@@ -821,10 +821,10 @@ private struct SubscriptionSettingsView: View {
             previousProductIDs: productIDsBeforeOfferCodeRedemption)
           {
           case .activated(let tier):
-            session.alertMessage = "(tier.title) access is active."
-          case .awaitingServer:
+            session.alertMessage = "\(tier.title) access is active."
+          case .verifiedLocally(let tier):
             session.alertMessage =
-              "The promo code was accepted by the App Store. Server access is still syncing."
+              "\(tier.title) was verified by the App Store. Server access is syncing in the background."
           case .noVerifiedRedemption:
             break
           }

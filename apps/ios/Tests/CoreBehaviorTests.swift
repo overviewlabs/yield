@@ -93,6 +93,24 @@ final class CoreBehaviorTests: XCTestCase {
       ))
   }
 
+  func testOfferCodeIdentifiesANewLocallyVerifiedPlanWhileServerSyncs() {
+    let optionsPro = DemoFixtures.plans.first(where: { $0.tier == .optionsPro })!
+    XCTAssertEqual(
+      OfferCodeEntitlementResolver.newlyVerifiedTier(
+        previousProductIDs: [],
+        currentProductIDs: [optionsPro.productID],
+        plans: DemoFixtures.plans
+      ),
+      .optionsPro
+    )
+    XCTAssertNil(
+      OfferCodeEntitlementResolver.newlyVerifiedTier(
+        previousProductIDs: [optionsPro.productID],
+        currentProductIDs: [optionsPro.productID],
+        plans: DemoFixtures.plans
+      ))
+  }
+
   @MainActor
   func testPurchaseStateTransitionsForUnavailableProductAndMockedRestore() async {
     let unavailable = StoreKitService(arguments: ["tests"])

@@ -1016,9 +1016,10 @@ struct OnboardingFlowView: View {
           if session.onboardingDraft.step == .subscription {
             _ = await session.advanceOnboarding()
           }
-        case .awaitingServer:
-          session.alertMessage =
-            "The promo code was accepted by the App Store. Server access is still syncing; try Continue again shortly."
+        case .verifiedLocally:
+          if session.onboardingDraft.step == .subscription {
+            _ = await session.advanceOnboarding()
+          }
         case .noVerifiedRedemption:
           break
         }

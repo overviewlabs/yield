@@ -13,10 +13,19 @@ enum ContentLoadPhase: Equatable {
 enum OfferCodeReconciliationOutcome: Equatable {
   case noVerifiedRedemption
   case activated(PlanTier)
-  case awaitingServer
+  case verifiedLocally(PlanTier)
 }
 
 enum OfferCodeEntitlementResolver {
+  static func newlyVerifiedTier(
+    previousProductIDs: Set<String>,
+    currentProductIDs: Set<String>,
+    plans: [SubscriptionPlan]
+  ) -> PlanTier? {
+    let newlyVerifiedProductIDs = currentProductIDs.subtracting(previousProductIDs)
+    return plans.first(where: { newlyVerifiedProductIDs.contains($0.productID) })?.tier
+  }
+
   static func activatedTier(
     previousProductIDs: Set<String>,
     currentProductIDs: Set<String>,
@@ -779,43 +788,51 @@ final class AppSession {
   }
 
   /// The StoreKit redemption sheet reports a successful presentation even when the user closes it.
-  /// Only a newly verified transaction that is also acknowledged by the server counts as redemption.
+  /// Only a newly verified transaction counts as redemption. Server authorization remains a
+  /// separate requirement for server-run features, but must not block onboarding navigation.
   func reconcileOfferCodeRedemption(
     previousProductIDs: Set<String>
   ) async -> OfferCodeReconciliationOutcome {
-    var sawNewVerifiedTransaction = false
+    for attempt in 0..<8 {
+      await storeKit.refreshLocalEntitlements()
+      if let locallyVerifiedTier = OfferCodeEntitlementResolver.newlyVerifiedTier(
+          previousProductIDs: previousProductIDs,
+          currentProductIDs: storeKit.localVerifiedProductIDs,
+          plans: plans)
+      {
+        // StoreKit's signed transaction is sufficient to let onboarding continue. Server-run
+        // features remain protected by authoritativeCurrentPlanTier until reconciliation finishes.
+        onboardingDraft.selectedPlan = locallyVerifiedTier
+        persistDraft()
+        if authoritativeCurrentPlanTier == locallyVerifiedTier {
+          return .activated(locallyVerifiedTier)
+        }
+        Task { await reconcileOfferCodeWithServer(expectedTier: locallyVerifiedTier) }
+        return .verifiedLocally(locallyVerifiedTier)
+      }
+      guard attempt < 7 else { break }
+      try? await Task.sleep(for: .milliseconds(250))
+    }
+    return .noVerifiedRedemption
+  }
 
+  private func reconcileOfferCodeWithServer(expectedTier: PlanTier) async {
     for attempt in 0..<8 {
       await storeKit.refreshEntitlements()
-      let newlyVerifiedProductIDs = storeKit.localVerifiedProductIDs.subtracting(previousProductIDs)
-      sawNewVerifiedTransaction = sawNewVerifiedTransaction || !newlyVerifiedProductIDs.isEmpty
-
-      if sawNewVerifiedTransaction {
-        do {
-          applyPlanCatalog(try await repository.planCatalog())
-          if let activatedTier = OfferCodeEntitlementResolver.activatedTier(
-            previousProductIDs: previousProductIDs,
-            currentProductIDs: storeKit.localVerifiedProductIDs,
-            authoritativeTier: authoritativeCurrentPlanTier,
-            plans: plans
-          ) {
-            onboardingDraft.selectedPlan = activatedTier
-            await storeKit.loadProducts(plans: plans)
-            persistDraft()
-            return .activated(activatedTier)
-          }
-        } catch {
-          // Keep polling briefly. The App Store transaction can arrive before the server catalog
-          // reflects the corresponding entitlement acknowledgement.
+      do {
+        applyPlanCatalog(try await repository.planCatalog())
+        if authoritativeCurrentPlanTier == expectedTier {
+          await storeKit.loadProducts(plans: plans)
+          persistDraft()
+          return
         }
+      } catch {
+        // Continue retrying in the background while the App Store notification and server catalog
+        // converge. Server-run features remain unavailable until the authoritative tier changes.
       }
-
-      let lastAttempt = sawNewVerifiedTransaction ? 7 : 3
-      guard attempt < lastAttempt else { break }
-      try? await Task.sleep(for: .milliseconds(500))
+      guard attempt < 7 else { return }
+      try? await Task.sleep(for: .seconds(1))
     }
-
-    return sawNewVerifiedTransaction ? .awaitingServer : .noVerifiedRedemption
   }
 
   func reloadOnboardingPlans() async {
@@ -1554,6 +1571,12 @@ final class AppSession {
       } else if let authoritativeCurrentPlanTier,
         onboardingDraft.selectedPlan == authoritativeCurrentPlanTier
       {
+        []
+      } else if let selectedPlan = plans.first(where: {
+        $0.tier == onboardingDraft.selectedPlan
+      }), storeKit.localVerifiedProductIDs.contains(selectedPlan.productID) {
+        // A signed StoreKit transaction may reach the device before the server catalog refreshes.
+        // This permits onboarding navigation only; server-run features remain authority-gated.
         []
       } else {
         ["Purchase or restore a plan and wait for server entitlement confirmation."]

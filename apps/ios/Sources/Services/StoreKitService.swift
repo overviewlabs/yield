@@ -204,6 +204,21 @@ final class StoreKitService {
     lastEntitlementSync = .now
   }
 
+  /// Refreshes only Apple's signed on-device entitlement view. This is used to unblock UI
+  /// navigation after redemption; it never changes server-authorized feature access.
+  func refreshLocalEntitlements() async {
+    var verifiedIDs: Set<String> = []
+    for await result in Transaction.currentEntitlements {
+      if case .verified(let transaction) = result,
+        transaction.revocationDate == nil,
+        transaction.expirationDate.map({ $0 > .now }) ?? true
+      {
+        verifiedIDs.insert(transaction.productID)
+      }
+    }
+    localVerifiedProductIDs = verifiedIDs
+  }
+
   func manageSubscriptions(in scene: UIWindowScene) async {
     do {
       try await AppStore.showManageSubscriptions(in: scene)
