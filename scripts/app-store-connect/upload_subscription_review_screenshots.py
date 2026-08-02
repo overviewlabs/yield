@@ -11,6 +11,7 @@ import subprocess
 import time
 import urllib.error
 import urllib.request
+import uuid
 
 import jwt
 
@@ -243,6 +244,112 @@ def response_error(response: dict) -> dict:
     return {"status": response.get("errorStatus"), "message": message}
 
 
+def ensure_free_app_price(token: str, app_id: str) -> dict:
+    """Ensure the downloadable app itself is free in the USA base storefront."""
+    schedule = api_request(
+        token,
+        "GET",
+        f"/v1/apps/{app_id}/appPriceSchedule",
+        allowed_errors={404},
+    ).get("data")
+    if schedule is not None:
+        base_territory = api_request(
+            token,
+            "GET",
+            f"/v1/appPriceSchedules/{schedule['id']}/baseTerritory",
+            allowed_errors={404},
+        ).get("data")
+        manual_prices = api_request(
+            token,
+            "GET",
+            f"/v1/appPriceSchedules/{schedule['id']}/manualPrices"
+            "?filter[territory]=USA&include=appPricePoint"
+            "&fields[appPricePoints]=customerPrice&limit=200",
+            allowed_errors={404},
+        )
+        included = manual_prices.get("included", [])
+        price_points = {
+            item["id"]: item.get("attributes", {}).get("customerPrice")
+            for item in included
+            if item.get("type") == "appPricePoints"
+        }
+        current_prices = []
+        for price in manual_prices.get("data", []):
+            if price.get("attributes", {}).get("endDate") is not None:
+                continue
+            point = (
+                price.get("relationships", {})
+                .get("appPricePoint", {})
+                .get("data", {})
+                .get("id")
+            )
+            current_prices.append(price_points.get(point))
+        if base_territory is not None and "0.0" in current_prices:
+            return {
+                "configured": True,
+                "baseTerritory": base_territory["id"],
+                "customerPrice": "0.0",
+            }
+
+    price_points = api_request(
+        token,
+        "GET",
+        f"/v1/apps/{app_id}/appPricePoints?filter[territory]=USA"
+        "&fields[appPricePoints]=customerPrice&limit=200",
+    )["data"]
+    free_point = next(
+        (
+            item
+            for item in price_points
+            if item.get("attributes", {}).get("customerPrice") in {"0", "0.0", "0.00"}
+        ),
+        None,
+    )
+    if free_point is None:
+        raise RuntimeError("Apple returned no free app price point for the USA storefront")
+
+    inline_id = str(uuid.uuid4())
+    response = api_request(
+        token,
+        "POST",
+        "/v1/appPriceSchedules",
+        {
+            "data": {
+                "type": "appPriceSchedules",
+                "relationships": {
+                    "app": {"data": {"type": "apps", "id": app_id}},
+                    "baseTerritory": {
+                        "data": {"type": "territories", "id": "USA"}
+                    },
+                    "manualPrices": {
+                        "data": [{"type": "appPrices", "id": inline_id}]
+                    },
+                },
+            },
+            "included": [
+                {
+                    "type": "appPrices",
+                    "id": inline_id,
+                    "attributes": {"startDate": None},
+                    "relationships": {
+                        "appPricePoint": {
+                            "data": {
+                                "type": "appPricePoints",
+                                "id": free_point["id"],
+                            }
+                        }
+                    },
+                }
+            ],
+        },
+    )
+    return {
+        "configured": "data" in response,
+        "baseTerritory": "USA",
+        "customerPrice": "0.0",
+    }
+
+
 def ensure_subscription_version(token: str, subscription_id: str) -> dict:
     versions = api_request(
         token, "GET", f"/v1/subscriptions/{subscription_id}/versions?limit=10"
@@ -334,6 +441,7 @@ def complete_app_review_submission(token: str) -> dict:
     if not app_versions:
         return {"submitted": False, "message": "No iOS App Store version 1.0 exists"}
     app_version = app_versions[0]
+    app_price = ensure_free_app_price(token, app_id)
     localization_data = api_request(
         token,
         "GET",
@@ -424,9 +532,10 @@ def complete_app_review_submission(token: str) -> dict:
         "appInfos": app_info_diagnostics,
         "build": None if build is None else build.get("attributes", {}),
         "availability": None if availability is None else availability.get("attributes", {}),
-        "priceSchedule": None
-        if price_schedule is None
-        else price_schedule.get("attributes", {}),
+        "priceSchedule": {
+            **({} if price_schedule is None else price_schedule.get("attributes", {})),
+            **app_price,
+        },
     }
     subscription_versions = [
         ensure_subscription_version(token, subscription_id) for subscription_id in SUBSCRIPTIONS
