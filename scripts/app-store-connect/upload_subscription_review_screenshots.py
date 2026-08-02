@@ -75,24 +75,37 @@ def api_request(
     token: str, method: str, path: str, body: dict | None = None, allowed_errors: set[int] | None = None
 ) -> dict:
     encoded = None if body is None else json.dumps(body).encode("utf-8")
-    request = urllib.request.Request(
-        API_BASE + path,
-        data=encoded,
-        method=method,
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-        },
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=60) as response:
-            payload = response.read()
-            return json.loads(payload) if payload else {}
-    except urllib.error.HTTPError as error:
-        detail = error.read().decode("utf-8", errors="replace")
-        if allowed_errors is not None and error.code in allowed_errors:
-            return {"errorStatus": error.code, "errorDetail": detail}
-        raise RuntimeError(f"App Store Connect returned HTTP {error.code}: {detail}") from error
+    retryable_statuses = {429, 500, 502, 503, 504}
+    for attempt in range(5):
+        request = urllib.request.Request(
+            API_BASE + path,
+            data=encoded,
+            method=method,
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                payload = response.read()
+                return json.loads(payload) if payload else {}
+        except urllib.error.HTTPError as error:
+            detail = error.read().decode("utf-8", errors="replace")
+            if allowed_errors is not None and error.code in allowed_errors:
+                return {"errorStatus": error.code, "errorDetail": detail}
+            if error.code not in retryable_statuses or attempt == 4:
+                raise RuntimeError(
+                    f"App Store Connect returned HTTP {error.code}: {detail}"
+                ) from error
+            retry_after = error.headers.get("Retry-After")
+            delay = min(30, int(retry_after)) if retry_after and retry_after.isdigit() else 2 ** attempt
+            print(
+                f"App Store Connect returned transient HTTP {error.code}; "
+                f"retrying in {delay} seconds"
+            )
+            time.sleep(delay)
+    raise RuntimeError("App Store Connect request exhausted its retry budget")
 
 
 def api_request_bytes(token: str, path: str) -> bytes:
