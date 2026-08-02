@@ -34,7 +34,7 @@ struct RootView: View {
     }
     .animation(.easeInOut(duration: 0.18), value: session.isPrivacyShieldVisible)
     .alert(
-      "WHOX Treasury",
+      "Metis",
       isPresented: Binding(
         get: { session.alertMessage != nil },
         set: { if !$0 { session.alertMessage = nil } }

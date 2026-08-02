@@ -578,7 +578,7 @@ enum DemoFixtures {
       LegalDocument(
         id: "broker", title: "Brokerage Connection Disclosure", version: "DEMO-2026.08",
         productionApproved: false,
-        summary: "WHOX Treasury is not Robinhood and stores no brokerage credential on this device."
+        summary: "Metis is not Robinhood and stores no brokerage credential on this device."
       ),
       LegalDocument(
         id: "options", title: "Options Risk Disclosure", version: "DEMO-2026.08",

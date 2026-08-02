@@ -84,7 +84,7 @@ private struct TreasuryWidgetView: View {
     .containerBackground(.fill.tertiary, for: .widget)
     .accessibilityElement(children: .combine)
     .accessibilityLabel(
-      "WHOX Treasury, \(entry.mode), agent \(entry.agentStatus), \(entry.pendingProposals) pending proposals, risk \(entry.riskState)"
+      "Metis, \(entry.mode), agent \(entry.agentStatus), \(entry.pendingProposals) pending proposals, risk \(entry.riskState)"
     )
   }
 }
@@ -95,7 +95,7 @@ private struct TreasuryStatusWidget: Widget {
     StaticConfiguration(kind: kind, provider: TreasuryWidgetProvider()) { entry in
       TreasuryWidgetView(entry: entry)
     }
-    .configurationDisplayName("Treasury Status")
+    .configurationDisplayName("Metis Status")
     .description("Privacy-preserving agent, proposal, and risk status.")
     .supportedFamilies([.systemSmall, .systemMedium])
   }

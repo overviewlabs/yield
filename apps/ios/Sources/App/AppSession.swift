@@ -1153,7 +1153,7 @@ final class AppSession {
 
   func handle(url: URL) {
     guard let route = TreasuryRoute.parse(url) else {
-      alertMessage = "That WHOX Treasury link is not supported."
+      alertMessage = "That Metis link is not supported."
       return
     }
     navigate(to: route)
@@ -1341,7 +1341,7 @@ final class AppSession {
 
   func signOutOtherDevices() async {
     do {
-      try await localAuthentication.authenticate(reason: "Sign out all other WHOX Treasury devices")
+      try await localAuthentication.authenticate(reason: "Sign out all other Metis devices")
       let count = try await authClient.revokeOtherSessions()
       alertMessage =
         mode == .demo
@@ -1372,7 +1372,7 @@ final class AppSession {
       return false
     }
     do {
-      try await localAuthentication.authenticate(reason: "Delete this WHOX Treasury account")
+      try await localAuthentication.authenticate(reason: "Delete this Metis account")
     } catch {
       alertMessage = error.localizedDescription
       return false

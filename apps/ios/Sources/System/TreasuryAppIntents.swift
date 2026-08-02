@@ -9,7 +9,7 @@ private enum IntentRouteWriter {
 
 struct OpenDashboardIntent: AppIntent {
   static let title: LocalizedStringResource = "Open Dashboard"
-  static let description = IntentDescription("Open the privacy-protected WHOX Treasury dashboard.")
+  static let description = IntentDescription("Open the privacy-protected Metis dashboard.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
     IntentRouteWriter.store("whoxtreasury://dashboard")

@@ -1,6 +1,6 @@
-# WHOX Treasury for iOS
+# Metis for iOS
 
-Native SwiftUI client for WHOX Treasury. The app targets iOS 26, uses Swift 6.2 strict concurrency, and includes an iPhone/iPad app, WidgetKit extension, App Intents, unit tests, and UI tests.
+Native SwiftUI client for Metis. The app targets iOS 26, uses Swift 6.2 strict concurrency, and includes an iPhone/iPad app, WidgetKit extension, App Intents, unit tests, and UI tests.
 
 The built-in Demo experience is complete and works without a backend or brokerage login. Paper mode uses authenticated canonical HTTP endpoints only when an explicit HTTPS service is configured; missing, malformed, mismatched, or Demo-classified responses fail closed and never fall back to seeded data. Live trading, options live trading, and autonomous execution are compile-time/resource gated off in `Resources/Configuration/ReleaseGates.json`.
 

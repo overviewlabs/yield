@@ -1,4 +1,4 @@
-name: Build signed TestFlight IPA
+name: Build signed Metis TestFlight IPA
 
 on:
   workflow_dispatch:
@@ -90,7 +90,7 @@ jobs:
       - name: Upload signed IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: whox-treasury-testflight-ipa
+          name: metis-testflight-ipa
           path: ${{ runner.temp }}/export/*.ipa
           if-no-files-found: error
           retention-days: 1

@@ -13,7 +13,7 @@ enum PairingClientError: LocalizedError, Equatable {
     switch self {
     case .invalidResponse:
       "The connection service returned an unreadable response. Regenerate the setup session."
-    case .unauthorized: "Your WHOX Treasury session expired. Sign in again before connecting."
+    case .unauthorized: "Your Metis session expired. Sign in again before connecting."
     case .notFound: "The pairing session is already expired or canceled. Generate a new code."
     case .unavailable:
       "The connection service is temporarily unavailable. Your brokerage account was not changed."

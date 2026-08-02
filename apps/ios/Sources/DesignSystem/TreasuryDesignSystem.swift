@@ -46,7 +46,7 @@ struct BrandArtworkView: View {
       .scaledToFit()
       .frame(width: size, height: size)
       .clipShape(RoundedRectangle(cornerRadius: size * 0.22, style: .continuous))
-      .accessibilityLabel("WHOX Treasury vault compass")
+      .accessibilityLabel("Metis vault compass")
   }
 }
 
@@ -176,7 +176,7 @@ struct PrivacyShieldView: View {
       Rectangle().fill(.background).ignoresSafeArea()
       VStack(spacing: 18) {
         BrandArtworkView(size: 76)
-        Text("WHOX Treasury").font(.title2.weight(.semibold))
+        Text("Metis").font(.title2.weight(.semibold))
         Text(
           isLocked
             ? "Sensitive information is locked."

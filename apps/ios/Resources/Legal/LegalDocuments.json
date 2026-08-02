@@ -2,7 +2,7 @@
   {"id":"terms","title":"Terms of Service","version":"DEMO-2026.08","productionApproved":false,"summary":"Demo fixture only. Counsel-approved terms are required before Live activation."},
   {"id":"privacy","title":"Privacy Policy","version":"DEMO-2026.08","productionApproved":false,"summary":"Demo fixture only. Runtime data practices must be reflected before release."},
   {"id":"ai-risk","title":"AI Agent Risk Disclosure","version":"DEMO-2026.08","productionApproved":false,"summary":"Automated analysis can be wrong. Investing can lose money."},
-  {"id":"broker","title":"Brokerage Connection Disclosure","version":"DEMO-2026.08","productionApproved":false,"summary":"WHOX Treasury is not Robinhood and stores no brokerage credential on this device."},
+  {"id":"broker","title":"Brokerage Connection Disclosure","version":"DEMO-2026.08","productionApproved":false,"summary":"Metis is not Robinhood and stores no brokerage credential on this device."},
   {"id":"options","title":"Options Risk Disclosure","version":"DEMO-2026.08","productionApproved":false,"summary":"Options may lose their premium quickly and require separate broker permission."},
   {"id":"subscription","title":"Subscription Terms","version":"DEMO-2026.08","productionApproved":false,"summary":"Subscriptions provide feature access and never guarantee investment returns."},
   {"id":"advisory","title":"Investment Advisory Agreement","version":"DEMO-2026.08","productionApproved":false,"summary":"Demo fixture only. An applicable counsel-approved advisory agreement is required before Live activation."},

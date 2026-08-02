@@ -165,8 +165,8 @@ struct PositionDetailView: View {
       DisclosureGroup("Tax lots") {
         Text(
           position.quoteTimestamp == .distantPast
-            ? "Tax-lot details were not supplied by the API. WHOX Treasury does not invent unavailable brokerage tax data."
-            : "Tax-lot details are not available in this Demo fixture. WHOX Treasury does not invent unavailable brokerage tax data."
+            ? "Tax-lot details were not supplied by the API. Metis does not invent unavailable brokerage tax data."
+            : "Tax-lot details are not available in this Demo fixture. Metis does not invent unavailable brokerage tax data."
         )
         .font(.caption).foregroundStyle(.secondary)
       }

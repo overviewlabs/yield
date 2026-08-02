@@ -117,7 +117,7 @@ enum EligibilityValidator {
     }
 
     if !draft.understandsNotBroker {
-      incomplete.append("Acknowledge that WHOX Treasury is not a bank or broker.")
+      incomplete.append("Acknowledge that Metis is not a bank or broker.")
     }
 
     if !unavailable.isEmpty {

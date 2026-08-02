@@ -6,7 +6,7 @@ This is a ready-to-paste structure, not a release-ready representation today. Re
 
 **Purpose**
 
-WHOX Treasury lets a user select a versioned investing strategy, set deterministic portfolio and order limits, review proposals and order activity, and pause future automated activity. It does not promise results. A subscription grants app features only; it does not grant brokerage trading or options permission.
+Metis lets a user select a versioned investing strategy, set deterministic portfolio and order limits, review proposals and order activity, and pause future automated activity. It does not promise results. A subscription grants app features only; it does not grant brokerage trading or options permission.
 
 **Demo entry — no credentials or purchase required**
 
