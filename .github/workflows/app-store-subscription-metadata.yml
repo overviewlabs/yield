@@ -40,9 +40,22 @@ jobs:
             2>&1 | tee "$RUNNER_TEMP/subscription-metadata.log"
 
       - name: Publish StoreKit diagnostic
+        if: success()
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .github/storekit-diagnostic.json
           git diff --cached --quiet || git commit -m "Record StoreKit product status"
+          git push
+
+      - name: Preserve sanitized App Store validation error
+        if: failure()
+        run: |
+          tail -50 "$RUNNER_TEMP/subscription-metadata.log" \
+            | sed -E 's/(Bearer|token|secret|private[_ -]?key)[^ ,}]*/[REDACTED]/Ig' \
+            > .github/submission-error.txt
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .github/submission-error.txt
+          git commit -m "Record App Store validation error"
           git push
