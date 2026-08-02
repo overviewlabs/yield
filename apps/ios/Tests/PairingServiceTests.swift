@@ -141,7 +141,8 @@ final class PairingServiceTests: XCTestCase {
     XCTAssertTrue(handled)
     XCTAssertEqual(service.lifecycleStatus, .authorizing)
     XCTAssertEqual(
-      service.statusMessage, "Robinhood returned to Yield. Verifying the connection with the WHOX server.")
+      service.statusMessage,
+      "Robinhood returned to Yield. Verifying the connection with the WHOX server.")
   }
 
   @MainActor

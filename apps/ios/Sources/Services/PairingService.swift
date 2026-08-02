@@ -737,7 +737,8 @@ final class PairingService {
       switch result {
       case .verificationPending:
         lifecycleStatus = .authorizing
-        statusMessage = "Robinhood returned to Yield. Verifying the connection with the WHOX server."
+        statusMessage =
+          "Robinhood returned to Yield. Verifying the connection with the WHOX server."
         await pollNow()
       case .canceled:
         lifecycleStatus = .authorizing
