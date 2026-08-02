@@ -223,6 +223,175 @@ def submit_subscription(token: str, subscription_id: str) -> dict:
     }
 
 
+def response_error(response: dict) -> dict:
+    detail = response.get("errorDetail", "")
+    try:
+        errors = json.loads(detail).get("errors", [])
+        message = errors[0].get("detail", detail) if errors else detail
+    except json.JSONDecodeError:
+        message = detail
+    return {"status": response.get("errorStatus"), "message": message}
+
+
+def ensure_subscription_version(token: str, subscription_id: str) -> dict:
+    versions = api_request(
+        token, "GET", f"/v1/subscriptions/{subscription_id}/versions?limit=10"
+    )["data"]
+    if versions:
+        return versions[0]
+    created = api_request(
+        token,
+        "POST",
+        "/v1/subscriptionVersions",
+        {
+            "data": {
+                "type": "subscriptionVersions",
+                "relationships": {
+                    "subscription": {
+                        "data": {"type": "subscriptions", "id": subscription_id}
+                    }
+                },
+            }
+        },
+    )["data"]
+    localizations = api_request(
+        token,
+        "GET",
+        f"/v1/subscriptions/{subscription_id}/subscriptionLocalizations?limit=200",
+    )["data"]
+    for localization in localizations:
+        attributes = localization.get("attributes", {})
+        api_request(
+            token,
+            "POST",
+            "/v2/subscriptionLocalizations",
+            {
+                "data": {
+                    "type": "subscriptionLocalizations",
+                    "attributes": {
+                        "locale": attributes["locale"],
+                        "name": attributes["name"],
+                        "description": attributes.get("description", ""),
+                    },
+                    "relationships": {
+                        "version": {
+                            "data": {"type": "subscriptionVersions", "id": created["id"]}
+                        }
+                    },
+                }
+            },
+        )
+    return created
+
+
+def add_review_item(
+    token: str, review_submission_id: str, relationship: str, resource_type: str, resource_id: str
+) -> dict:
+    response = api_request(
+        token,
+        "POST",
+        "/v1/reviewSubmissionItems",
+        {
+            "data": {
+                "type": "reviewSubmissionItems",
+                "relationships": {
+                    "reviewSubmission": {
+                        "data": {
+                            "type": "reviewSubmissions",
+                            "id": review_submission_id,
+                        }
+                    },
+                    relationship: {"data": {"type": resource_type, "id": resource_id}},
+                },
+            }
+        },
+        allowed_errors={409, 422},
+    )
+    return {"added": "data" in response, **({} if "data" in response else response_error(response))}
+
+
+def complete_app_review_submission(token: str) -> dict:
+    apps = api_request(token, "GET", f"/v1/apps?filter[bundleId]={BUNDLE_ID}&limit=2")["data"]
+    if len(apps) != 1:
+        return {"submitted": False, "message": f"Expected one app for {BUNDLE_ID}"}
+    app_id = apps[0]["id"]
+    app_versions = api_request(
+        token,
+        "GET",
+        f"/v1/apps/{app_id}/appStoreVersions?filter[platform]=IOS"
+        "&filter[versionString]=1.0&limit=10",
+    )["data"]
+    if not app_versions:
+        return {"submitted": False, "message": "No iOS App Store version 1.0 exists"}
+    app_version = app_versions[0]
+    subscription_versions = [
+        ensure_subscription_version(token, subscription_id) for subscription_id in SUBSCRIPTIONS
+    ]
+    created = api_request(
+        token,
+        "POST",
+        "/v1/reviewSubmissions",
+        {
+            "data": {
+                "type": "reviewSubmissions",
+                "attributes": {"platform": "IOS"},
+                "relationships": {
+                    "app": {"data": {"type": "apps", "id": app_id}}
+                },
+            }
+        },
+        allowed_errors={409, 422},
+    )
+    if "data" not in created:
+        return {"submitted": False, "stage": "create", **response_error(created)}
+    submission_id = created["data"]["id"]
+    items = [
+        {
+            "kind": "appStoreVersion",
+            **add_review_item(
+                token,
+                submission_id,
+                "appStoreVersion",
+                "appStoreVersions",
+                app_version["id"],
+            ),
+        }
+    ]
+    for version in subscription_versions:
+        items.append(
+            {
+                "kind": "subscriptionVersion",
+                "id": version["id"],
+                **add_review_item(
+                    token,
+                    submission_id,
+                    "subscriptionVersion",
+                    "subscriptionVersions",
+                    version["id"],
+                ),
+            }
+        )
+    submitted = api_request(
+        token,
+        "PATCH",
+        f"/v1/reviewSubmissions/{submission_id}",
+        {
+            "data": {
+                "type": "reviewSubmissions",
+                "id": submission_id,
+                "attributes": {"submitted": True},
+            }
+        },
+        allowed_errors={409, 422},
+    )
+    return {
+        "submitted": "data" in submitted,
+        "submissionId": submission_id,
+        "items": items,
+        **({} if "data" in submitted else response_error(submitted)),
+    }
+
+
 def upload_asset(operation: dict, blob: bytes) -> None:
     offset = operation["offset"]
     chunk = blob[offset : offset + operation["length"]]
@@ -307,11 +476,16 @@ def main() -> None:
         )
 
     assign_testflight_build(token)
+    review_submission = complete_app_review_submission(token)
     time.sleep(5)
     diagnostics = [subscription_diagnostic(token, item) for item in SUBSCRIPTIONS]
     DIAGNOSTIC_PATH.write_text(
         json.dumps(
-            {"subscriptions": diagnostics, "submissionAttempts": submissions},
+            {
+                "subscriptions": diagnostics,
+                "submissionAttempts": submissions,
+                "reviewSubmission": review_submission,
+            },
             indent=2,
             sort_keys=True,
         )
