@@ -9,6 +9,7 @@ import { PostgresPairingService } from "./postgres-pairings.js";
 import { PostgresSessionService } from "./postgres-session.js";
 import { PostgresApiDataStore } from "./postgres-store.js";
 import type { ApiServerOptions } from "./server.js";
+import { environmentValue } from "./environment-value.js";
 
 export interface ApiRuntimeConfiguration {
   readonly host: string;
@@ -34,7 +35,7 @@ function urlFromEnvironment(name: string, fallback: string): URL {
 }
 
 function persistentSecret(name: string, mode: RuntimeMode): Buffer {
-  const raw = process.env[name]?.trim();
+  const raw = environmentValue(process.env, name);
   if (raw === undefined || raw.length < 32 || placeholderPattern.test(raw)) {
     if (mode !== "demo") {
       throw new DomainError("RUNTIME_SECRET_REQUIRED", `${name} must be a distinct, non-placeholder secret of at least 32 bytes in ${mode}`, 500);
@@ -67,23 +68,24 @@ export function loadApiRuntimeConfiguration(): ApiRuntimeConfiguration {
   if (adminUrl) origins.add(absoluteUrl("ADMIN_WEB_URL", adminUrl).origin);
   const authSigningKey=persistentSecret("SESSION_SIGNING_SECRET",mode);const pairingHashPepper=persistentSecret("PAIRING_HASH_PEPPER",mode);const rateLimitKeySecret=persistentSecret("RATE_LIMIT_KEY_SECRET",mode);
   if(mode!=="demo"&&(authSigningKey.equals(pairingHashPepper)||authSigningKey.equals(rateLimitKeySecret)||pairingHashPepper.equals(rateLimitKeySecret)))throw new DomainError("RUNTIME_SECRETS_NOT_DISTINCT","Session signing, pairing hash, and rate-limit key secrets must be distinct",500);
-  if(mode!=="demo"&&!process.env.REDIS_URL?.trim())throw new DomainError("REDIS_URL_REQUIRED","Paper and Live API runtimes require Redis coordination",500);
+  const redisUrl=environmentValue(process.env,"REDIS_URL");
+  if(mode!=="demo"&&!redisUrl)throw new DomainError("REDIS_URL_REQUIRED","Paper and Live API runtimes require Redis coordination",500);
   if(mode==="demo")return Object.freeze({
     host: process.env.HOST?.trim() || "127.0.0.1",
     port,
     serverOptions: Object.freeze({mode,authSigningKey,pairingHashPepper,rateLimitKeySecret,trustedProxyHops:trustedProxyHops(),connectionWebUrl,publicApiUrl,allowedCorsOrigins:origins}),
     async close():Promise<void>{}
   });
-  const databaseUrl=process.env.DATABASE_URL?.trim();
+  const databaseUrl=environmentValue(process.env,"DATABASE_URL");
   if(!databaseUrl)throw new DomainError("DATABASE_URL_REQUIRED","Paper API runtime requires PostgreSQL durable state",500);
-  const appleClientId=process.env.APPLE_CLIENT_ID?.trim();
+  const appleClientId=environmentValue(process.env,"APPLE_CLIENT_ID");
   if(!appleClientId)throw new DomainError("APPLE_CLIENT_ID_REQUIRED","Paper authentication requires an approved Sign in with Apple client identifier",500);
   const storeKit=loadAppleStoreKitRuntime(mode);
   if(storeKit===undefined)throw new DomainError("STOREKIT_RUNTIME_CONFIGURATION_REQUIRED","Paper StoreKit runtime is unavailable",500);
   const deviceTokenEncryptionKey=persistentSecret("DEVICE_TOKEN_ENCRYPTION_KEY",mode);
   if(deviceTokenEncryptionKey.equals(authSigningKey)||deviceTokenEncryptionKey.equals(pairingHashPepper)||deviceTokenEncryptionKey.equals(rateLimitKeySecret))throw new DomainError("RUNTIME_SECRETS_NOT_DISTINCT","Device-token encryption, session signing, pairing hash, and rate-limit key secrets must be distinct",500);
   const database=new PostgresTenantDatabase(databaseUrl);
-  const rateLimiter=RedisSlidingWindowRateLimiter.fromUrl(process.env.REDIS_URL!.trim(),240,60_000);
+  const rateLimiter=RedisSlidingWindowRateLimiter.fromUrl(redisUrl!,240,60_000);
   return Object.freeze({
     host: process.env.HOST?.trim() || "127.0.0.1",
     port,

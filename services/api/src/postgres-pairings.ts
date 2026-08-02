@@ -228,5 +228,11 @@ export class PostgresPairingService implements PairingServiceContract {
     return Object.freeze(unmanaged.rows[0]?.exists===true?{kind:"unmanaged"}:{kind:"none"});
   });}
   public async concludeMobileWithoutConnection(ownerUserId:string,creatorSessionId:string,pairingId:string,state:string,outcome:"canceled"|"error",now:string):Promise<void>{await this.database.withTenant(ownerUserId,async(transaction)=>{const row=await this.#row(transaction,ownerUserId,pairingId,true);const supplied=this.#digest(state,"oauth-state");const expected=row?.stateDigest??Buffer.alloc(0);if(row===undefined||row.creatorSessionId!==creatorSessionId||row.status!=="authorizing"||row.oauthFlow!=="mobile"||row.verifierEnvelope!==null||expected.length!==supplied.length||!timingSafeEqual(expected,supplied))throw new DomainError("PAIRING_INVALID","Pairing callback is invalid or expired",400);await transaction.query("UPDATE connection_pairings SET status=$3,consumed_at=CASE WHEN $3='error' THEN $4::timestamptz ELSE NULL END,oauth_state_digest=NULL,oauth_nonce_digest=NULL,pkce_verifier_envelope=NULL,oauth_state_expires_at=NULL,oauth_flow=NULL,oauth_redirect_uri=NULL,mobile_return_uri=NULL WHERE id=$1 AND user_id=$2",[pairingId,ownerUserId,outcome==="canceled"?"pending":"error",now]);});}
-  public async healthy():Promise<boolean>{return this.approvedConnectorIdentity!==undefined&&await this.database.ready();}
+  /**
+   * Reports persistence readiness only. Provider authorization is an
+   * independently capability-gated endpoint and continues to return 503 when
+   * no approved connector identity is injected; it must not take Apple sign-in
+   * and the rest of Paper onboarding offline.
+   */
+  public async healthy():Promise<boolean>{return await this.database.ready();}
 }

@@ -13,6 +13,7 @@ import {
   type AppStoreServerNotificationHandler
 } from "./storekit-notifications.js";
 import type { StoreKitTransactionVerifier } from "./storekit.js";
+import { environmentValue } from "./environment-value.js";
 
 export interface AppleStoreKitRuntime {
   readonly transactionVerifier: StoreKitTransactionVerifier;
@@ -22,7 +23,7 @@ export interface AppleStoreKitRuntime {
 }
 
 function required(environment: NodeJS.ProcessEnv, name: string): string {
-  const value = environment[name]?.trim();
+  const value = environmentValue(environment, name);
   if (value === undefined || value === "") {
     throw new DomainError("STOREKIT_RUNTIME_CONFIGURATION_REQUIRED", `${name} is required for Paper StoreKit verification`, 500);
   }
@@ -48,7 +49,7 @@ export function loadAppleStoreKitRuntime(
 ): AppleStoreKitRuntime | undefined {
   if (mode === "demo") return undefined;
   const databaseUrl = required(environment, "APP_STORE_DATABASE_URL");
-  if (databaseUrl === environment.DATABASE_URL?.trim()) {
+  if (databaseUrl === environmentValue(environment, "DATABASE_URL")) {
     throw new DomainError(
       "STOREKIT_DATABASE_CREDENTIAL_NOT_ISOLATED",
       "APP_STORE_DATABASE_URL must use a distinct least-privilege database login",
@@ -56,7 +57,7 @@ export function loadAppleStoreKitRuntime(
     );
   }
   const enabledEnvironments = environments(required(environment, "STOREKIT_ENVIRONMENTS"));
-  const appIdRaw = environment.APPLE_APP_ID?.trim();
+  const appIdRaw = environmentValue(environment, "APPLE_APP_ID");
   const appAppleId = appIdRaw === undefined || appIdRaw === "" ? undefined : Number(appIdRaw);
   if (appAppleId !== undefined && (!Number.isSafeInteger(appAppleId) || appAppleId <= 0)) {
     throw new DomainError("STOREKIT_APP_APPLE_ID_INVALID", "APPLE_APP_ID must be a positive integer", 500);

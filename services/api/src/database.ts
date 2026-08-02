@@ -20,8 +20,13 @@ export class PostgresTenantDatabase {
   public async consumeAppleIdentityAssertion(assertionDigest:string,expiresAt:string,consumedAt:string):Promise<void>{const client=await this.#pool.connect();let began=false;try{await client.query("BEGIN");began=true;await this.#setRuntimeTransactionRole(client);await client.query("SELECT app.consume_apple_identity_assertion($1,$2,$3)",[assertionDigest,expiresAt,consumedAt]);await client.query("COMMIT");}catch(error){if(began)await client.query("ROLLBACK");if(typeof error==="object"&&error!==null&&(error as{code?:string}).code==="23505")throw new DomainError("APPLE_IDENTITY_REPLAYED","Apple identity token was already consumed",401);throw error;}finally{client.release();}}
   public async healthy():Promise<boolean>{try{return (await this.#pool.query<{ok:number}>("SELECT 1 AS ok")).rows[0]?.ok===1;}catch{return false;}}
   public async ready():Promise<boolean>{
+    const client=await this.#pool.connect();
+    let began=false;
     try{
-      const result=await this.#pool.query<{ready:boolean}>(`SELECT
+      await client.query("BEGIN");
+      began=true;
+      await this.#setRuntimeTransactionRole(client);
+      const result=await client.query<{ready:boolean}>(`SELECT
         to_regclass('public.api_idempotency_records') IS NOT NULL
         AND to_regclass('public.pairing_claim_attempts') IS NOT NULL
         AND to_regclass('public.apple_identity_assertions') IS NOT NULL
@@ -81,8 +86,12 @@ export class PostgresTenantDatabase {
         ),false)
         AND NOT has_schema_privilege('whox_broker_authorization_janitor','app','CREATE')
         AS ready`,[this.#runtimeRole]);
+      await client.query("COMMIT");
       return result.rows[0]?.ready===true;
-    }catch{return false;}
+    }catch{
+      if(began)await client.query("ROLLBACK");
+      return false;
+    }finally{client.release();}
   }
   public async close():Promise<void>{await this.#pool.end();}
 }

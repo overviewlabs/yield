@@ -2,6 +2,13 @@
 
 Secrets belong in the managed secret system; public URLs and safe toggles may be ordinary configuration. Production fails startup for missing/invalid required values.
 
+Secret-bearing API and StoreKit values may be supplied from a mounted credential
+by setting the matching `*_FILE` variable (for example,
+`SESSION_SIGNING_SECRET_FILE=/run/credentials/session-signing-secret`). Configure
+either the inline variable or its file-backed form, never both. File contents are
+trimmed, bounded to 64 KiB, and read only by the runtime process. Ordinary public
+configuration such as `APP_ENV`, ports, and public origins remains inline.
+
 | Variable | Scope | Rule |
 |---|---|---|
 | `APP_ENV` | all services | `demo`, `paper`, or `live`; default Demo only locally |
