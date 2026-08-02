@@ -197,7 +197,11 @@
           ]
         }
       ],
-      "priceSchedule": {},
+      "priceSchedule": {
+        "baseTerritory": "USA",
+        "configured": true,
+        "customerPrice": "0.0"
+      },
       "reviewDetail": {
         "contactEmail": "admin@overviewlabs.ai",
         "contactFirstName": "Evans",
@@ -220,28 +224,28 @@
         "added": false,
         "id": "3676f212-a18c-463a-879b-01cfa482cac8",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"3c69d099-2415-4ee2-91d8-2de0f35c28cf\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"0691aa40-89e8-4efd-8e17-282c4a31acd6\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "0f62bb6e-4e91-451b-a718-152fc9a38118",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"fd842f35-393d-405d-8608-7cd023f21be5\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"222bc4bf-49ed-4a2c-9a51-08d55120910e\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "f9b2021a-b0fd-4adb-b620-17a295c18f2b",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"00eb1d10-d2dd-4263-988f-0003417e271e\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"46fd443c-0f9d-49e2-b7af-9120e04b13b4\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "d704945d-c643-4680-ac00-1bd4abfdd827",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"0bff96c5-745e-4695-8d9d-1c0f3470cac1\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"127c3941-5d4a-4dd8-8cbc-c8b3412b75d8\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       }
     ],
