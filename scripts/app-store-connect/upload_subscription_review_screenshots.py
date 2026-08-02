@@ -36,6 +36,13 @@ APP_SCREENSHOTS = [
     Path("apps/ios/Documentation/QA/2026-08-01/visual-review/iphone-clean-assets-final/778EDA6B-0AC3-41F9-86B6-DE8C0CDCB4C9.png"),
     Path("apps/ios/Documentation/QA/2026-08-01/visual-review/iphone-clean-assets-final/FAF0660E-8F5C-4D45-9631-92C0D696C36A.png"),
 ]
+IPAD_SCREENSHOTS = [
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/ipad-final-green/4ACFB550-FF5B-40D9-9E24-C9B70258FA0B.png"),
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/ipad-final-green/800D685E-AC31-4F32-8C22-AD584891D344.png"),
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/ipad-final-green/E7EEA644-1AC0-44AB-9D0B-504B905765FE.png"),
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/ipad-final-green/00EFE791-DF7C-445D-A333-A136ED35674B.png"),
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/ipad-final-green/3F156749-FE4C-468A-BD05-2B8D7CF6D966.png"),
+]
 SCREENSHOT = Path(
     "apps/ios/Documentation/QA/2026-08-01/visual-review/onboarding/"
     "6A19087F-6431-4D4F-84F4-CE3EBC0482B9.png"
@@ -648,81 +655,88 @@ def upload_app_screenshots(token: str, localization_id: str) -> None:
         "GET",
         f"/v1/appStoreVersionLocalizations/{localization_id}/appScreenshotSets?limit=200",
     )["data"]
-    screenshot_set = next(
-        (
-            item
-            for item in sets
-            if item.get("attributes", {}).get("screenshotDisplayType") == "APP_IPHONE_61"
-        ),
-        None,
-    )
-    if screenshot_set is None:
-        screenshot_set = api_request(
-            token,
-            "POST",
-            "/v1/appScreenshotSets",
-            {
-                "data": {
-                    "type": "appScreenshotSets",
-                    "attributes": {"screenshotDisplayType": "APP_IPHONE_61"},
-                    "relationships": {
-                        "appStoreVersionLocalization": {
-                            "data": {
-                                "type": "appStoreVersionLocalizations",
-                                "id": localization_id,
-                            }
-                        }
-                    },
-                }
-            },
-        )["data"]
-    existing = api_request(
-        token,
-        "GET",
-        f"/v1/appScreenshotSets/{screenshot_set['id']}/appScreenshots?limit=200",
-    )["data"]
-    if existing:
-        return
-    for position, path in enumerate(APP_SCREENSHOTS, start=1):
-        blob = path.read_bytes()
-        screenshot = api_request(
-            token,
-            "POST",
-            "/v1/appScreenshots",
-            {
-                "data": {
-                    "type": "appScreenshots",
-                    "attributes": {
-                        "fileSize": len(blob),
-                        "fileName": f"yield-{position}-{path.name}",
-                    },
-                    "relationships": {
-                        "appScreenshotSet": {
-                            "data": {"type": "appScreenshotSets", "id": screenshot_set["id"]}
-                        }
-                    },
-                }
-            },
-        )["data"]
-        for operation in screenshot.get("attributes", {}).get("uploadOperations", []):
-            upload_asset(operation, blob)
-        api_request(
-            token,
-            "PATCH",
-            f"/v1/appScreenshots/{screenshot['id']}",
-            {
-                "data": {
-                    "type": "appScreenshots",
-                    "id": screenshot["id"],
-                    "attributes": {
-                        "sourceFileChecksum": hashlib.md5(
-                            blob, usedforsecurity=False
-                        ).hexdigest(),
-                        "uploaded": True,
-                    },
-                }
-            },
+    for display_type, paths in (
+        ("APP_IPHONE_61", APP_SCREENSHOTS),
+        ("APP_IPAD_PRO_3GEN_129", IPAD_SCREENSHOTS),
+    ):
+        screenshot_set = next(
+            (
+                item
+                for item in sets
+                if item.get("attributes", {}).get("screenshotDisplayType") == display_type
+            ),
+            None,
         )
+        if screenshot_set is None:
+            screenshot_set = api_request(
+                token,
+                "POST",
+                "/v1/appScreenshotSets",
+                {
+                    "data": {
+                        "type": "appScreenshotSets",
+                        "attributes": {"screenshotDisplayType": display_type},
+                        "relationships": {
+                            "appStoreVersionLocalization": {
+                                "data": {
+                                    "type": "appStoreVersionLocalizations",
+                                    "id": localization_id,
+                                }
+                            }
+                        },
+                    }
+                },
+            )["data"]
+        existing = api_request(
+            token,
+            "GET",
+            f"/v1/appScreenshotSets/{screenshot_set['id']}/appScreenshots?limit=200",
+        )["data"]
+        if existing:
+            continue
+        for position, path in enumerate(paths, start=1):
+            blob = path.read_bytes()
+            screenshot = api_request(
+                token,
+                "POST",
+                "/v1/appScreenshots",
+                {
+                    "data": {
+                        "type": "appScreenshots",
+                        "attributes": {
+                            "fileSize": len(blob),
+                            "fileName": f"yield-{display_type}-{position}-{path.name}",
+                        },
+                        "relationships": {
+                            "appScreenshotSet": {
+                                "data": {
+                                    "type": "appScreenshotSets",
+                                    "id": screenshot_set["id"],
+                                }
+                            }
+                        },
+                    }
+                },
+            )["data"]
+            for operation in screenshot.get("attributes", {}).get("uploadOperations", []):
+                upload_asset(operation, blob)
+            api_request(
+                token,
+                "PATCH",
+                f"/v1/appScreenshots/{screenshot['id']}",
+                {
+                    "data": {
+                        "type": "appScreenshots",
+                        "id": screenshot["id"],
+                        "attributes": {
+                            "sourceFileChecksum": hashlib.md5(
+                                blob, usedforsecurity=False
+                            ).hexdigest(),
+                            "uploaded": True,
+                        },
+                    }
+                },
+            )
 
 
 def complete_app_store_metadata(
