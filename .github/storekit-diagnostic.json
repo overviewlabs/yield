@@ -1,0 +1,84 @@
+{
+  "subscriptions": [
+    {
+      "attributes": {
+        "familySharable": false,
+        "groupLevel": 4,
+        "name": "Equity Monthly",
+        "productId": "ai.whox.yield.equity.monthly",
+        "reviewNote": "Monthly Yield feature subscription. Brokerage access and trading permissions are separate. The paywall displays localized price, trial eligibility, and renewal terms.",
+        "state": "READY_TO_SUBMIT",
+        "subscriptionPeriod": "ONE_MONTH"
+      },
+      "availability": {
+        "availableInNewTerritories": true
+      },
+      "id": "6797232006",
+      "includesUSA": true,
+      "introductoryOfferCount": 175,
+      "localizationCount": 1,
+      "priceCount": 175,
+      "territoryCount": 175
+    },
+    {
+      "attributes": {
+        "familySharable": false,
+        "groupLevel": 3,
+        "name": "Equity Pro Monthly",
+        "productId": "ai.whox.yield.equitypro.monthly",
+        "reviewNote": "Monthly Yield feature subscription. Brokerage access and trading permissions are separate. The paywall displays localized price, trial eligibility, and renewal terms.",
+        "state": "READY_TO_SUBMIT",
+        "subscriptionPeriod": "ONE_MONTH"
+      },
+      "availability": {
+        "availableInNewTerritories": true
+      },
+      "id": "6797231871",
+      "includesUSA": true,
+      "introductoryOfferCount": 175,
+      "localizationCount": 1,
+      "priceCount": 175,
+      "territoryCount": 175
+    },
+    {
+      "attributes": {
+        "familySharable": false,
+        "groupLevel": 2,
+        "name": "Options Monthly",
+        "productId": "ai.whox.yield.options.monthly",
+        "reviewNote": "Monthly Yield feature subscription. Brokerage access and trading permissions are separate. The paywall displays localized price, trial eligibility, and renewal terms.",
+        "state": "READY_TO_SUBMIT",
+        "subscriptionPeriod": "ONE_MONTH"
+      },
+      "availability": {
+        "availableInNewTerritories": true
+      },
+      "id": "6797231801",
+      "includesUSA": true,
+      "introductoryOfferCount": 175,
+      "localizationCount": 1,
+      "priceCount": 175,
+      "territoryCount": 175
+    },
+    {
+      "attributes": {
+        "familySharable": false,
+        "groupLevel": 1,
+        "name": "Options Pro Monthly",
+        "productId": "ai.whox.yield.optionspro.monthly",
+        "reviewNote": "Monthly Yield feature subscription. Brokerage access and trading permissions are separate. The paywall displays localized price, trial eligibility, and renewal terms.",
+        "state": "READY_TO_SUBMIT",
+        "subscriptionPeriod": "ONE_MONTH"
+      },
+      "availability": {
+        "availableInNewTerritories": true
+      },
+      "id": "6797231900",
+      "includesUSA": true,
+      "introductoryOfferCount": 175,
+      "localizationCount": 1,
+      "priceCount": 175,
+      "territoryCount": 175
+    }
+  ]
+}
