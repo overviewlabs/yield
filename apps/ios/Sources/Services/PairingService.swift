@@ -796,9 +796,13 @@ final class PairingService {
     }
     do {
       let snapshot = try await client.status(for: session.id)
-      lifecycleStatus = snapshot.status
       connectedConnection = snapshot.connection
-      statusMessage = snapshot.message ?? statusText(for: snapshot.status)
+      let preservesBrowserRetry =
+        snapshot.status == .pending && browserAuthorizationURL != nil
+      if !preservesBrowserRetry {
+        lifecycleStatus = snapshot.status
+        statusMessage = snapshot.message ?? statusText(for: snapshot.status)
+      }
       if snapshot.status.isTerminal {
         let shouldReplaceFailedMobileAttempt =
           snapshot.status == .failed && authorizationAttemptID != nil

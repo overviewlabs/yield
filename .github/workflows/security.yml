@@ -88,3 +88,5 @@ jobs:
         uses: github/codeql-action/analyze@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4
         with:
           category: /language:javascript-typescript
+          # This private repository does not currently have GitHub Advanced Security enabled.
+          upload: never
