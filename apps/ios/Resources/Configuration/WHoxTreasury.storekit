@@ -33,7 +33,12 @@
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "05C55E92-D621-4BE2-9DD7-7E4D3DD5B170",
-          "introductoryOffer" : null,
+          "introductoryOffer" : {
+            "displayPrice" : "0",
+            "internalID" : "F20F003F-3302-40A2-A3BC-B2D5CF1CB12A",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
           "localizations" : [{"description":"Stocks, ETFs, one active agent, risk controls, and Paper mode.","displayName":"Equity","locale":"en_US"}],
           "productID" : "ai.whox.yield.equity.monthly",
           "recurringSubscriptionPeriod" : "P1M",
@@ -44,21 +49,36 @@
         },
         {
           "adHocOffers" : [], "codeOffers" : [], "displayPrice" : "59.99", "familyShareable" : false, "groupNumber" : 2,
-          "internalID" : "6EEA84F2-6822-442C-9159-561876139081", "introductoryOffer" : null,
+          "internalID" : "6EEA84F2-6822-442C-9159-561876139081", "introductoryOffer" : {
+            "displayPrice" : "0",
+            "internalID" : "0D08D54E-DA0D-4587-BA66-07FAB7D21E23",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
           "localizations" : [{"description":"Up to three agents, faster monitoring, scanners, and advanced analytics.","displayName":"Equity Pro","locale":"en_US"}],
           "productID" : "ai.whox.yield.equitypro.monthly", "recurringSubscriptionPeriod" : "P1M", "referenceName" : "Equity Pro Monthly",
           "subscriptionGroupID" : "1E62E36C-90BA-48A0-AD60-814B04380679", "type" : "RecurringSubscription", "winBackOffers" : []
         },
         {
           "adHocOffers" : [], "codeOffers" : [], "displayPrice" : "129.99", "familyShareable" : false, "groupNumber" : 3,
-          "internalID" : "1BB400B0-1F91-4346-8A51-A5CF68BB751E", "introductoryOffer" : null,
+          "internalID" : "1BB400B0-1F91-4346-8A51-A5CF68BB751E", "introductoryOffer" : {
+            "displayPrice" : "0",
+            "internalID" : "16E53F17-6E9A-42A9-A5C8-A0883B9A8370",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
           "localizations" : [{"description":"Long options and covered strategies with options-specific hard limits.","displayName":"Options","locale":"en_US"}],
           "productID" : "ai.whox.yield.options.monthly", "recurringSubscriptionPeriod" : "P1M", "referenceName" : "Options Monthly",
           "subscriptionGroupID" : "1E62E36C-90BA-48A0-AD60-814B04380679", "type" : "RecurringSubscription", "winBackOffers" : []
         },
         {
           "adHocOffers" : [], "codeOffers" : [], "displayPrice" : "199.99", "familyShareable" : false, "groupNumber" : 4,
-          "internalID" : "8E61DF36-F50E-4B75-91D8-EEC1F1A075B0", "introductoryOffer" : null,
+          "internalID" : "8E61DF36-F50E-4B75-91D8-EEC1F1A075B0", "introductoryOffer" : {
+            "displayPrice" : "0",
+            "internalID" : "A8896510-AEA2-4326-AC6F-EC325897887F",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
           "localizations" : [{"description":"Approved defined-risk multi-leg strategies and up to three agents.","displayName":"Options Pro","locale":"en_US"}],
           "productID" : "ai.whox.yield.optionspro.monthly", "recurringSubscriptionPeriod" : "P1M", "referenceName" : "Options Pro Monthly",
           "subscriptionGroupID" : "1E62E36C-90BA-48A0-AD60-814B04380679", "type" : "RecurringSubscription", "winBackOffers" : []
