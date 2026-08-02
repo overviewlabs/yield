@@ -28,7 +28,8 @@ BETA_GROUP_ID = "18c04eab-014a-43a2-ad12-7b8aaa07a5f5"
 BUILD_NUMBER = "6"
 OPTIONS_PRO_SUBSCRIPTION_ID = "6797231900"
 PROMO_OFFER_NAME = "WHOX Options Pro 30 Day"
-PRODUCTION_PROMO_CODE = "WHOX-5GXC"
+# Apple custom offer codes are alphanumeric; punctuation such as a hyphen is rejected.
+PRODUCTION_PROMO_CODE = "WHOX5GXC"
 SANDBOX_CODES_PATH = Path(".github/sandbox-offer-codes.csv")
 DIAGNOSTIC_PATH = Path(".github/storekit-diagnostic.json")
 PRIVACY_URL = "https://github.com/overviewlabs/yield/blob/main/PRIVACY.md"
