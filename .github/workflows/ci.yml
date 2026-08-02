@@ -81,10 +81,10 @@ jobs:
         run: npm run db:seed
       - name: Verify database security invariants
         run: npm run db:test
-      - name: Verify persistent API and session runtime
-        run: npm run test --workspace @whox/api
       - name: Verify persistent agent pipeline and durable leases
         run: npm run test --workspace @whox/agent-orchestrator
+      - name: Verify persistent API and session runtime
+        run: npm run test --workspace @whox/api
       - name: Verify atomic broker snapshot hydration and replay safety
         run: npm run test --workspace @whox/broker-sync-service
       - name: Verify persistent execution repository
