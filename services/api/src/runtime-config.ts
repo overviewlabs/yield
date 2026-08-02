@@ -10,6 +10,7 @@ import { PostgresSessionService } from "./postgres-session.js";
 import { PostgresApiDataStore } from "./postgres-store.js";
 import type { ApiServerOptions } from "./server.js";
 import { environmentValue } from "./environment-value.js";
+import { HttpMobileBrokerAuthorizationConnector, ROBINHOOD_CONNECTOR_IDENTITY } from "./http-mobile-broker-connector.js";
 
 export interface ApiRuntimeConfiguration {
   readonly host: string;
@@ -86,6 +87,15 @@ export function loadApiRuntimeConfiguration(): ApiRuntimeConfiguration {
   if(deviceTokenEncryptionKey.equals(authSigningKey)||deviceTokenEncryptionKey.equals(pairingHashPepper)||deviceTokenEncryptionKey.equals(rateLimitKeySecret))throw new DomainError("RUNTIME_SECRETS_NOT_DISTINCT","Device-token encryption, session signing, pairing hash, and rate-limit key secrets must be distinct",500);
   const database=new PostgresTenantDatabase(databaseUrl);
   const rateLimiter=RedisSlidingWindowRateLimiter.fromUrl(redisUrl!,240,60_000);
+  const brokerConnectorUrl=environmentValue(process.env,"BROKER_CONNECTOR_URL");
+  const brokerConnectorSecret=environmentValue(process.env,"BROKER_CONNECTOR_SHARED_SECRET");
+  const robinhoodClientId=environmentValue(process.env,"ROBINHOOD_OAUTH_CLIENT_ID");
+  const mobileBrokerAuthorizationConnector=brokerConnectorUrl===undefined||brokerConnectorSecret===undefined||robinhoodClientId===undefined
+    ? undefined
+    : new HttpMobileBrokerAuthorizationConnector({baseUrl:absoluteUrl("BROKER_CONNECTOR_URL",brokerConnectorUrl),sharedSecret:brokerConnectorSecret,clientId:robinhoodClientId,publicApiUrl});
+  if([brokerConnectorUrl,brokerConnectorSecret,robinhoodClientId].some((value)=>value!==undefined)&&mobileBrokerAuthorizationConnector===undefined){
+    throw new DomainError("BROKER_CONNECTOR_CONFIGURATION_INCOMPLETE","Robinhood connector configuration must be supplied as a complete set",500);
+  }
   return Object.freeze({
     host: process.env.HOST?.trim() || "127.0.0.1",
     port,
@@ -103,7 +113,8 @@ export function loadApiRuntimeConfiguration(): ApiRuntimeConfiguration {
       readinessChecks:[()=>storeKit.healthy()],
       dataStore:new PostgresApiDataStore(database,{deviceBindingKey:authSigningKey,deviceTokenEncryptionKey}),
       sessionManager:new PostgresSessionService(database,authSigningKey),
-      pairingService:new PostgresPairingService(database,connectionWebUrl,pairingHashPepper)
+      pairingService:new PostgresPairingService(database,connectionWebUrl,pairingHashPepper,undefined,mobileBrokerAuthorizationConnector===undefined?undefined:ROBINHOOD_CONNECTOR_IDENTITY),
+      ...(mobileBrokerAuthorizationConnector===undefined?{}:{mobileBrokerAuthorizationConnector})
     }),
     async close():Promise<void>{await Promise.all([database.close(),rateLimiter.close(),storeKit.close()]);}
   });

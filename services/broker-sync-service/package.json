@@ -23,6 +23,7 @@
   "dependencies": {
     "@whox/agent-orchestrator": "*",
     "@whox/contracts": "*",
+    "@whox/execution-worker": "*",
     "@whox/shared-config": "*",
     "pg": "^8.16.3"
   },
