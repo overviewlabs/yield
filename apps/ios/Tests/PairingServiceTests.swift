@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 
-@testable import WHOX_Treasury
+@testable import Metis
 
 final class PairingServiceTests: XCTestCase {
   func testExponentialBackoffCaps() {

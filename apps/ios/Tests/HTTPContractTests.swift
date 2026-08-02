@@ -2,7 +2,7 @@ import AuthenticationServices
 import Foundation
 import XCTest
 
-@testable import WHOX_Treasury
+@testable import Metis
 
 final class HTTPContractTests: XCTestCase {
   override func setUp() {
