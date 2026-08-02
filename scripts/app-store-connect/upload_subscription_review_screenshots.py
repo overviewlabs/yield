@@ -576,6 +576,18 @@ def complete_app_store_metadata(
     api_request(
         token,
         "PATCH",
+        f"/v1/apps/{app_id}",
+        {
+            "data": {
+                "type": "apps",
+                "id": app_id,
+                "attributes": {"contentRightsDeclaration": "USES_THIRD_PARTY_CONTENT"},
+            }
+        },
+    )
+    api_request(
+        token,
+        "PATCH",
         f"/v1/appStoreVersions/{app_version['id']}",
         {
             "data": {
@@ -613,6 +625,64 @@ def complete_app_store_metadata(
         upload_app_screenshots(token, localization["id"])
     app_infos = api_request(token, "GET", f"/v1/apps/{app_id}/appInfos?limit=10")["data"]
     for app_info in app_infos:
+        api_request(
+            token,
+            "PATCH",
+            f"/v1/appInfos/{app_info['id']}",
+            {
+                "data": {
+                    "type": "appInfos",
+                    "id": app_info["id"],
+                    "relationships": {
+                        "primaryCategory": {
+                            "data": {"type": "appCategories", "id": "FINANCE"}
+                        }
+                    },
+                }
+            },
+        )
+        rating = api_request(
+            token,
+            "GET",
+            f"/v1/appInfos/{app_info['id']}/ageRatingDeclaration",
+        )["data"]
+        api_request(
+            token,
+            "PATCH",
+            f"/v1/ageRatingDeclarations/{rating['id']}",
+            {
+                "data": {
+                    "type": "ageRatingDeclarations",
+                    "id": rating["id"],
+                    "attributes": {
+                        "advertising": False,
+                        "alcoholTobaccoOrDrugUseOrReferences": "NONE",
+                        "contests": "NONE",
+                        "gambling": False,
+                        "gamblingSimulated": "NONE",
+                        "gunsOrOtherWeapons": "NONE",
+                        "healthOrWellnessTopics": False,
+                        "lootBox": False,
+                        "medicalOrTreatmentInformation": "NONE",
+                        "messagingAndChat": False,
+                        "parentalControls": False,
+                        "profanityOrCrudeHumor": "NONE",
+                        "ageAssurance": False,
+                        "sexualContentGraphicAndNudity": "NONE",
+                        "sexualContentOrNudity": "NONE",
+                        "socialMedia": False,
+                        "socialMediaAgeRestricted": False,
+                        "horrorOrFearThemes": "NONE",
+                        "matureOrSuggestiveThemes": "NONE",
+                        "unrestrictedWebAccess": False,
+                        "userGeneratedContent": False,
+                        "violenceCartoonOrFantasy": "NONE",
+                        "violenceRealisticProlongedGraphicOrSadistic": "NONE",
+                        "violenceRealistic": "NONE",
+                    },
+                }
+            },
+        )
         info_localizations = api_request(
             token,
             "GET",
@@ -633,6 +703,19 @@ def complete_app_store_metadata(
                     }
                 },
             )
+    builds = api_request(
+        token,
+        "GET",
+        f"/v1/builds?filter[app]={app_id}&filter[version]={BUILD_NUMBER}"
+        "&sort=-uploadedDate&limit=1",
+    )["data"]
+    if builds:
+        api_request(
+            token,
+            "PATCH",
+            f"/v1/appStoreVersions/{app_version['id']}/relationships/build",
+            {"data": {"type": "builds", "id": builds[0]["id"]}},
+        )
     review = api_request(
         token,
         "GET",
