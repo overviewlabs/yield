@@ -98,7 +98,10 @@ def api_request_bytes(token: str, path: str) -> bytes:
     request = urllib.request.Request(
         API_BASE + path,
         method="GET",
-        headers={"Authorization": f"Bearer {token}"},
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Accept": "text/csv",
+        },
     )
     try:
         with urllib.request.urlopen(request, timeout=60) as response:
