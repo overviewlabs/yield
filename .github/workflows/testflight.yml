@@ -18,7 +18,7 @@ on:
       - .github/build-now
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: testflight-${{ github.ref }}
@@ -67,8 +67,19 @@ jobs:
         working-directory: apps/ios
         run: xcodegen generate --spec project.yml
 
-      - name: Verify Swift formatting
-        run: xcrun swift-format lint --recursive --parallel --strict apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget
+      - name: Apply and verify Swift formatting
+        run: |
+          xcrun swift-format format --in-place --recursive --parallel \
+            apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget
+          xcrun swift-format lint --recursive --parallel --strict \
+            apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget
+          if ! git diff --quiet; then
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget
+            git commit -m "Apply Swift formatting"
+            git push
+          fi
 
       - name: Archive
         env:
