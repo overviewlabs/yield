@@ -11,6 +11,7 @@
 	<key>CFBundlePackageType</key><string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key><string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key><string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key><false/>
 	<key>LSApplicationCategoryType</key><string>public.app-category.finance</string>
 	<key>NSFaceIDUsageDescription</key><string>Authenticate sensitive account controls and trade proposal approvals.</string>
 	<!-- Runtime selection is explicit. Release/Paper builds must override this value and provide
