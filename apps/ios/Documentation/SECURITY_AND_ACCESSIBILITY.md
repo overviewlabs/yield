@@ -2,7 +2,7 @@
 
 ## Security invariants
 
-- Robinhood setup uses a short-lived authorization URL placed in a pre-addressed email draft for desktop completion. Robinhood credentials remain outside Yield, and the phone retains only masked pairing status while polling the WHOX API. After a tenant-bound cleanup tombstone commits, an isolated approved connector exchanges the code into a provisional encrypted-vault transaction. Provider confirmation must precede broker hydration. iOS and the ordinary API receive neither token bytes nor Robinhood credentials.
+- Robinhood setup uses a short-lived authorization URL delivered by the WHOX API through its server-side SMTP transport for desktop completion. The entered Robinhood email is normalized and used as the provider's OAuth login hint; the private URL is never returned to the phone. Robinhood credentials remain outside Yield, and the phone retains only masked pairing status while polling the WHOX API. After a tenant-bound cleanup tombstone commits, an isolated approved connector exchanges the code into a provisional encrypted-vault transaction. Provider confirmation must precede broker hydration. iOS and the ordinary API receive neither token bytes nor Robinhood credentials.
 - WHOX access and refresh material uses Keychain items restricted to this device.
 - Sign in with Apple identity tokens are exchanged with the backend; the app never treats an unverified local identity as a production session.
 - StoreKit verification is necessary but not sufficient for server-agent access. Backend JWS verification and acknowledgment are authoritative.

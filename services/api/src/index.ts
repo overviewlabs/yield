@@ -1,6 +1,7 @@
 import { createApiServer } from "./server.js";
 import { loadApiRuntimeConfiguration } from "./runtime-config.js";
 export * from "./server.js";
+export * from "./desktop-link-email.js";
 export * from "./security.js";
 export * from "./pairings.js";
 export * from "./store.js";

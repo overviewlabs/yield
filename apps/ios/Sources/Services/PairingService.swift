@@ -23,10 +23,27 @@ enum PairingClientError: LocalizedError, Equatable {
 protocol BrokerPairingClient: Sendable {
   func createPairing() async throws -> PairingSession
   func startInAppAuthorization(pairingID: UUID) async throws -> MobileAuthorizationHandoff
+  func emailDesktopAuthorization(
+    pairingID: UUID, robinhoodEmail: String
+  ) async throws -> DesktopLinkDelivery
   func abortInAppAuthorization(pairingID: UUID) async throws
   func status(for id: UUID) async throws -> PairingStatusSnapshot
   func cancelPairing(id: UUID) async throws
   func disconnectConnection() async throws
+}
+
+struct DesktopLinkDelivery: Equatable, Sendable {
+  let recipientHint: String
+  let expiresAt: Date
+}
+
+extension BrokerPairingClient {
+  func emailDesktopAuthorization(
+    pairingID: UUID, robinhoodEmail: String
+  ) async throws -> DesktopLinkDelivery {
+    let handoff = try await startInAppAuthorization(pairingID: pairingID)
+    return DesktopLinkDelivery(recipientHint: robinhoodEmail, expiresAt: handoff.expiresAt)
+  }
 }
 
 struct MobileAuthorizationHandoff: Equatable, Sendable {
@@ -143,34 +160,6 @@ enum MobileAuthorizationURLPolicy {
   private static func isRobinhoodAuthorizationHost(_ host: String?) -> Bool {
     guard let host = host?.lowercased() else { return false }
     return host == "robinhood.com" || host.hasSuffix(".robinhood.com")
-  }
-}
-
-enum DesktopPairingEmailURL {
-  static func make(
-    recipient: String, authorizationURL: URL, expiresAt: Date
-  ) -> URL? {
-    let address = recipient.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard !address.isEmpty, address.count <= 254, !address.contains("\n"),
-      !address.contains("\r")
-    else {
-      return nil
-    }
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    formatter.timeStyle = .short
-    var components = URLComponents()
-    components.scheme = "mailto"
-    components.path = address
-    components.queryItems = [
-      URLQueryItem(name: "subject", value: "Your Yield Robinhood connection link"),
-      URLQueryItem(
-        name: "body",
-        value:
-          "Open this single-use link on your desktop computer to connect Robinhood to Yield:\n\n\(authorizationURL.absoluteString)\n\nThis link expires \(formatter.string(from: expiresAt)). If you did not request it, do not open it. Yield never asks for your Robinhood password by email."
-      ),
-    ]
-    return components.url
   }
 }
 
@@ -386,6 +375,27 @@ struct HTTPBrokerPairingClient: BrokerPairingClient {
     return decoded.handoff
   }
 
+  func emailDesktopAuthorization(
+    pairingID: UUID, robinhoodEmail: String
+  ) async throws -> DesktopLinkDelivery {
+    var request = URLRequest(
+      url: baseURL.appending(path: "v1/brokers/robinhood/desktop-link/email"))
+    request.httpMethod = "POST"
+    request.httpBody = try JSONEncoder().encode(
+      DesktopLinkEmailBody(pairingID: pairingID, robinhoodEmail: robinhoodEmail))
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("application/json", forHTTPHeaderField: "Accept")
+    try await authorize(&request)
+    let (data, response) = try await urlSession.data(for: request)
+    try validate(response)
+    let decoded = try decoder.decode(DesktopLinkEmailResponse.self, from: data)
+    guard decoded.delivered, decoded.expiresAt > .now else {
+      throw PairingClientError.invalidResponse
+    }
+    return DesktopLinkDelivery(
+      recipientHint: decoded.recipientHint, expiresAt: decoded.expiresAt)
+  }
+
   func abortInAppAuthorization(pairingID: UUID) async throws {
     var request = URLRequest(
       url: baseURL.appending(path: "v1/brokers/robinhood/mobile-oauth/abort"))
@@ -574,6 +584,22 @@ struct HTTPBrokerPairingClient: BrokerPairingClient {
     }
   }
 
+  private struct DesktopLinkEmailBody: Encodable {
+    let pairingID: UUID
+    let robinhoodEmail: String
+
+    enum CodingKeys: String, CodingKey {
+      case pairingID = "pairingId"
+      case robinhoodEmail
+    }
+  }
+
+  private struct DesktopLinkEmailResponse: Decodable {
+    let delivered: Bool
+    let recipientHint: String
+    let expiresAt: Date
+  }
+
   private struct MobileAuthorizationStartResponse: Decodable {
     let authorizationURL: URL
     let callbackScheme: String
@@ -626,9 +652,8 @@ struct HTTPBrokerPairingClient: BrokerPairingClient {
 @Observable
 final class PairingService {
   private(set) var session: PairingSession?
-  /// Short-lived, PKCE-bound Robinhood destination returned by the WHOX server.
-  /// It contains no broker token or authorization code and may be reopened or
-  /// moved to another trusted browser while the authorization remains valid.
+  /// Used only by the direct in-app authorization path. Desktop email delivery
+  /// intentionally never returns its private authorization URL to the phone.
   private(set) var browserAuthorizationURL: URL?
   private(set) var browserAuthorizationExpiresAt: Date?
   private(set) var lifecycleStatus: PairingLifecycleStatus?
@@ -636,7 +661,7 @@ final class PairingService {
   private(set) var isPolling = false
   private(set) var isAuthorizingInApp = false
   private(set) var statusMessage =
-    "Email a single-use link to yourself and open it on a desktop computer."
+    "Enter your Robinhood email to receive a single-use desktop link."
   private(set) var lastScheduledDelay: Double?
   private(set) var pollAttempt = 0
   @ObservationIgnored private let client: any BrokerPairingClient
@@ -665,7 +690,7 @@ final class PairingService {
       lifecycleStatus = .pending
       connectedConnection = nil
       statusMessage =
-        "Setup is ready. Continue in Robinhood’s secure sign-in browser."
+        "Setup is ready. Enter your Robinhood email to receive the desktop link."
       startPolling()
     } catch {
       lifecycleStatus = .failed
@@ -747,56 +772,51 @@ final class PairingService {
     }
   }
 
-  func prepareDesktopHandoff() async -> URL? {
-    guard !isAuthorizingInApp else { return nil }
+  func sendDesktopHandoff(to robinhoodEmail: String) async -> Bool {
+    guard !isAuthorizingInApp else { return false }
     if lifecycleStatus == .connected {
       statusMessage =
         "Disconnect the current Robinhood authorization before starting a replacement connection."
-      return nil
-    }
-    if let browserAuthorizationURL, let browserAuthorizationExpiresAt,
-      browserAuthorizationExpiresAt > .now
-    {
-      lifecycleStatus = .authorizing
-      statusMessage =
-        "Your desktop link is ready. Send the email, open it on your computer, and complete Robinhood sign-in while Yield waits for confirmation."
-      return browserAuthorizationURL
+      return false
     }
     if session == nil || lifecycleStatus?.isTerminal == true {
       await generate()
-      guard lifecycleStatus == .pending else { return nil }
+      guard lifecycleStatus == .pending else { return false }
     }
     guard let pairing = session, pairing.expiresAt > .now else {
       finish(status: .expired, message: "The pairing expired. Generate a new desktop link.")
-      return nil
+      return false
     }
 
     let attemptID = UUID()
     authorizationAttemptID = attemptID
     isAuthorizingInApp = true
     lifecycleStatus = .authorizing
-    statusMessage = "Preparing a single-use Robinhood link for your desktop computer."
+    statusMessage = "Sending a single-use Robinhood link to your email."
     do {
-      let handoff = try await client.startInAppAuthorization(pairingID: pairing.id)
-      guard authorizationAttemptID == attemptID else { return nil }
-      try MobileAuthorizationURLPolicy.validate(handoff, pairing: pairing)
-      browserAuthorizationURL = handoff.authorizationURL
-      browserAuthorizationExpiresAt = handoff.expiresAt
+      let delivery = try await client.emailDesktopAuthorization(
+        pairingID: pairing.id, robinhoodEmail: robinhoodEmail)
+      guard authorizationAttemptID == attemptID else { return false }
+      guard delivery.expiresAt > .now, delivery.expiresAt <= pairing.expiresAt else {
+        throw PairingClientError.invalidResponse
+      }
+      browserAuthorizationURL = nil
+      browserAuthorizationExpiresAt = delivery.expiresAt
       authorizationAttemptID = nil
       isAuthorizingInApp = false
       lifecycleStatus = .authorizing
       statusMessage =
-        "Your desktop link is ready. Send the email, open it on your computer, and complete Robinhood sign-in while Yield waits for confirmation."
-      return handoff.authorizationURL
+        "Link sent to \(delivery.recipientHint). Open it on your computer and complete Robinhood sign-in while Yield waits for confirmation."
+      return true
     } catch {
-      guard authorizationAttemptID == attemptID else { return nil }
+      guard authorizationAttemptID == attemptID else { return false }
       authorizationAttemptID = nil
       isAuthorizingInApp = false
       lifecycleStatus = .pending
       statusMessage =
         (error as? LocalizedError)?.errorDescription
         ?? "The desktop connection link could not be prepared. Try again."
-      return nil
+      return false
     }
   }
 

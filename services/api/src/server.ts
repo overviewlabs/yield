@@ -21,6 +21,7 @@ import { UnavailableStoreKitTransactionVerifier, type StoreKitSyncRequest, type 
 import { rateLimitClientKey, trustedClientAddress, type ApiRateLimiter } from "./distributed-rate-limit.js";
 import { UnavailableStoreKitServerNotificationHandler, type AppStoreServerNotificationHandler } from "./storekit-notifications.js";
 import { MOBILE_BROKER_RETURN_URI, connectorIdentitiesMatch, sanitizedMobileReturn, validateAuthorizationDestination, validateAuthorizationExchange, validateMobileBrokerConnector } from "./mobile-broker-authorization.js";
+import { UnavailableDesktopLinkEmailSender, validatedRobinhoodEmail, type DesktopLinkEmailSender } from "./desktop-link-email.js";
 
 type Json = unknown;
 
@@ -65,6 +66,7 @@ export interface ApiServerOptions {
   readonly readinessChecks?: readonly (() => boolean | Promise<boolean>)[];
   readonly mobileBrokerAuthorizationConnector?: ApprovedMobileBrokerAuthorizationConnector;
   readonly brokerConnectorTimeoutMs?: number;
+  readonly desktopLinkEmailSender?: DesktopLinkEmailSender;
 }
 
 function compilePath(path: string): { pattern: RegExp; names: string[] } {
@@ -163,6 +165,7 @@ export function createApiServer(options: ApiServerOptions = {}): Server {
   const storeKitNotificationHandlers = options.storeKitNotificationHandlers ?? new Map();
   const now = options.now ?? (() => new Date());
   const brokerConnectorTimeoutMs = options.brokerConnectorTimeoutMs ?? 15_000;
+  const desktopLinkEmailSender = options.desktopLinkEmailSender ?? new UnavailableDesktopLinkEmailSender();
   if (!Number.isInteger(brokerConnectorTimeoutMs) || brokerConnectorTimeoutMs < 1 || brokerConnectorTimeoutMs > 60_000) throw new DomainError("BROKER_CONNECTOR_TIMEOUT_INVALID", "Broker connector timeout is invalid", 500);
   const routes: Route[] = [];
   const add = (method: string, path: string, authenticated: boolean, handler: Handler): void => {
@@ -341,7 +344,7 @@ export function createApiServer(options: ApiServerOptions = {}): Server {
     return { status: 302, headers: { location: redirect.href, "cache-control": "no-store" } };
   });
   add("GET", "/v1/brokers/robinhood/oauth/callback", false, () => { throw new DomainError("ROBINHOOD_AUTHORIZATION_UNAVAILABLE", "OAuth callback exchange is delegated to the isolated connection service and is not configured", 503); });
-  add("POST", "/v1/brokers/robinhood/mobile-oauth/start", true, async (context) => ({ body: await mutate(context, async () => {
+  const beginMobileAuthorization = async (context: Context, loginHint?: string): Promise<Readonly<Record<string, unknown>>> => {
     if (mobileBrokerAuthorizationConnector === undefined || mobileBrokerMetadata === undefined || pairings.beginMobileAuthorization === undefined || pairings.resetMobileAuthorization === undefined || pairings.mobileCallbackSecrets === undefined || pairings.beginMobileExchangeForSession === undefined || pairings.completeMobileForSession === undefined || pairings.loadAuthorizationExchange === undefined || pairings.requestAuthorizationExchangeRevocation === undefined || pairings.acknowledgeAuthorizationExchangeRevocation === undefined || pairings.loadAuthorizationSaga === undefined || pairings.requestAuthorizationRevocation === undefined || pairings.acknowledgeAuthorizationConfirmation === undefined || pairings.acknowledgeAuthorizationRevocation === undefined || pairings.concludeMobileWithoutConnection === undefined) {
       throw new DomainError("ROBINHOOD_MOBILE_OAUTH_UNAVAILABLE", "Mobile authorization is disabled until an approved provider OAuth contract and callback exchange adapter are configured", 503);
     }
@@ -357,7 +360,8 @@ export function createApiServer(options: ApiServerOptions = {}): Server {
       clientId: mobileBrokerMetadata.clientId,
       scopes: Object.freeze([...mobileBrokerMetadata.allowedScopes]),
       redirectUri: mobileBrokerMetadata.redirectUri,
-      resourceUri: mobileBrokerMetadata.identity.resourceUri
+      resourceUri: mobileBrokerMetadata.identity.resourceUri,
+      ...(loginHint === undefined ? {} : { loginHint })
     });
     try {
       const started = await withBrokerConnectorTimeout(async (signal) => await mobileBrokerAuthorizationConnector.beginAuthorization(request, signal), brokerConnectorTimeoutMs);
@@ -368,7 +372,21 @@ export function createApiServer(options: ApiServerOptions = {}): Server {
       if (error instanceof DomainError) throw error;
       throw new DomainError("BROKER_AUTHORIZATION_PROVIDER_UNAVAILABLE", "Broker authorization provider is temporarily unavailable", 503);
     }
-  }) }));
+  };
+  add("POST", "/v1/brokers/robinhood/mobile-oauth/start", true, async (context) => ({ body: await mutate(context, async () => await beginMobileAuthorization(context)) }));
+  add("POST", "/v1/brokers/robinhood/desktop-link/email", true, async (context) => {
+    if (Object.keys(context.body).length !== 2 || !Object.prototype.hasOwnProperty.call(context.body, "pairingId") || !Object.prototype.hasOwnProperty.call(context.body, "robinhoodEmail")) {
+      throw new DomainError("DESKTOP_LINK_REQUEST_INVALID", "A pairing and Robinhood email address are required", 422);
+    }
+    const robinhoodEmail = validatedRobinhoodEmail(context.body.robinhoodEmail);
+    const started = await beginMobileAuthorization({ ...context, body: { pairingId: context.body.pairingId } }, robinhoodEmail);
+    const authorizationUrl = String(started.authorizationUrl ?? "");
+    const expiresAt = String(started.expiresAt ?? "");
+    await desktopLinkEmailSender.send({ recipient: robinhoodEmail, authorizationUrl, expiresAt });
+    const [local, domain] = robinhoodEmail.split("@");
+    const recipientHint = `${local!.slice(0, 1)}***@${domain}`;
+    return { body: { delivered: true, recipientHint, expiresAt } };
+  });
   add("POST", "/v1/brokers/robinhood/mobile-oauth/abort", true, async (context) => ({ body: await mutate(context, async () => {
     if (pairings.abortMobileAuthorization === undefined) throw new DomainError("ROBINHOOD_MOBILE_OAUTH_UNAVAILABLE", "Mobile authorization state cannot be managed by this runtime", 503);
     const pairingId = pairingIdBody(context.body);

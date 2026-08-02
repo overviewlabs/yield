@@ -285,6 +285,8 @@ export interface MobileBrokerAuthorizationStartRequest {
   readonly scopes: readonly string[];
   readonly redirectUri: string;
   readonly resourceUri: string;
+  /** Optional provider-recognized account hint. It is never used as WHOX identity evidence. */
+  readonly loginHint?: string;
 }
 
 export interface MobileBrokerAuthorizationExchangeRequest {

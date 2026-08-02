@@ -47,12 +47,13 @@ describe("Robinhood isolated authorization connector", () => {
       const start = await connector.beginAuthorization({
         state: "opaque-state", codeChallenge: "opaque-challenge", codeChallengeMethod: "S256",
         clientId: "public-client-id", scopes: ["internal"], redirectUri: connector.metadata.redirectUri,
-        resourceUri: connector.identity.resourceUri
+        resourceUri: connector.identity.resourceUri, loginHint: "person@example.com"
       });
       const destination = new URL(start.authorizationUrl);
       assert.equal(destination.href.startsWith("https://robinhood.com/oauth?"), true);
       assert.equal(destination.searchParams.get("state"), "opaque-state");
       assert.equal(destination.searchParams.get("code_challenge"), "opaque-challenge");
+      assert.equal(destination.searchParams.get("login_hint"), "person@example.com");
       const transactionId = "11111111-1111-4111-8111-111111111111";
       const exchange = await connector.exchangeAuthorizationCode({
         exchangeTransactionId: transactionId, code: "one-time-code", codeVerifier: "verifier",

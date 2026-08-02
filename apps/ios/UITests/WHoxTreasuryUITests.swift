@@ -228,6 +228,10 @@ final class WHoxTreasuryUITests: XCTestCase {
     assertText("Connect Robinhood")
     XCTAssertTrue(app.staticTexts["Secure desktop handoff"].exists)
     attachScreenshot("10-connection-empty")
+    let robinhoodEmail = app.textFields["robinhoodEmailField"]
+    scrollUntilHittable(robinhoodEmail)
+    robinhoodEmail.tap()
+    robinhoodEmail.typeText("person@example.com")
     let connect = app.buttons["Email Desktop Link"]
     scrollUntilHittable(connect)
     connect.tap()

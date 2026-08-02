@@ -11,6 +11,7 @@ struct OnboardingFlowView: View {
   @State private var pendingAppleNonce: String?
   @State private var isPresentingOfferCodeRedemption = false
   @State private var productIDsBeforeOfferCodeRedemption: Set<String> = []
+  @State private var robinhoodEmail = ""
 
   var body: some View {
     NavigationStack {
@@ -535,13 +536,13 @@ struct OnboardingFlowView: View {
       onboardingTitle(
         "Connect Robinhood",
         subtitle:
-          "Email a single-use connection link to your verified account address, then open it on a desktop computer. Yield waits for server confirmation and receives only masked connection status—never your Robinhood password, OAuth code, broker token, or MCP credential."
+          "Enter the email address used for Robinhood. Yield emails a single-use connection link for you to open on a computer, then waits for server confirmation. Yield receives only masked connection status—never your Robinhood password, OAuth code, broker token, or MCP credential."
       )
 
       DisclosureNotice(
         title: "Secure desktop handoff",
         message:
-          "Yield creates a short-lived link and opens a pre-addressed email draft. Tap Send, open the link on your computer, and complete Robinhood sign-in there while this app waits.",
+          "Yield securely sends a short-lived link to the address you enter. The Robinhood sign-in page receives that address as a login hint, and this app keeps checking for completion.",
         symbol: "envelope", color: .blue
       )
 
@@ -555,15 +556,17 @@ struct OnboardingFlowView: View {
           .font(.subheadline).foregroundStyle(
             session.pairingService.lifecycleStatus == .connected ? .green : .secondary)
           if session.pairingService.lifecycleStatus != .connected {
+            robinhoodEmailField
             Button("Email Desktop Link", systemImage: "envelope") {
               Task {
-                await session.emailRobinhoodDesktopLink()
+                await session.emailRobinhoodDesktopLink(to: robinhoodEmail)
                 session.adoptCompletedPairing()
               }
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
-            .disabled(session.pairingService.isAuthorizingInApp)
+            .disabled(session.pairingService.isAuthorizingInApp || normalizedRobinhoodEmail.isEmpty)
+            desktopLinkCountdown
             if session.mode == .demo {
               Button("Complete Demo Pairing") {
                 Task {
@@ -603,16 +606,42 @@ struct OnboardingFlowView: View {
           symbol: "timer"
         )
         .treasuryCard()
+        robinhoodEmailField
         Button("Email Desktop Link", systemImage: "envelope") {
           Task {
-            await session.emailRobinhoodDesktopLink()
+            await session.emailRobinhoodDesktopLink(to: robinhoodEmail)
             session.adoptCompletedPairing()
           }
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
         .frame(maxWidth: .infinity)
+        .disabled(normalizedRobinhoodEmail.isEmpty)
         .accessibilityIdentifier("connectRobinhoodButton")
+      }
+    }
+  }
+
+  private var normalizedRobinhoodEmail: String {
+    robinhoodEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+  }
+
+  private var robinhoodEmailField: some View {
+    TextField("Robinhood email address", text: $robinhoodEmail)
+      .textContentType(.emailAddress)
+      .keyboardType(.emailAddress)
+      .textInputAutocapitalization(.never)
+      .autocorrectionDisabled()
+      .accessibilityIdentifier("robinhoodEmailField")
+  }
+
+  @ViewBuilder private var desktopLinkCountdown: some View {
+    if let expiresAt = session.pairingService.browserAuthorizationExpiresAt {
+      TimelineView(.periodic(from: .now, by: 1)) { context in
+        let remaining = max(0, Int(expiresAt.timeIntervalSince(context.date).rounded(.up)))
+        Text(String(format: "Link expires in %d:%02d", remaining / 60, remaining % 60))
+          .font(.caption.monospacedDigit())
+          .foregroundStyle(remaining == 0 ? .red : .secondary)
       }
     }
   }

@@ -11,6 +11,7 @@ import { PostgresApiDataStore } from "./postgres-store.js";
 import type { ApiServerOptions } from "./server.js";
 import { environmentValue } from "./environment-value.js";
 import { HttpMobileBrokerAuthorizationConnector, ROBINHOOD_CONNECTOR_IDENTITY } from "./http-mobile-broker-connector.js";
+import { SmtpDesktopLinkEmailSender } from "./desktop-link-email.js";
 
 export interface ApiRuntimeConfiguration {
   readonly host: string;
@@ -96,6 +97,14 @@ export function loadApiRuntimeConfiguration(): ApiRuntimeConfiguration {
   if([brokerConnectorUrl,brokerConnectorSecret,robinhoodClientId].some((value)=>value!==undefined)&&mobileBrokerAuthorizationConnector===undefined){
     throw new DomainError("BROKER_CONNECTOR_CONFIGURATION_INCOMPLETE","Robinhood connector configuration must be supplied as a complete set",500);
   }
+  const smtpHost=environmentValue(process.env,"SMTP_HOST");
+  const smtpUsername=environmentValue(process.env,"SMTP_USERNAME");
+  const smtpPassword=environmentValue(process.env,"SMTP_PASSWORD");
+  const smtpFrom=environmentValue(process.env,"SMTP_FROM");
+  const smtpPort=Number(process.env.SMTP_PORT??"465");
+  const smtpValues=[smtpHost,smtpUsername,smtpPassword,smtpFrom];
+  if(smtpValues.some((value)=>value!==undefined)&&smtpValues.some((value)=>value===undefined))throw new DomainError("SMTP_CONFIGURATION_INCOMPLETE","SMTP configuration must be supplied as a complete set",500);
+  const desktopLinkEmailSender=smtpHost===undefined?undefined:new SmtpDesktopLinkEmailSender({host:smtpHost,port:smtpPort,username:smtpUsername!,password:smtpPassword!,from:smtpFrom!});
   return Object.freeze({
     host: process.env.HOST?.trim() || "127.0.0.1",
     port,
@@ -114,7 +123,8 @@ export function loadApiRuntimeConfiguration(): ApiRuntimeConfiguration {
       dataStore:new PostgresApiDataStore(database,{deviceBindingKey:authSigningKey,deviceTokenEncryptionKey}),
       sessionManager:new PostgresSessionService(database,authSigningKey),
       pairingService:new PostgresPairingService(database,connectionWebUrl,pairingHashPepper,undefined,mobileBrokerAuthorizationConnector===undefined?undefined:ROBINHOOD_CONNECTOR_IDENTITY),
-      ...(mobileBrokerAuthorizationConnector===undefined?{}:{mobileBrokerAuthorizationConnector})
+      ...(mobileBrokerAuthorizationConnector===undefined?{}:{mobileBrokerAuthorizationConnector}),
+      ...(desktopLinkEmailSender===undefined?{}:{desktopLinkEmailSender})
     }),
     async close():Promise<void>{await Promise.all([database.close(),rateLimiter.close(),storeKit.close()]);}
   });

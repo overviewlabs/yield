@@ -102,6 +102,8 @@ export function validateAuthorizationDestination(
   requireSingleParameter(destination, "code_challenge_method", "S256");
   requireSingleParameter(destination, "redirect_uri", request.redirectUri);
   requireSingleParameter(destination, "resource", request.resourceUri);
+  if (request.loginHint !== undefined) requireSingleParameter(destination, "login_hint", request.loginHint);
+  else if (destination.searchParams.has("login_hint")) throw new DomainError("BROKER_AUTHORIZATION_URL_INVALID", "Approved authorization URL contains an unrequested login hint", 503);
   const scopeValues = destination.searchParams.getAll("scope");
   const actualScopes = scopeValues.length === 1 ? scopeValues[0]!.split(" ") : [];
   if (actualScopes.some((scope) => scope === "") || actualScopes.length !== request.scopes.length || [...actualScopes].sort().some((scope, index) => scope !== [...request.scopes].sort()[index])) {

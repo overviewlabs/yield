@@ -595,6 +595,7 @@ private struct ConnectionValueRow: View {
 private struct BrokerPairingSheet: View {
   @Environment(AppSession.self) private var session
   @Environment(\.dismiss) private var dismiss
+  @State private var robinhoodEmail = ""
 
   var body: some View {
     NavigationStack {
@@ -604,7 +605,7 @@ private struct BrokerPairingSheet: View {
             DisclosureNotice(
               title: "Secure Robinhood handoff",
               message:
-                "Yield creates a short-lived desktop connection link in a pre-addressed email draft. Send it to yourself, open it on your computer, and complete Robinhood sign-in while the app waits for server confirmation.",
+                "Yield sends a short-lived connection link to your Robinhood email. Open it on your computer and complete sign-in while the app waits for server confirmation.",
               symbol: "envelope", color: .blue)
             Text(session.pairingService.statusMessage).multilineTextAlignment(.center)
               .foregroundStyle(.secondary)
@@ -615,15 +616,17 @@ private struct BrokerPairingSheet: View {
               }
               .buttonStyle(.borderedProminent).controlSize(.large)
             } else {
+              robinhoodEmailField
               Button("Email Desktop Link", systemImage: "envelope") {
                 Task {
-                  await session.emailRobinhoodDesktopLink()
+                  await session.emailRobinhoodDesktopLink(to: robinhoodEmail)
                   session.adoptCompletedPairing()
                 }
               }
               .buttonStyle(.borderedProminent)
               .controlSize(.large)
-              .disabled(session.pairingService.isAuthorizingInApp)
+              .disabled(session.pairingService.isAuthorizingInApp || normalizedRobinhoodEmail.isEmpty)
+              desktopLinkCountdown
               if session.mode == .demo {
                 Button("Complete Demo Pairing") {
                   Task {
@@ -647,15 +650,17 @@ private struct BrokerPairingSheet: View {
             BrandArtworkView(size: 76)
             Text("Connect Robinhood on your computer").font(.title2.bold())
             Text(
-              "Yield will create a single-use connection link and address an email draft to your verified account email."
+              "Enter the email used for Robinhood. Yield will securely send a single-use desktop connection link."
             ).multilineTextAlignment(.center).foregroundStyle(.secondary)
+            robinhoodEmailField
             Button("Email Desktop Link", systemImage: "envelope") {
               Task {
-                await session.emailRobinhoodDesktopLink()
+                await session.emailRobinhoodDesktopLink(to: robinhoodEmail)
                 session.adoptCompletedPairing()
               }
             }
             .buttonStyle(.borderedProminent).controlSize(.large)
+            .disabled(normalizedRobinhoodEmail.isEmpty)
           }
         }
         .padding(24)
@@ -666,6 +671,29 @@ private struct BrokerPairingSheet: View {
     }
     .presentationDetents([.large])
     .interactiveDismissDisabled(session.pairingService.isAuthorizingInApp)
+  }
+
+  private var normalizedRobinhoodEmail: String {
+    robinhoodEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+  }
+
+  private var robinhoodEmailField: some View {
+    TextField("Robinhood email address", text: $robinhoodEmail)
+      .textContentType(.emailAddress)
+      .keyboardType(.emailAddress)
+      .textInputAutocapitalization(.never)
+      .autocorrectionDisabled()
+  }
+
+  @ViewBuilder private var desktopLinkCountdown: some View {
+    if let expiresAt = session.pairingService.browserAuthorizationExpiresAt {
+      TimelineView(.periodic(from: .now, by: 1)) { context in
+        let remaining = max(0, Int(expiresAt.timeIntervalSince(context.date).rounded(.up)))
+        Text(String(format: "Link expires in %d:%02d", remaining / 60, remaining % 60))
+          .font(.caption.monospacedDigit())
+          .foregroundStyle(remaining == 0 ? .red : .secondary)
+      }
+    }
   }
 
 }

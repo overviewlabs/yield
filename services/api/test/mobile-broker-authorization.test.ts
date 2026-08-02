@@ -12,6 +12,7 @@ import {
 } from "@whox/contracts";
 import { PairingService } from "../src/pairings.js";
 import { createApiServer } from "../src/server.js";
+import type { DesktopLinkEmail, DesktopLinkEmailSender } from "../src/desktop-link-email.js";
 
 const now = "2026-08-01T14:00:00.000Z";
 const identity: ApprovedBrokerConnectorIdentity = Object.freeze({
@@ -63,6 +64,7 @@ class TestMobileConnector implements ApprovedMobileBrokerAuthorizationConnector 
     destination.searchParams.set("code_challenge_method", request.codeChallengeMethod);
     destination.searchParams.set("redirect_uri", request.redirectUri);
     destination.searchParams.set("resource", request.resourceUri);
+    if (request.loginHint !== undefined) destination.searchParams.set("login_hint", request.loginHint);
     return { authorizationUrl: destination.href };
   }
 
@@ -93,12 +95,17 @@ class TestMobileConnector implements ApprovedMobileBrokerAuthorizationConnector 
   }
 }
 
+class CapturingDesktopLinkEmailSender implements DesktopLinkEmailSender {
+  public readonly messages: DesktopLinkEmail[] = [];
+  async send(message: DesktopLinkEmail): Promise<void> { this.messages.push(message); }
+}
+
 const servers: ReturnType<typeof createApiServer>[] = [];
 afterEach(async () => {
   await Promise.all(servers.splice(0).map(async (server) => await new Promise<void>((resolve) => server.close(() => resolve()))));
 });
 
-async function startServer(connector?: TestMobileConnector, brokerConnectorTimeoutMs?: number) {
+async function startServer(connector?: TestMobileConnector, brokerConnectorTimeoutMs?: number, desktopLinkEmailSender?: DesktopLinkEmailSender) {
   const pairings = new PairingService(new URL("https://connect.whox.test"), Buffer.alloc(32, 72), 10 * 60_000, connector === undefined ? undefined : identity);
   let stepUpSequence = 0;
   const server = createApiServer({
@@ -122,6 +129,7 @@ async function startServer(connector?: TestMobileConnector, brokerConnectorTimeo
     },
     ...(connector === undefined ? {} : { mobileBrokerAuthorizationConnector: connector }),
     ...(brokerConnectorTimeoutMs === undefined ? {} : { brokerConnectorTimeoutMs }),
+    ...(desktopLinkEmailSender === undefined ? {} : { desktopLinkEmailSender }),
     now: () => new Date(now)
   });
   servers.push(server);
@@ -167,6 +175,30 @@ async function disconnect(base: string, accessToken: string, deviceId: string, k
 }
 
 describe("server-driven mobile broker authorization", () => {
+  it("emails a token-free response while applying the Robinhood login hint to the private authorization link", async () => {
+    const connector = new TestMobileConnector();
+    const emailSender = new CapturingDesktopLinkEmailSender();
+    const base = await startServer(connector, undefined, emailSender);
+    const accessToken = await login(base, "desktop-email-device");
+    const pairing = await createPairing(base, accessToken, "create-desktop-email-pairing");
+
+    const response = await fetch(`${base}/v1/brokers/robinhood/desktop-link/email`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${accessToken}`, "content-type": "application/json" },
+      body: JSON.stringify({ pairingId: pairing.pairingId, robinhoodEmail: "person@example.com" })
+    });
+
+    assert.equal(response.status, 200);
+    const body = await response.json() as Record<string, unknown>;
+    assert.equal(body.delivered, true);
+    assert.equal(body.recipientHint, "p***@example.com");
+    assert.equal("authorizationUrl" in body, false);
+    assert.equal(emailSender.messages.length, 1);
+    assert.equal(emailSender.messages[0]!.recipient, "person@example.com");
+    assert.equal(new URL(emailSender.messages[0]!.authorizationUrl).searchParams.get("login_hint"), "person@example.com");
+    assert.equal(connector.starts[0]!.loginHint, "person@example.com");
+  });
+
   it("binds PKCE and opaque state, exchanges only on the server, and returns a token-free app callback", async () => {
     const connector = new TestMobileConnector();
     const base = await startServer(connector);

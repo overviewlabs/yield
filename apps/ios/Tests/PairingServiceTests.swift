@@ -98,42 +98,21 @@ final class PairingServiceTests: XCTestCase {
     }
   }
 
-  func testDesktopPairingEmailContainsOnlyRecipientAndShortLivedAuthorizationLink() throws {
-    let authorizationURL = URL(
-      string: "https://agent.robinhood.com/oauth/authorize?state=opaque&code_challenge=safe")!
-    let emailURL = try XCTUnwrap(
-      DesktopPairingEmailURL.make(
-        recipient: "person@example.com", authorizationURL: authorizationURL,
-        expiresAt: Date(timeIntervalSince1970: 1_800_000_000)))
-    let components = try XCTUnwrap(
-      URLComponents(url: emailURL, resolvingAgainstBaseURL: false))
-
-    XCTAssertEqual(components.scheme, "mailto")
-    XCTAssertEqual(components.path, "person@example.com")
-    XCTAssertEqual(
-      components.queryItems?.first(where: { $0.name == "subject" })?.value,
-      "Your Yield Robinhood connection link")
-    let body = try XCTUnwrap(
-      components.queryItems?.first(where: { $0.name == "body" })?.value)
-    XCTAssertTrue(body.contains(authorizationURL.absoluteString))
-    XCTAssertFalse(body.localizedCaseInsensitiveContains("password="))
-  }
-
   @MainActor
-  func testDesktopHandoffPreparesLinkWithoutOpeningMobileBrowser() async {
+  func testDesktopHandoffRequestsServerDeliveryWithoutOpeningMobileBrowser() async {
     let client = MobileAuthorizationPairingClient(result: .failed)
     let presenter = CapturingAuthorizationPresenter(result: .verificationPending)
     let service = PairingService(
       client: client, authorizationPresenter: presenter,
       backoff: .init(baseSeconds: 60, maximumSeconds: 60))
 
-    let url = await service.prepareDesktopHandoff()
+    let delivered = await service.sendDesktopHandoff(to: "person@example.com")
 
-    XCTAssertEqual(url, URL(string: "https://agent.robinhood.com/oauth/authorize"))
+    XCTAssertTrue(delivered)
     XCTAssertEqual(presenter.authorizationCount, 0)
     XCTAssertEqual(service.lifecycleStatus, .authorizing)
     XCTAssertTrue(service.isPolling)
-    XCTAssertTrue(service.statusMessage.contains("desktop"))
+    XCTAssertTrue(service.statusMessage.contains("person@example.com"))
   }
 
   @MainActor

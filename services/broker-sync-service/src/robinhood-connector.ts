@@ -158,6 +158,7 @@ export class RobinhoodConnector implements ApprovedMobileBrokerAuthorizationConn
       code_challenge: request.codeChallenge, code_challenge_method: request.codeChallengeMethod,
       redirect_uri: request.redirectUri, resource: request.resourceUri
     };
+    if (request.loginHint !== undefined) values.login_hint = request.loginHint;
     for (const [key, value] of Object.entries(values)) url.searchParams.set(key, value);
     return Object.freeze({ authorizationUrl: url.href });
   }

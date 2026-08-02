@@ -1,7 +1,6 @@
 import AuthenticationServices
 import Foundation
 import Observation
-import UIKit
 
 enum ContentLoadPhase: Equatable {
   case idle
@@ -554,25 +553,16 @@ final class AppSession {
   }
 
   @discardableResult
-  func emailRobinhoodDesktopLink() async -> Bool {
-    guard !profile.email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-      alertMessage =
-        "Yield does not have a verified account email. Sign in again before requesting a desktop link."
+  func emailRobinhoodDesktopLink(to robinhoodEmail: String) async -> Bool {
+    let address = robinhoodEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !address.isEmpty else {
+      alertMessage = "Enter the email address used for your Robinhood account."
       return false
     }
-    guard let authorizationURL = await pairingService.prepareDesktopHandoff(),
-      let expiresAt = pairingService.browserAuthorizationExpiresAt,
-      let emailURL = DesktopPairingEmailURL.make(
-        recipient: profile.email, authorizationURL: authorizationURL, expiresAt: expiresAt)
-    else {
+    guard await pairingService.sendDesktopHandoff(to: address) else {
       if pairingService.lifecycleStatus != .connected {
         alertMessage = pairingService.statusMessage
       }
-      return false
-    }
-    guard await UIApplication.shared.open(emailURL, options: [:]) else {
-      alertMessage =
-        "No email app could open the desktop-link draft. Configure a default email app and try again."
       return false
     }
     return true
