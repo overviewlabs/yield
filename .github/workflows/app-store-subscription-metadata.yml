@@ -9,7 +9,7 @@ on:
       - .github/subscriptions-now
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   upload:
@@ -38,3 +38,11 @@ jobs:
           printf '%s' "$ASC_PRIVATE_KEY_BASE64" | base64 --decode > "$ASC_PRIVATE_KEY_PATH"
           "$RUNNER_TEMP/asc-venv/bin/python" scripts/app-store-connect/upload_subscription_review_screenshots.py \
             2>&1 | tee "$RUNNER_TEMP/subscription-metadata.log"
+
+      - name: Publish StoreKit diagnostic
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .github/storekit-diagnostic.json
+          git diff --cached --quiet || git commit -m "Record StoreKit product status"
+          git push

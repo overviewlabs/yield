@@ -25,6 +25,7 @@ SUBSCRIPTIONS = {
 BUNDLE_ID = "ai.whox.yield"
 BETA_GROUP_ID = "18c04eab-014a-43a2-ad12-7b8aaa07a5f5"
 BUILD_NUMBER = "5"
+DIAGNOSTIC_PATH = Path(".github/storekit-diagnostic.json")
 SCREENSHOT = Path(
     "apps/ios/Documentation/QA/2026-08-01/visual-review/onboarding/"
     "6A19087F-6431-4D4F-84F4-CE3EBC0482B9.png"
@@ -146,6 +147,50 @@ def assign_testflight_build(token: str) -> None:
         print(f"Build {BUILD_NUMBER}: assigned to Yield Internal Testers")
 
 
+def subscription_diagnostic(token: str, subscription_id: str) -> dict:
+    subscription = api_request(token, "GET", f"/v1/subscriptions/{subscription_id}")["data"]
+    availability = api_request(
+        token,
+        "GET",
+        f"/v1/subscriptions/{subscription_id}/subscriptionAvailability",
+        allowed_errors={404},
+    ).get("data")
+    territories = []
+    if availability is not None:
+        territories = api_request(
+            token,
+            "GET",
+            f"/v1/subscriptionAvailabilities/{availability['id']}"
+            "/availableTerritories?limit=200",
+        )["data"]
+    return {
+        "id": subscription_id,
+        "attributes": subscription.get("attributes", {}),
+        "availability": None if availability is None else availability.get("attributes", {}),
+        "territoryCount": len(territories),
+        "includesUSA": any(item["id"] == "USA" for item in territories),
+        "priceCount": len(
+            api_request(
+                token, "GET", f"/v1/subscriptions/{subscription_id}/prices?limit=200"
+            )["data"]
+        ),
+        "introductoryOfferCount": len(
+            api_request(
+                token,
+                "GET",
+                f"/v1/subscriptions/{subscription_id}/introductoryOffers?limit=200",
+            )["data"]
+        ),
+        "localizationCount": len(
+            api_request(
+                token,
+                "GET",
+                f"/v1/subscriptions/{subscription_id}/subscriptionLocalizations?limit=200",
+            )["data"]
+        ),
+    }
+
+
 def upload_asset(operation: dict, blob: bytes) -> None:
     offset = operation["offset"]
     chunk = blob[offset : offset + operation["length"]]
@@ -173,9 +218,11 @@ def main() -> None:
     token = access_token()
     blob = SCREENSHOT.read_bytes()
     checksum = hashlib.md5(blob, usedforsecurity=False).hexdigest()
+    diagnostics = []
 
     for subscription_id, label in SUBSCRIPTIONS.items():
         ensure_subscription_availability(token, subscription_id)
+        diagnostics.append(subscription_diagnostic(token, subscription_id))
         response = api_request(
             token, "GET", f"/v1/subscriptions/{subscription_id}/appStoreReviewScreenshot"
         )
@@ -226,6 +273,10 @@ def main() -> None:
         print(f"{label}: review screenshot submitted")
 
     assign_testflight_build(token)
+    DIAGNOSTIC_PATH.write_text(
+        json.dumps({"subscriptions": diagnostics}, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":
