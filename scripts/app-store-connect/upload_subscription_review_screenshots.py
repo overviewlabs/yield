@@ -22,6 +22,9 @@ SUBSCRIPTIONS = {
     "6797231801": "options",
     "6797231900": "options-pro",
 }
+BUNDLE_ID = "ai.whox.yield"
+BETA_GROUP_ID = "18c04eab-014a-43a2-ad12-7b8aaa07a5f5"
+BUILD_NUMBER = "5"
 SCREENSHOT = Path(
     "apps/ios/Documentation/QA/2026-08-01/visual-review/onboarding/"
     "6A19087F-6431-4D4F-84F4-CE3EBC0482B9.png"
@@ -111,6 +114,38 @@ def ensure_subscription_availability(token: str, subscription_id: str) -> None:
         print(f"{subscription_id}: available in {len(available)} storefronts")
 
 
+def assign_testflight_build(token: str) -> None:
+    apps = api_request(token, "GET", f"/v1/apps?filter[bundleId]={BUNDLE_ID}&limit=2")["data"]
+    if len(apps) != 1:
+        raise RuntimeError(f"Expected exactly one App Store app for {BUNDLE_ID}")
+    app_id = apps[0]["id"]
+    build = None
+    for _ in range(30):
+        builds = api_request(
+            token,
+            "GET",
+            f"/v1/builds?filter[app]={app_id}&filter[version]={BUILD_NUMBER}"
+            "&sort=-uploadedDate&limit=1",
+        )["data"]
+        if builds and builds[0].get("attributes", {}).get("processingState") == "VALID":
+            build = builds[0]
+            break
+        time.sleep(20)
+    if build is None:
+        raise RuntimeError(f"TestFlight Build {BUILD_NUMBER} did not become valid in time")
+    result = api_request(
+        token,
+        "POST",
+        f"/v1/betaGroups/{BETA_GROUP_ID}/relationships/builds",
+        {"data": [{"type": "builds", "id": build["id"]}]},
+        allowed_errors={409},
+    )
+    if result.get("errorStatus") == 409:
+        print(f"Build {BUILD_NUMBER}: already assigned to Yield Internal Testers")
+    else:
+        print(f"Build {BUILD_NUMBER}: assigned to Yield Internal Testers")
+
+
 def upload_asset(operation: dict, blob: bytes) -> None:
     offset = operation["offset"]
     chunk = blob[offset : offset + operation["length"]]
@@ -189,6 +224,8 @@ def main() -> None:
                 },
             )
         print(f"{label}: review screenshot submitted")
+
+    assign_testflight_build(token)
 
 
 if __name__ == "__main__":
