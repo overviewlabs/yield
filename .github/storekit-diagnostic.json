@@ -1,4 +1,10 @@
 {
+  "promoOffer": {
+    "name": "WHOX Options Pro 30 Day",
+    "offerId": "8f49a4be-aee7-4711-b827-e861648a2c6c",
+    "productionCustomCodeReady": false,
+    "sandboxCodeCount": 10
+  },
   "reviewSubmission": {
     "appStoreVersion": {
       "appInfos": [
@@ -1576,28 +1582,28 @@
         "added": false,
         "id": "3676f212-a18c-463a-879b-01cfa482cac8",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"323fbe5b-1682-4f8c-b1a9-19d06a47a9e0\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"e117e462-b7d5-4b79-b846-c1365a2ede47\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "0f62bb6e-4e91-451b-a718-152fc9a38118",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"0c2ba0ac-95df-4a9b-8afe-3ecc04d34e56\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"36198803-7a9e-4ece-b109-d6df24901e25\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "f9b2021a-b0fd-4adb-b620-17a295c18f2b",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"fd43b900-fae6-416d-9669-d505527816dc\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"370a33f4-5569-4dfc-8fe1-1a4283221bff\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "d704945d-c643-4680-ac00-1bd4abfdd827",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"3f1e709f-c523-4a54-abb0-eabd33f906c5\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"f1b64d0a-9218-495f-9905-86f6d4de4aff\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       }
     ],
