@@ -54,7 +54,18 @@ final class StoreKitService {
   func loadProducts(plans: [SubscriptionPlan]) async {
     phase = .loadingProducts
     do {
-      let products = try await Product.products(for: plans.map(\.productID))
+      let requestedIDs = Set(plans.map(\.productID))
+      var products: [Product] = []
+      // StoreKit can briefly return an empty catalog while the storefront is being
+      // refreshed. Retry that response instead of presenting a permanently disabled
+      // paywall until the next app launch.
+      for attempt in 0..<3 {
+        products = try await Product.products(for: requestedIDs)
+        if Set(products.map(\.id)) == requestedIDs { break }
+        if attempt < 2 {
+          try await Task.sleep(for: .milliseconds(750 * (attempt + 1)))
+        }
+      }
       productsByID = Dictionary(uniqueKeysWithValues: products.map { ($0.id, $0) })
       var eligibleProductIDs: Set<String> = []
       for product in products {
@@ -65,13 +76,23 @@ final class StoreKitService {
         eligibleProductIDs.insert(product.id)
       }
       eligibleIntroOfferProductIDs = eligibleProductIDs
-      phase = .idle
+      let missingIDs = requestedIDs.subtracting(Set(productsByID.keys))
+      if missingIDs.isEmpty {
+        phase = .idle
+        statusMessage = nil
+      } else {
+        phase = .failed(
+          "Some plans are not available from the App Store yet. Tap Reload Plans to try again."
+        )
+        statusMessage = "App Store plan availability is still refreshing."
+      }
     } catch {
       productsByID = [:]
       eligibleIntroOfferProductIDs = []
       phase = .failed(
-        "App Store products could not be loaded. Demo remains available; Paper requires its approved backend configuration."
+        "App Store products could not be loaded. Check your connection and tap Reload Plans."
       )
+      statusMessage = "The App Store catalog could not be loaded."
     }
   }
 

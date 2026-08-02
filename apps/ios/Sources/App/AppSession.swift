@@ -725,7 +725,10 @@ final class AppSession {
     await storeKit.purchase(plan)
     guard case .purchased(let productID) = storeKit.phase,
       productID == plan.productID
-    else { return }
+    else {
+      if case .failed(let message) = storeKit.phase { alertMessage = message }
+      return
+    }
     do {
       let context = try await repository.planCatalog()
       applyPlanCatalog(context)
@@ -752,6 +755,14 @@ final class AppSession {
     } catch {
       alertMessage =
         "Purchases were checked, but the current server plan could not be refreshed. \(error.localizedDescription)"
+    }
+  }
+
+  func reloadOnboardingPlans() async {
+    await storeKit.loadProducts(plans: plans)
+    if plans.allSatisfy({ storeKit.localizedPrice(for: $0) == nil }) {
+      alertMessage =
+        "The App Store has not returned the subscription catalog yet. Confirm this device is online and signed in to the App Store, then try again."
     }
   }
 

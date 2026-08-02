@@ -44,7 +44,9 @@ def access_token() -> str:
     )
 
 
-def api_request(token: str, method: str, path: str, body: dict | None = None) -> dict:
+def api_request(
+    token: str, method: str, path: str, body: dict | None = None, allowed_errors: set[int] | None = None
+) -> dict:
     encoded = None if body is None else json.dumps(body).encode("utf-8")
     request = urllib.request.Request(
         API_BASE + path,
@@ -61,7 +63,57 @@ def api_request(token: str, method: str, path: str, body: dict | None = None) ->
             return json.loads(payload) if payload else {}
     except urllib.error.HTTPError as error:
         detail = error.read().decode("utf-8", errors="replace")
+        if allowed_errors is not None and error.code in allowed_errors:
+            return {"errorStatus": error.code, "errorDetail": detail}
         raise RuntimeError(f"App Store Connect returned HTTP {error.code}: {detail}") from error
+
+
+def ensure_subscription_availability(token: str, subscription_id: str) -> None:
+    territories = api_request(token, "GET", "/v1/territories?limit=200")["data"]
+    territory_links = [
+        {"type": "territories", "id": territory["id"]} for territory in territories
+    ]
+    response = api_request(
+        token,
+        "GET",
+        f"/v1/subscriptions/{subscription_id}/subscriptionAvailability",
+        allowed_errors={404},
+    )
+    availability = response.get("data")
+    relationships = {
+        "subscription": {"data": {"type": "subscriptions", "id": subscription_id}},
+        "availableTerritories": {"data": territory_links},
+    }
+    if availability is None:
+        api_request(
+            token,
+            "POST",
+            "/v1/subscriptionAvailabilities",
+            {
+                "data": {
+                    "type": "subscriptionAvailabilities",
+                    "attributes": {"availableInNewTerritories": True},
+                    "relationships": relationships,
+                }
+            },
+        )
+    else:
+        api_request(
+            token,
+            "PATCH",
+            f"/v1/subscriptionAvailabilities/{availability['id']}",
+            {
+                "data": {
+                    "type": "subscriptionAvailabilities",
+                    "id": availability["id"],
+                    "attributes": {"availableInNewTerritories": True},
+                    "relationships": {
+                        "availableTerritories": {"data": territory_links}
+                    },
+                }
+            },
+        )
+    print(f"{subscription_id}: enabled in {len(territory_links)} storefronts")
 
 
 def upload_asset(operation: dict, blob: bytes) -> None:
@@ -93,6 +145,7 @@ def main() -> None:
     checksum = hashlib.md5(blob, usedforsecurity=False).hexdigest()
 
     for subscription_id, label in SUBSCRIPTIONS.items():
+        ensure_subscription_availability(token, subscription_id)
         response = api_request(
             token, "GET", f"/v1/subscriptions/{subscription_id}/appStoreReviewScreenshot"
         )

@@ -12,6 +12,10 @@ on:
         description: Build number
         required: true
         type: string
+  push:
+    branches: [main]
+    paths:
+      - .github/build-now
 
 permissions:
   contents: read
@@ -67,6 +71,9 @@ jobs:
         run: xcrun swift-format lint --recursive --parallel --strict apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget
 
       - name: Archive
+        env:
+          MARKETING_VERSION: ${{ inputs.version || '1.0' }}
+          BUILD_NUMBER: ${{ inputs.build_number || '5' }}
         run: |
           set -euo pipefail
           xcodebuild \
@@ -75,8 +82,8 @@ jobs:
             -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/WHOXTreasury.xcarchive" \
-            MARKETING_VERSION='${{ inputs.version }}' \
-            CURRENT_PROJECT_VERSION='${{ inputs.build_number }}' \
+            MARKETING_VERSION="$MARKETING_VERSION" \
+            CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             clean archive
 
       - name: Export signed IPA

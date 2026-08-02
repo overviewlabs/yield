@@ -352,6 +352,13 @@ struct OnboardingFlowView: View {
         PlanSelectionCard(plan: plan, selected: session.onboardingDraft.selectedPlan == plan.tier)
       }
       if session.mode == .paper {
+        if session.plans.contains(where: { session.storeKit.localizedPrice(for: $0) == nil }) {
+          Button("Reload Plans", systemImage: "arrow.clockwise") {
+            Task { await session.reloadOnboardingPlans() }
+          }
+          .buttonStyle(.borderedProminent)
+          .disabled(session.storeKit.phase == .loadingProducts)
+        }
         Button("Restore Purchases") { Task { await session.restoreOnboardingPurchases() } }
           .buttonStyle(.bordered)
         Button("Redeem Promo Code", systemImage: "ticket") {
@@ -1062,7 +1069,7 @@ private struct PlanSelectionCard: View {
           Task { await session.purchaseOnboardingPlan(plan) }
         }
         .buttonStyle(.borderedProminent)
-        .disabled(session.storeKit.localizedPrice(for: plan) == nil)
+        .disabled(session.storeKit.phase == .loadingProducts)
       }
     }
     .treasuryCard()
