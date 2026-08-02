@@ -725,6 +725,7 @@ private struct BrokerPairingSheet: View {
 
 private struct SubscriptionSettingsView: View {
   @Environment(AppSession.self) private var session
+  @State private var isPresentingOfferCodeRedemption = false
   var body: some View {
     List {
       Section {
@@ -769,6 +770,9 @@ private struct SubscriptionSettingsView: View {
         }
       }
       Section("Purchase tools") {
+        Button("Redeem Promo Code", systemImage: "ticket") {
+          isPresentingOfferCodeRedemption = true
+        }
         Button("Restore Purchases") { Task { await session.restoreOnboardingPurchases() } }
         if let statusMessage = session.storeKit.statusMessage {
           Label(statusMessage, systemImage: "checkmark.circle.fill")
@@ -878,9 +882,20 @@ private struct NotificationSettingsView: View {
             ) {
               ForEach(0..<24, id: \.self) {
                 Text(String(format: "%02d:00", $0)).tag(Optional($0))
-              }
-            }
-          }
+      }
+    }
+    .offerCodeRedemption(isPresented: $isPresentingOfferCodeRedemption) { result in
+      switch result {
+      case .success:
+        Task {
+          await session.restoreOnboardingPurchases()
+          session.alertMessage = "Promo code redeemed. Your verified subscription access was refreshed."
+        }
+      case .failure(let error):
+        session.alertMessage = "The promo code was not redeemed. \(error.localizedDescription)"
+      }
+    }
+  }
         }
         Section {
           Button("Request System Permission") {

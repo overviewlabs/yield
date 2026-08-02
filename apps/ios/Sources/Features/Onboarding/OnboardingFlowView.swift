@@ -1,4 +1,5 @@
 import AuthenticationServices
+import StoreKit
 import SwiftUI
 import UIKit
 
@@ -8,6 +9,7 @@ struct OnboardingFlowView: View {
   @State private var selectedLegalDocument: LegalDocument?
   @State private var eligibilityDeletionConfirmation = ""
   @State private var pendingAppleNonce: String?
+  @State private var isPresentingOfferCodeRedemption = false
 
   var body: some View {
     NavigationStack {
@@ -45,6 +47,9 @@ struct OnboardingFlowView: View {
           .presentationDetents([.medium, .large])
       }
       .animation(reduceMotion ? nil : .snappy, value: session.onboardingDraft.step)
+    }
+    .offerCodeRedemption(isPresented: $isPresentingOfferCodeRedemption) { result in
+      handleOfferCodeRedemption(result)
     }
     .accessibilityIdentifier("onboardingFlow")
   }
@@ -349,6 +354,10 @@ struct OnboardingFlowView: View {
       if session.mode == .paper {
         Button("Restore Purchases") { Task { await session.restoreOnboardingPurchases() } }
           .buttonStyle(.bordered)
+        Button("Redeem Promo Code", systemImage: "ticket") {
+          isPresentingOfferCodeRedemption = true
+        }
+        .buttonStyle(.bordered)
         Link(
           "Manage App Store Subscriptions",
           destination: URL(string: "https://apps.apple.com/account/subscriptions")!
@@ -985,6 +994,18 @@ struct OnboardingFlowView: View {
     Binding(
       get: { session.onboardingDraft[keyPath: keyPath] },
       set: { session.onboardingDraft[keyPath: keyPath] = $0 })
+  }
+
+  private func handleOfferCodeRedemption(_ result: Result<Void, any Error>) {
+    switch result {
+    case .success:
+      Task {
+        await session.restoreOnboardingPurchases()
+        session.alertMessage = "Promo code redeemed. Your verified subscription access was refreshed."
+      }
+    case .failure(let error):
+      session.alertMessage = "The promo code was not redeemed. \(error.localizedDescription)"
+    }
   }
 
   private func riskBinding(_ keyPath: WritableKeyPath<RiskPolicy, Double>) -> Binding<Double> {
