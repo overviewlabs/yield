@@ -26,6 +26,16 @@ BUNDLE_ID = "ai.whox.yield"
 BETA_GROUP_ID = "18c04eab-014a-43a2-ad12-7b8aaa07a5f5"
 BUILD_NUMBER = "5"
 DIAGNOSTIC_PATH = Path(".github/storekit-diagnostic.json")
+PRIVACY_URL = "https://github.com/overviewlabs/yield/blob/main/PRIVACY.md"
+SUPPORT_URL = "https://github.com/overviewlabs/yield/blob/main/SUPPORT.md"
+MARKETING_URL = "https://github.com/overviewlabs/yield"
+APP_SCREENSHOTS = [
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/iphone-clean-assets-final/C0B9E2F8-7CA2-4D67-83EA-FAD97176763B.png"),
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/iphone-clean-assets-final/07B051C9-2D79-4EFE-A6C1-E2CCFF6B13E8.png"),
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/iphone-clean-assets-final/A8CC422C-880E-4785-9559-8B9B2363A7DC.png"),
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/iphone-clean-assets-final/778EDA6B-0AC3-41F9-86B6-DE8C0CDCB4C9.png"),
+    Path("apps/ios/Documentation/QA/2026-08-01/visual-review/iphone-clean-assets-final/FAF0660E-8F5C-4D45-9631-92C0D696C36A.png"),
+]
 SCREENSHOT = Path(
     "apps/ios/Documentation/QA/2026-08-01/visual-review/onboarding/"
     "6A19087F-6431-4D4F-84F4-CE3EBC0482B9.png"
@@ -329,6 +339,15 @@ def complete_app_review_submission(token: str) -> dict:
         "GET",
         f"/v1/appStoreVersions/{app_version['id']}/appStoreVersionLocalizations?limit=200",
     )["data"]
+    complete_app_store_metadata(token, app_id, app_version, localization_data)
+    app_version = api_request(
+        token, "GET", f"/v1/appStoreVersions/{app_version['id']}"
+    )["data"]
+    localization_data = api_request(
+        token,
+        "GET",
+        f"/v1/appStoreVersions/{app_version['id']}/appStoreVersionLocalizations?limit=200",
+    )["data"]
     localization_diagnostics = []
     for localization in localization_data:
         screenshot_sets = api_request(
@@ -466,6 +485,201 @@ def upload_asset(operation: dict, blob: bytes) -> None:
         command.extend(["--header", f"{header['name']}: {header['value']}"])
     command.append(operation["url"])
     subprocess.run(command, input=chunk, check=True)
+
+
+def upload_app_screenshots(token: str, localization_id: str) -> None:
+    sets = api_request(
+        token,
+        "GET",
+        f"/v1/appStoreVersionLocalizations/{localization_id}/appScreenshotSets?limit=200",
+    )["data"]
+    screenshot_set = next(
+        (
+            item
+            for item in sets
+            if item.get("attributes", {}).get("screenshotDisplayType") == "APP_IPHONE_61"
+        ),
+        None,
+    )
+    if screenshot_set is None:
+        screenshot_set = api_request(
+            token,
+            "POST",
+            "/v1/appScreenshotSets",
+            {
+                "data": {
+                    "type": "appScreenshotSets",
+                    "attributes": {"screenshotDisplayType": "APP_IPHONE_61"},
+                    "relationships": {
+                        "appStoreVersionLocalization": {
+                            "data": {
+                                "type": "appStoreVersionLocalizations",
+                                "id": localization_id,
+                            }
+                        }
+                    },
+                }
+            },
+        )["data"]
+    existing = api_request(
+        token,
+        "GET",
+        f"/v1/appScreenshotSets/{screenshot_set['id']}/appScreenshots?limit=200",
+    )["data"]
+    if existing:
+        return
+    for position, path in enumerate(APP_SCREENSHOTS, start=1):
+        blob = path.read_bytes()
+        screenshot = api_request(
+            token,
+            "POST",
+            "/v1/appScreenshots",
+            {
+                "data": {
+                    "type": "appScreenshots",
+                    "attributes": {
+                        "fileSize": len(blob),
+                        "fileName": f"yield-{position}-{path.name}",
+                    },
+                    "relationships": {
+                        "appScreenshotSet": {
+                            "data": {"type": "appScreenshotSets", "id": screenshot_set["id"]}
+                        }
+                    },
+                }
+            },
+        )["data"]
+        for operation in screenshot.get("attributes", {}).get("uploadOperations", []):
+            upload_asset(operation, blob)
+        api_request(
+            token,
+            "PATCH",
+            f"/v1/appScreenshots/{screenshot['id']}",
+            {
+                "data": {
+                    "type": "appScreenshots",
+                    "id": screenshot["id"],
+                    "attributes": {
+                        "sourceFileChecksum": hashlib.md5(
+                            blob, usedforsecurity=False
+                        ).hexdigest(),
+                        "uploaded": True,
+                    },
+                }
+            },
+        )
+
+
+def complete_app_store_metadata(
+    token: str, app_id: str, app_version: dict, localizations: list[dict]
+) -> None:
+    api_request(
+        token,
+        "PATCH",
+        f"/v1/appStoreVersions/{app_version['id']}",
+        {
+            "data": {
+                "type": "appStoreVersions",
+                "id": app_version["id"],
+                "attributes": {"copyright": "2026 Evans Obeng", "usesIdfa": False},
+            }
+        },
+    )
+    description = (
+        "Yield helps users monitor portfolios, select versioned investment strategies, "
+        "set explicit risk limits, review proposed activity, and control future automation. "
+        "Brokerage authorization and permissions remain separate. Investing and options "
+        "involve risk, including possible loss of principal, and automated analysis can be wrong."
+    )
+    for localization in localizations:
+        api_request(
+            token,
+            "PATCH",
+            f"/v1/appStoreVersionLocalizations/{localization['id']}",
+            {
+                "data": {
+                    "type": "appStoreVersionLocalizations",
+                    "id": localization["id"],
+                    "attributes": {
+                        "description": description,
+                        "keywords": "portfolio,investing,stocks,options,automation,risk,analysis",
+                        "marketingUrl": MARKETING_URL,
+                        "promotionalText": "Portfolio monitoring and automated strategy controls with explicit risk limits.",
+                        "supportUrl": SUPPORT_URL,
+                    },
+                }
+            },
+        )
+        upload_app_screenshots(token, localization["id"])
+    app_infos = api_request(token, "GET", f"/v1/apps/{app_id}/appInfos?limit=10")["data"]
+    for app_info in app_infos:
+        info_localizations = api_request(
+            token,
+            "GET",
+            f"/v1/appInfos/{app_info['id']}/appInfoLocalizations?limit=200",
+        )["data"]
+        for localization in info_localizations:
+            if localization.get("attributes", {}).get("locale") != "en-US":
+                continue
+            api_request(
+                token,
+                "PATCH",
+                f"/v1/appInfoLocalizations/{localization['id']}",
+                {
+                    "data": {
+                        "type": "appInfoLocalizations",
+                        "id": localization["id"],
+                        "attributes": {"privacyPolicyUrl": PRIVACY_URL},
+                    }
+                },
+            )
+    review = api_request(
+        token,
+        "GET",
+        f"/v1/appStoreVersions/{app_version['id']}/appStoreReviewDetail",
+        allowed_errors={404},
+    ).get("data")
+    review_attributes = {
+        "contactFirstName": "Evans",
+        "contactLastName": "Obeng",
+        "contactPhone": "+15707658048",
+        "contactEmail": "admin@overviewlabs.ai",
+        "demoAccountRequired": False,
+        "notes": (
+            "Sign in with Apple is supported. Investment and subscription access do not "
+            "override risk restrictions or brokerage permissions. Yield is not Robinhood."
+        ),
+    }
+    if review is None:
+        api_request(
+            token,
+            "POST",
+            "/v1/appStoreReviewDetails",
+            {
+                "data": {
+                    "type": "appStoreReviewDetails",
+                    "attributes": review_attributes,
+                    "relationships": {
+                        "appStoreVersion": {
+                            "data": {"type": "appStoreVersions", "id": app_version["id"]}
+                        }
+                    },
+                }
+            },
+        )
+    else:
+        api_request(
+            token,
+            "PATCH",
+            f"/v1/appStoreReviewDetails/{review['id']}",
+            {
+                "data": {
+                    "type": "appStoreReviewDetails",
+                    "id": review["id"],
+                    "attributes": review_attributes,
+                }
+            },
+        )
 
 
 def main() -> None:
