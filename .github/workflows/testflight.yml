@@ -67,25 +67,45 @@ jobs:
         run: xcrun swift-format lint --recursive --parallel --strict apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget
 
       - name: Archive
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY_BASE64: ${{ secrets.ASC_PRIVATE_KEY_BASE64 }}
         run: |
           set -euo pipefail
+          ASC_KEY_PATH="$RUNNER_TEMP/AuthKey_${ASC_KEY_ID}.p8"
+          printf '%s' "$ASC_PRIVATE_KEY_BASE64" | base64 --decode > "$ASC_KEY_PATH"
           xcodebuild \
             -project apps/ios/WHOXTreasury.xcodeproj \
             -scheme WHOXTreasury \
             -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/WHOXTreasury.xcarchive" \
+            -allowProvisioningUpdates \
+            -allowProvisioningDeviceRegistration \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
             MARKETING_VERSION='${{ inputs.version }}' \
             CURRENT_PROJECT_VERSION='${{ inputs.build_number }}' \
+            CODE_SIGN_STYLE=Automatic \
+            PROVISIONING_PROFILE_SPECIFIER='' \
             clean archive
 
       - name: Export signed IPA
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: |
           xcodebuild \
             -exportArchive \
             -archivePath "$RUNNER_TEMP/WHOXTreasury.xcarchive" \
             -exportPath "$RUNNER_TEMP/export" \
-            -exportOptionsPlist apps/ios/ci/ExportOptions.plist
+            -exportOptionsPlist apps/ios/ci/ExportOptions.plist \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
 
       - name: Upload signed IPA artifact
         uses: actions/upload-artifact@v4
