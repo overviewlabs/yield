@@ -1,0 +1,40 @@
+        'http', request, response, code, msg, hdrs)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 531, in error
+    return self._call_chain(*args)
+           ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 611, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 409: Conflict
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/runner/work/yield/yield/scripts/app-store-connect/upload_subscription_review_screenshots.py", line 213, in <module>
+    main()
+    ~~~~^^
+  File "/Users/runner/work/yield/yield/scripts/app-store-connect/upload_subscription_review_screenshots.py", line 161, in main
+    ensure_subscription_availability([REDACTED], subscription_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/runner/work/yield/yield/scripts/app-store-connect/upload_subscription_review_screenshots.py", line 94, in ensure_subscription_availability
+    api_request(
+    ~~~~~~~~~~~^
+        [REDACTED],
+        ^^^^^^
+    ...<11 lines>...
+        },
+        ^^
+    )
+    ^
+  File "/Users/runner/work/yield/yield/scripts/app-store-connect/upload_subscription_review_screenshots.py", line 68, in api_request
+    raise RuntimeError(f"App Store Connect returned HTTP {error.code}: {detail}") from error
+RuntimeError: App Store Connect returned HTTP 409: {
+  "errors" : [ {
+    "id" : "ad346a35-9be4-4571-8678-61aa051c0087",
+    "status" : "409",
+    "code" : "STATE_ERROR",
+    "title" : "The request cannot be fulfilled because of the state of another resource.",
+    "detail" : "You cannot create MONTHLY planType subscriptionPlanAvailabilities for given subscription."
+  } ]
+}
