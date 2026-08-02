@@ -1019,7 +1019,7 @@ private struct PlanSelectionCard: View {
         if isSelected { Image(systemName: "checkmark.circle.fill").foregroundStyle(.tint) }
       }
       Text(
-        session.storeKit.localizedPrice(for: plan).map { "\($0) per month" }
+        session.storeKit.purchaseTerms(for: plan)
           ?? "Price unavailable in current storefront"
       )
       .font(.headline).monospacedDigit()
@@ -1036,7 +1036,7 @@ private struct PlanSelectionCard: View {
           .font(.subheadline.weight(.semibold))
           .foregroundStyle(.green)
       } else {
-        Button("Purchase \(plan.tier.title)") {
+        Button(session.storeKit.purchaseButtonTitle(for: plan)) {
           Task { await session.purchaseOnboardingPlan(plan) }
         }
         .buttonStyle(.borderedProminent)

@@ -16,6 +16,7 @@ enum PurchasePhase: Equatable {
 @Observable
 final class StoreKitService {
   private(set) var productsByID: [String: Product] = [:]
+  private(set) var eligibleIntroOfferProductIDs: Set<String> = []
   /// Verified on-device transactions are suitable for local merchandising only.
   private(set) var localVerifiedProductIDs: Set<String> = []
   /// Only server-reconciled IDs may authorize server-run agent features.
@@ -55,8 +56,19 @@ final class StoreKitService {
     do {
       let products = try await Product.products(for: plans.map(\.productID))
       productsByID = Dictionary(uniqueKeysWithValues: products.map { ($0.id, $0) })
+      var eligibleProductIDs: Set<String> = []
+      for product in products {
+        guard let subscription = product.subscription,
+          subscription.introductoryOffer?.paymentMode == .freeTrial,
+          await subscription.isEligibleForIntroOffer
+        else { continue }
+        eligibleProductIDs.insert(product.id)
+      }
+      eligibleIntroOfferProductIDs = eligibleProductIDs
       phase = .idle
     } catch {
+      productsByID = [:]
+      eligibleIntroOfferProductIDs = []
       phase = .failed(
         "App Store products could not be loaded. Demo remains available; Paper requires its approved backend configuration."
       )
@@ -65,6 +77,22 @@ final class StoreKitService {
 
   func localizedPrice(for plan: SubscriptionPlan) -> String? {
     productsByID[plan.productID]?.displayPrice
+  }
+
+  func hasEligibleFreeTrial(for plan: SubscriptionPlan) -> Bool {
+    eligibleIntroOfferProductIDs.contains(plan.productID)
+  }
+
+  func purchaseTerms(for plan: SubscriptionPlan) -> String? {
+    guard let price = localizedPrice(for: plan) else { return nil }
+    if hasEligibleFreeTrial(for: plan) {
+      return "7 days free, then \(price) per month. Renews automatically until canceled."
+    }
+    return "\(price) per month. Renews automatically until canceled."
+  }
+
+  func purchaseButtonTitle(for plan: SubscriptionPlan) -> String {
+    hasEligibleFreeTrial(for: plan) ? "Start 7-Day Free Trial" : "Subscribe to \(plan.tier.title)"
   }
 
   /// Associates new App Store transactions with the authenticated WHOX account.

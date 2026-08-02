@@ -743,7 +743,10 @@ private struct SubscriptionSettingsView: View {
             HStack {
               Text(plan.tier.title).font(.headline)
               Spacer()
-              Text(session.storeKit.localizedPrice(for: plan) ?? "Unavailable").monospacedDigit()
+              Text(session.storeKit.purchaseTerms(for: plan) ?? "Unavailable")
+                .font(.subheadline)
+                .multilineTextAlignment(.trailing)
+                .monospacedDigit()
             }
             Text(plan.summary).font(.caption).foregroundStyle(.secondary)
             ForEach(plan.features, id: \.self) {
@@ -756,7 +759,7 @@ private struct SubscriptionSettingsView: View {
               Label("Current server-authorized plan", systemImage: "checkmark.seal.fill")
                 .font(.subheadline.weight(.semibold)).foregroundStyle(.green)
             } else {
-              Button("Purchase \(plan.tier.title)") {
+              Button(session.storeKit.purchaseButtonTitle(for: plan)) {
                 Task { await session.purchaseOnboardingPlan(plan) }
               }
               .disabled(session.storeKit.localizedPrice(for: plan) == nil)
