@@ -620,6 +620,47 @@ def upload_app_screenshots(token: str, localization_id: str) -> None:
 def complete_app_store_metadata(
     token: str, app_id: str, app_version: dict, localizations: list[dict]
 ) -> None:
+    availability = api_request(
+        token,
+        "GET",
+        f"/v1/apps/{app_id}/appAvailabilityV2",
+        allowed_errors={404},
+    ).get("data")
+    if availability is None:
+        territories = api_request(token, "GET", "/v1/territories?limit=200")["data"]
+        included = []
+        links = []
+        for territory in territories:
+            local_id = "${" + territory["id"] + "}"
+            links.append({"type": "territoryAvailabilities", "id": local_id})
+            included.append(
+                {
+                    "type": "territoryAvailabilities",
+                    "id": local_id,
+                    "attributes": {"available": True, "preOrderEnabled": False},
+                    "relationships": {
+                        "territory": {
+                            "data": {"type": "territories", "id": territory["id"]}
+                        }
+                    },
+                }
+            )
+        api_request(
+            token,
+            "POST",
+            "/v2/appAvailabilities",
+            {
+                "data": {
+                    "type": "appAvailabilities",
+                    "attributes": {"availableInNewTerritories": True},
+                    "relationships": {
+                        "app": {"data": {"type": "apps", "id": app_id}},
+                        "territoryAvailabilities": {"data": links},
+                    },
+                },
+                "included": included,
+            },
+        )
     api_request(
         token,
         "PATCH",
