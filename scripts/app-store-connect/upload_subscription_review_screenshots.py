@@ -524,6 +524,35 @@ def complete_app_review_submission(token: str) -> dict:
         f"/v1/apps/{app_id}/appAvailabilityV2",
         allowed_errors={404},
     ).get("data")
+    territory_issues = []
+    if availability is not None:
+        territory_availabilities = api_request(
+            token,
+            "GET",
+            f"/v2/appAvailabilities/{availability['id']}/territoryAvailabilities"
+            "?include=territory&limit=200",
+        )["data"]
+        issue_markers = ("MISSING", "INVALID", "FAILED", "NOT_PROVIDED", "CANNOT", "REQUIRED")
+        for territory_availability in territory_availabilities:
+            statuses = territory_availability.get("attributes", {}).get("contentStatuses", [])
+            issues = [
+                status for status in statuses if any(marker in status for marker in issue_markers)
+            ]
+            if not issues:
+                continue
+            territory_id = (
+                territory_availability.get("relationships", {})
+                .get("territory", {})
+                .get("data", {})
+                .get("id")
+            )
+            territory_issues.append(
+                {
+                    "territory": territory_id,
+                    "availabilityId": territory_availability["id"],
+                    "statuses": issues,
+                }
+            )
     price_schedule = api_request(
         token,
         "GET",
@@ -537,7 +566,12 @@ def complete_app_review_submission(token: str) -> dict:
         "reviewDetail": None if review_detail is None else review_detail.get("attributes", {}),
         "appInfos": app_info_diagnostics,
         "build": None if build is None else build.get("attributes", {}),
-        "availability": None if availability is None else availability.get("attributes", {}),
+        "availability": None
+        if availability is None
+        else {
+            **availability.get("attributes", {}),
+            "territoryIssues": territory_issues,
+        },
         "priceSchedule": {
             **({} if price_schedule is None else price_schedule.get("attributes", {})),
             **app_price,
