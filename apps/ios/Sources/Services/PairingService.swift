@@ -1,4 +1,3 @@
-import AuthenticationServices
 import Foundation
 import Observation
 import UIKit
@@ -118,6 +117,12 @@ enum MobileAuthorizationURLPolicy {
     return result
   }
 
+  static func isBrokerCallback(_ url: URL) -> Bool {
+    url.scheme?.lowercased() == callbackScheme
+      && url.host?.lowercased() == callbackHost
+      && url.path == callbackPath
+  }
+
   private static func isExactReturnURL(_ url: URL) -> Bool {
     url.scheme?.lowercased() == callbackScheme
       && url.host?.lowercased() == callbackHost
@@ -150,113 +155,39 @@ protocol BrokerAuthorizationPresenting: AnyObject {
 }
 
 @MainActor
-final class ASWebAuthenticationBrokerAuthorizationPresenter: NSObject,
-  BrokerAuthorizationPresenting, ASWebAuthenticationPresentationContextProviding
-{
-  private var authenticationSession: ASWebAuthenticationSession?
-  private var continuation: CheckedContinuation<MobileAuthorizationResult, any Error>?
-  private var presentationAnchor: ASPresentationAnchor?
+final class SafariBrokerAuthorizationPresenter: BrokerAuthorizationPresenting {
+  typealias URLOpener = @MainActor (URL) async -> Bool
+
+  private let openURL: URLOpener
+  private var isOpening = false
+
+  init(
+    openURL: @escaping URLOpener = { url in
+      await UIApplication.shared.open(url, options: [:])
+    }
+  ) {
+    self.openURL = openURL
+  }
 
   func authorize(
     using handoff: MobileAuthorizationHandoff, pairing: PairingSession
   ) async throws -> MobileAuthorizationResult {
-    guard authenticationSession == nil, continuation == nil else {
+    guard !isOpening else {
       throw MobileAuthorizationError.alreadyInProgress
     }
     try MobileAuthorizationURLPolicy.validate(handoff, pairing: pairing)
-    guard let anchor = Self.activePresentationAnchor() else {
-      throw MobileAuthorizationError.presentationUnavailable
-    }
-    presentationAnchor = anchor
-
-    return try await withCheckedThrowingContinuation { continuation in
-      self.continuation = continuation
-      let callback = ASWebAuthenticationSession.Callback.customScheme(handoff.callbackScheme)
-      let session = ASWebAuthenticationSession(
-        url: handoff.authorizationURL, callback: callback
-      ) { [weak self] callbackURL, error in
-        Task { @MainActor in
-          self?.complete(
-            callbackURL: callbackURL, error: error, handoff: handoff, pairing: pairing)
-        }
-      }
-      session.presentationContextProvider = self
-      // Reuse the user's system-browser Robinhood session to reduce sign-in friction. Cookies and
-      // credentials remain inside AuthenticationServices and are never exposed to WHOX code.
-      session.prefersEphemeralWebBrowserSession = false
-      authenticationSession = session
-      guard session.canStart, session.start() else {
-        finish(throwing: MobileAuthorizationError.presentationUnavailable)
-        return
-      }
-    }
+    isOpening = true
+    let opened = await openURL(handoff.authorizationURL)
+    isOpening = false
+    guard opened else { throw MobileAuthorizationError.presentationUnavailable }
+    // Safari returns through the registered yield:// callback. Until that callback arrives,
+    // canonical server status remains the sole source of truth for connection completion.
+    return .verificationPending
   }
 
   func cancel() {
-    guard authenticationSession != nil || continuation != nil else { return }
-    let session = authenticationSession
-    authenticationSession = nil
-    presentationAnchor = nil
-    let pending = continuation
-    continuation = nil
-    session?.cancel()
-    pending?.resume(returning: .canceled)
-  }
-
-  func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-    guard let presentationAnchor else {
-      preconditionFailure("Authentication presentation anchor was cleared before presentation.")
-    }
-    return presentationAnchor
-  }
-
-  private func complete(
-    callbackURL: URL?, error: (any Error)?, handoff: MobileAuthorizationHandoff,
-    pairing: PairingSession
-  ) {
-    guard continuation != nil else { return }
-    if let webError = error as? ASWebAuthenticationSessionError,
-      webError.code == .canceledLogin
-    {
-      finish(returning: .canceled)
-      return
-    }
-    guard error == nil, let callbackURL else {
-      finish(throwing: MobileAuthorizationError.unavailable)
-      return
-    }
-    do {
-      let result = try MobileAuthorizationURLPolicy.result(
-        from: callbackURL, expectedReturnURL: handoff.returnURL, pairingID: pairing.id)
-      finish(returning: result)
-    } catch {
-      finish(throwing: error)
-    }
-  }
-
-  private func finish(returning result: MobileAuthorizationResult) {
-    authenticationSession = nil
-    presentationAnchor = nil
-    let pending = continuation
-    continuation = nil
-    pending?.resume(returning: result)
-  }
-
-  private func finish(throwing error: any Error) {
-    authenticationSession?.cancel()
-    authenticationSession = nil
-    presentationAnchor = nil
-    let pending = continuation
-    continuation = nil
-    pending?.resume(throwing: error)
-  }
-
-  private static func activePresentationAnchor() -> ASPresentationAnchor? {
-    let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
-      .filter { $0.activationState == .foregroundActive }
-    return scenes.lazy.compactMap { scene in
-      scene.windows.first(where: \.isKeyWindow) ?? scene.windows.first(where: { !$0.isHidden })
-    }.first
+    // Once handed off, Safari is owned by the user and cannot be dismissed by the app.
+    isOpening = false
   }
 }
 
@@ -677,7 +608,7 @@ final class PairingService {
   private(set) var isPolling = false
   private(set) var isAuthorizingInApp = false
   private(set) var statusMessage =
-    "Tap Connect Robinhood to open secure sign-in inside the app."
+    "Tap Connect Robinhood to open secure sign-in in Safari."
   private(set) var lastScheduledDelay: Double?
   private(set) var pollAttempt = 0
   @ObservationIgnored private let client: any BrokerPairingClient
@@ -741,7 +672,7 @@ final class PairingService {
     isAuthorizingInApp = true
     lifecycleStatus = .authorizing
     statusMessage =
-      "Opening Robinhood in Apple’s secure authentication browser. WHOX never receives your Robinhood password."
+      "Opening Robinhood in Safari. WHOX never receives your Robinhood password."
     do {
       let handoff = try await client.startInAppAuthorization(pairingID: pairing.id)
       guard authorizationAttemptID == attemptID else { return }
@@ -756,7 +687,7 @@ final class PairingService {
       case .verificationPending:
         lifecycleStatus = .authorizing
         statusMessage =
-          "Robinhood returned to Treasury. Verifying the connection with the WHOX server."
+          "Safari opened. Complete Robinhood sign-in there; Yield will reopen from the secure callback and verify the connection."
         await pollNow()
       case .canceled:
         lifecycleStatus = .authorizing
@@ -786,6 +717,43 @@ final class PairingService {
           pairing, message: message + " This pairing remains available for browser retry.")
       }
     }
+  }
+
+  @discardableResult
+  func handleAuthorizationCallback(_ url: URL) async -> Bool {
+    guard MobileAuthorizationURLPolicy.isBrokerCallback(url) else { return false }
+    guard let pairing = session,
+      let returnURL = URL(string: "yield://broker-connection/callback")
+    else {
+      lifecycleStatus = .failed
+      statusMessage =
+        "Robinhood returned to Yield, but the pairing is no longer available. Start a new connection."
+      return true
+    }
+
+    do {
+      let result = try MobileAuthorizationURLPolicy.result(
+        from: url, expectedReturnURL: returnURL, pairingID: pairing.id)
+      switch result {
+      case .verificationPending:
+        lifecycleStatus = .authorizing
+        statusMessage = "Robinhood returned to Yield. Verifying the connection with the WHOX server."
+        await pollNow()
+      case .canceled:
+        lifecycleStatus = .authorizing
+        statusMessage = "Robinhood sign-in was canceled. Tap Connect Robinhood to reopen Safari."
+      case .failed:
+        await replacePairingAfterMobileFailure(
+          "Robinhood could not complete browser setup. A fresh pairing is ready for another attempt."
+        )
+      }
+    } catch {
+      lifecycleStatus = .authorizing
+      statusMessage =
+        (error as? LocalizedError)?.errorDescription
+        ?? "Robinhood returned an invalid completion message."
+    }
+    return true
   }
 
   func pollNow() async {

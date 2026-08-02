@@ -319,7 +319,7 @@ final class WHoxTreasuryUITests: XCTestCase {
     connection.tap()
     XCTAssertTrue(app.navigationBars["Robinhood Connection"].waitForExistence(timeout: 5))
     let browserDisclosure = app.staticTexts.matching(
-      NSPredicate(format: "label CONTAINS[c] 'secure authentication browser'")
+      NSPredicate(format: "label CONTAINS[c] 'open the server-provided Robinhood setup in Safari'")
     ).firstMatch
     scrollUntilExists(browserDisclosure)
     XCTAssertTrue(browserDisclosure.exists)

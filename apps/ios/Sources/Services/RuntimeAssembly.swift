@@ -174,7 +174,7 @@ enum RuntimeAssembly {
         client: HTTPBrokerPairingClient(
           baseURL: baseURL, urlSession: urlSession, stepUpProvider: stepUpProvider,
           credentialProvider: token),
-        authorizationPresenter: ASWebAuthenticationBrokerAuthorizationPresenter())
+        authorizationPresenter: SafariBrokerAuthorizationPresenter())
       let storeKit = StoreKitService(
         entitlementSyncClient: HTTPEntitlementSyncClient(
           baseURL: baseURL, urlSession: urlSession, credentialProvider: token),

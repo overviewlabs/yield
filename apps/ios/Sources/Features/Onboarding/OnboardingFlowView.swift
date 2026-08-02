@@ -535,13 +535,13 @@ struct OnboardingFlowView: View {
       onboardingTitle(
         "Connect Robinhood",
         subtitle:
-          "Tap once to open the server-provided Robinhood setup in Apple’s secure authentication browser. Treasury receives only masked connection status—never your Robinhood password, OAuth code, broker token, or MCP credential."
+          "Tap once to open the server-provided Robinhood setup in Safari. After sign-in, Robinhood returns you to Yield through a secure pairing callback. Yield receives only masked connection status—never your Robinhood password, OAuth code, broker token, or MCP credential."
       )
 
       DisclosureNotice(
         title: "Robinhood-controlled setup",
         message:
-          "Treasury opens Apple’s secure in-app authentication browser. Sign in and approve within Robinhood, then return here while Yield verifies the connection.",
+          "Yield opens the Safari app. Sign in and approve within Robinhood; the successful callback reopens Yield while the server verifies the connection.",
         symbol: "safari", color: .blue
       )
 

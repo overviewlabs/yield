@@ -99,6 +99,52 @@ final class PairingServiceTests: XCTestCase {
   }
 
   @MainActor
+  func testSafariPresenterOpensValidatedAuthorizationURL() async throws {
+    let pairingID = UUID()
+    let pairing = PairingSession(
+      id: pairingID, code: "TEST-CODE",
+      setupURL: URL(string: "https://connect.whox.ai/pair/test")!,
+      expiresAt: .now.addingTimeInterval(600))
+    let handoff = MobileAuthorizationHandoff(
+      authorizationURL: URL(string: "https://agent.robinhood.com/oauth/authorize")!,
+      callbackScheme: "yield",
+      returnURL: URL(string: "yield://broker-connection/callback")!,
+      pairingID: pairingID, expiresAt: .now.addingTimeInterval(300))
+    var openedURL: URL?
+    let presenter = SafariBrokerAuthorizationPresenter { url in
+      openedURL = url
+      return true
+    }
+
+    let result = try await presenter.authorize(using: handoff, pairing: pairing)
+
+    XCTAssertEqual(openedURL, handoff.authorizationURL)
+    XCTAssertEqual(result, .verificationPending)
+  }
+
+  @MainActor
+  func testExternalSafariCallbackIsPairingBoundAndRefreshesStatus() async {
+    let client = MobileAuthorizationPairingClient(result: .failed)
+    let presenter = CapturingAuthorizationPresenter(result: .verificationPending)
+    let service = PairingService(
+      client: client, authorizationPresenter: presenter,
+      backoff: .init(baseSeconds: 60, maximumSeconds: 60))
+    await service.connectInApp()
+    let pairingID = service.session!.id
+    let callback = URL(
+      string:
+        "yield://broker-connection/callback?result=verification_pending&pairingId=\(pairingID.uuidString)"
+    )!
+
+    let handled = await service.handleAuthorizationCallback(callback)
+
+    XCTAssertTrue(handled)
+    XCTAssertEqual(service.lifecycleStatus, .authorizing)
+    XCTAssertEqual(
+      service.statusMessage, "Robinhood returned to Yield. Verifying the connection with the WHOX server.")
+  }
+
+  @MainActor
   func testDemoPairingCompletesWithoutBrokerToken() async {
     let client = DemoBrokerPairingClient(connectAfterPolls: 1)
     let service = PairingService(

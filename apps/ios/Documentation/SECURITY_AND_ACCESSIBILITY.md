@@ -2,7 +2,7 @@
 
 ## Security invariants
 
-- Robinhood setup may be displayed through `ASWebAuthenticationSession`, but Robinhood credentials stay in the system authentication surface. The callback reaches the WHOX API; after a tenant-bound cleanup tombstone commits, an isolated approved connector exchanges the code into a provisional encrypted-vault transaction. Provider confirmation must precede broker hydration. iOS and the ordinary API receive neither token bytes nor Robinhood credentials.
+- Robinhood setup opens in the Safari app, where Robinhood credentials remain outside Yield. A token-free, pairing-bound custom-scheme callback returns the user to Yield while the callback also reaches the WHOX API; after a tenant-bound cleanup tombstone commits, an isolated approved connector exchanges the code into a provisional encrypted-vault transaction. Provider confirmation must precede broker hydration. iOS and the ordinary API receive neither token bytes nor Robinhood credentials.
 - WHOX access and refresh material uses Keychain items restricted to this device.
 - Sign in with Apple identity tokens are exchanged with the backend; the app never treats an unverified local identity as a production session.
 - StoreKit verification is necessary but not sufficient for server-agent access. Backend JWS verification and acknowledgment are authoritative.

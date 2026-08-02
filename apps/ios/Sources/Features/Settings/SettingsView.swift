@@ -544,7 +544,7 @@ private struct ConnectionSettingsView: View {
       }
       Section("Disclosure") {
         Text(
-          "Treasury opens the server-provided Robinhood setup in Apple’s secure authentication browser. Sign in and approve within Robinhood. No password, OAuth code, broker token, or MCP credential is returned to or stored by this app."
+          "Yield opens the server-provided Robinhood setup in Safari. After approval, the secure callback returns to Yield. No password, OAuth code, broker token, or MCP credential is returned to or stored by this app."
         )
       }
     }

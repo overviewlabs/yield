@@ -1240,6 +1240,13 @@ final class AppSession {
   }
 
   func handle(url: URL) {
+    if MobileAuthorizationURLPolicy.isBrokerCallback(url) {
+      Task { @MainActor in
+        _ = await pairingService.handleAuthorizationCallback(url)
+        adoptCompletedPairing()
+      }
+      return
+    }
     guard let route = TreasuryRoute.parse(url) else {
       alertMessage = "That Yield link is not supported."
       return
