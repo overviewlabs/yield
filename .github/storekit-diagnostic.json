@@ -1,7 +1,52 @@
 {
   "reviewSubmission": {
     "appStoreVersion": {
-      "ageRating": null,
+      "appInfos": [
+        {
+          "ageRating": {
+            "advertising": false,
+            "ageAssurance": false,
+            "ageRatingOverride": "NONE",
+            "ageRatingOverrideV2": "NONE",
+            "alcoholTobaccoOrDrugUseOrReferences": "NONE",
+            "contests": "NONE",
+            "developerAgeRatingInfoUrl": null,
+            "gambling": false,
+            "gamblingSimulated": "NONE",
+            "gunsOrOtherWeapons": "NONE",
+            "healthOrWellnessTopics": false,
+            "horrorOrFearThemes": "NONE",
+            "kidsAgeBand": null,
+            "koreaAgeRatingOverride": "NONE",
+            "lootBox": false,
+            "matureOrSuggestiveThemes": "NONE",
+            "medicalOrTreatmentInformation": "NONE",
+            "messagingAndChat": false,
+            "parentalControls": false,
+            "profanityOrCrudeHumor": "NONE",
+            "sexualContentGraphicAndNudity": "NONE",
+            "sexualContentOrNudity": "NONE",
+            "socialMedia": false,
+            "socialMediaAgeRestricted": false,
+            "unrestrictedWebAccess": false,
+            "userGeneratedContent": false,
+            "violenceCartoonOrFantasy": "NONE",
+            "violenceRealistic": "NONE",
+            "violenceRealisticProlongedGraphicOrSadistic": "NONE"
+          },
+          "attributes": {
+            "appStoreAgeRating": "FOUR_PLUS",
+            "appStoreState": "PREPARE_FOR_SUBMISSION",
+            "australiaAgeRating": null,
+            "brazilAgeRating": "L",
+            "brazilAgeRatingV2": "SELF_RATED_L",
+            "franceAgeRating": null,
+            "koreaAgeRating": null,
+            "state": "PREPARE_FOR_SUBMISSION"
+          },
+          "id": "79c35ddd-1220-4c41-ada5-b150808dbc8a"
+        }
+      ],
       "attributes": {
         "appStoreState": "PREPARE_FOR_SUBMISSION",
         "appVersionState": "PREPARE_FOR_SUBMISSION",
@@ -14,6 +59,25 @@
         "reviewType": "APP_STORE",
         "usesIdfa": false,
         "versionString": "1.0"
+      },
+      "availability": null,
+      "build": {
+        "buildAudienceType": "APP_STORE_ELIGIBLE",
+        "computedMinMacOsVersion": "26.0",
+        "computedMinVisionOsVersion": "26.0",
+        "expirationDate": "2026-10-31T06:19:43-07:00",
+        "expired": false,
+        "iconAssetToken": {
+          "height": 152,
+          "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/bd/65/66/bd656614-f6d5-816a-9f29-d66fbca4cecb/AppIcon76x76@2x_U007eipad.png/{w}x{h}bb.{f}",
+          "width": 152
+        },
+        "lsMinimumSystemVersion": null,
+        "minOsVersion": "26.0",
+        "processingState": "VALID",
+        "uploadedDate": "2026-08-02T06:19:43-07:00",
+        "usesNonExemptEncryption": false,
+        "version": "5"
       },
       "id": "ab09b751-8852-4775-9654-62bc8747ea99",
       "localizations": [
@@ -28,9 +92,110 @@
             "whatsNew": null
           },
           "id": "fa881a76-aeb6-4be5-b447-6be66a13fc13",
-          "screenshotSetCount": 1
+          "screenshotSetCount": 1,
+          "screenshotSets": [
+            {
+              "attributes": {
+                "screenshotDisplayType": "APP_IPHONE_61"
+              },
+              "id": "b39e70da-ee32-4fa5-bbca-6add33cc40a2",
+              "screenshots": [
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource221/v4/3a/88/19/3a8819c7-974a-144c-fd2b-ce6b02c3d18c/yield-1-C0B9E2F8-7CA2-4D67-83EA-FAD97176763B.png",
+                  "assetType": "SortedD73ScreenShot",
+                  "fileName": "yield-1-C0B9E2F8-7CA2-4D67-83EA-FAD97176763B.png",
+                  "fileSize": 368224,
+                  "imageAsset": {
+                    "height": 2622,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3a/88/19/3a8819c7-974a-144c-fd2b-ce6b02c3d18c/yield-1-C0B9E2F8-7CA2-4D67-83EA-FAD97176763B.png/{w}x{h}bb.{f}",
+                    "width": 1206
+                  },
+                  "sourceFileChecksum": "08c2359300b1f00774ebd9ded5b70ce1",
+                  "uploadOperations": null
+                },
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource211/v4/c4/70/b0/c470b05f-2b8e-f522-ecbf-24f96ff985ad/yield-2-07B051C9-2D79-4EFE-A6C1-E2CCFF6B13E8.png",
+                  "assetType": "SortedD73ScreenShot",
+                  "fileName": "yield-2-07B051C9-2D79-4EFE-A6C1-E2CCFF6B13E8.png",
+                  "fileSize": 519819,
+                  "imageAsset": {
+                    "height": 2622,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c4/70/b0/c470b05f-2b8e-f522-ecbf-24f96ff985ad/yield-2-07B051C9-2D79-4EFE-A6C1-E2CCFF6B13E8.png/{w}x{h}bb.{f}",
+                    "width": 1206
+                  },
+                  "sourceFileChecksum": "e4cf3a65df3ffd9f903b48bd457bbc8a",
+                  "uploadOperations": null
+                },
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource221/v4/88/f9/91/88f99115-c2bf-e5bc-7db5-9a177fcc7d67/yield-3-A8CC422C-880E-4785-9559-8B9B2363A7DC.png",
+                  "assetType": "SortedD73ScreenShot",
+                  "fileName": "yield-3-A8CC422C-880E-4785-9559-8B9B2363A7DC.png",
+                  "fileSize": 326439,
+                  "imageAsset": {
+                    "height": 2622,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/88/f9/91/88f99115-c2bf-e5bc-7db5-9a177fcc7d67/yield-3-A8CC422C-880E-4785-9559-8B9B2363A7DC.png/{w}x{h}bb.{f}",
+                    "width": 1206
+                  },
+                  "sourceFileChecksum": "91fd29db0619ee6685ae44755e41a04c",
+                  "uploadOperations": null
+                },
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource221/v4/fd/8a/b8/fd8ab88c-e223-b6d3-a280-2c2c9158ec33/yield-4-778EDA6B-0AC3-41F9-86B6-DE8C0CDCB4C9.png",
+                  "assetType": "SortedD73ScreenShot",
+                  "fileName": "yield-4-778EDA6B-0AC3-41F9-86B6-DE8C0CDCB4C9.png",
+                  "fileSize": 340951,
+                  "imageAsset": {
+                    "height": 2622,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/fd/8a/b8/fd8ab88c-e223-b6d3-a280-2c2c9158ec33/yield-4-778EDA6B-0AC3-41F9-86B6-DE8C0CDCB4C9.png/{w}x{h}bb.{f}",
+                    "width": 1206
+                  },
+                  "sourceFileChecksum": "88c264b18e4813a362a0dbe98d6db592",
+                  "uploadOperations": null
+                },
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource211/v4/05/2a/63/052a6399-1c80-77e0-29ad-9c5a5f173852/yield-5-FAF0660E-8F5C-4D45-9631-92C0D696C36A.png",
+                  "assetType": "SortedD73ScreenShot",
+                  "fileName": "yield-5-FAF0660E-8F5C-4D45-9631-92C0D696C36A.png",
+                  "fileSize": 318249,
+                  "imageAsset": {
+                    "height": 2622,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/05/2a/63/052a6399-1c80-77e0-29ad-9c5a5f173852/yield-5-FAF0660E-8F5C-4D45-9631-92C0D696C36A.png/{w}x{h}bb.{f}",
+                    "width": 1206
+                  },
+                  "sourceFileChecksum": "69fa0e9f99cf45761f5d933e8c7ba607",
+                  "uploadOperations": null
+                }
+              ]
+            }
+          ]
         }
       ],
+      "priceSchedule": {},
       "reviewDetail": {
         "contactEmail": "admin@overviewlabs.ai",
         "contactFirstName": "Evans",
@@ -53,28 +218,28 @@
         "added": false,
         "id": "3676f212-a18c-463a-879b-01cfa482cac8",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"92fb8b76-16e8-4e15-ad01-2f9bb1da4d46\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"2f11775b-dfda-433c-82be-09418e3a2f2d\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "0f62bb6e-4e91-451b-a718-152fc9a38118",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"76084d76-ada8-4b32-a140-130a35d990e8\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"7ab665bb-3d9a-4b07-b9a8-106b4726f839\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "f9b2021a-b0fd-4adb-b620-17a295c18f2b",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"a80586af-15ff-4e26-ac23-3cf8c5ad27a9\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"50f9f163-0da1-4858-897f-8eb9e65eb014\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "d704945d-c643-4680-ac00-1bd4abfdd827",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"07ed1a4a-9775-4b7f-9fd7-3050aa05c93d\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"7bab7b09-ccd9-453f-81ec-f3bb91499ed9\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       }
     ],
