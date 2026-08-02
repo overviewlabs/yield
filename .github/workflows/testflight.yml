@@ -1,4 +1,4 @@
-name: Build signed Yield TestFlight IPA
+name: Build and upload Yield to TestFlight
 
 on:
   workflow_dispatch:
@@ -94,3 +94,26 @@ jobs:
           path: ${{ runner.temp }}/export/*.ipa
           if-no-files-found: error
           retention-days: 1
+
+      - name: Upload to App Store Connect
+        env:
+          ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          ASC_PRIVATE_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64 }}
+        run: |
+          set -euo pipefail
+          test -n "$ASC_KEY_ID"
+          test -n "$ASC_ISSUER_ID"
+          test -n "$ASC_PRIVATE_KEY_BASE64"
+          KEY_DIRECTORY="$HOME/.appstoreconnect/private_keys"
+          mkdir -p "$KEY_DIRECTORY"
+          printf '%s' "$ASC_PRIVATE_KEY_BASE64" \
+            | base64 --decode > "$KEY_DIRECTORY/AuthKey_${ASC_KEY_ID}.p8"
+          IPA_FILES=("$RUNNER_TEMP"/export/*.ipa)
+          test "${#IPA_FILES[@]}" -eq 1
+          xcrun altool \
+            --upload-app \
+            --type ios \
+            --file "${IPA_FILES[0]}" \
+            --apiKey "$ASC_KEY_ID" \
+            --apiIssuer "$ASC_ISSUER_ID"
