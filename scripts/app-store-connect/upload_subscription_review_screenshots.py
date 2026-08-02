@@ -324,27 +324,79 @@ def complete_app_review_submission(token: str) -> dict:
     if not app_versions:
         return {"submitted": False, "message": "No iOS App Store version 1.0 exists"}
     app_version = app_versions[0]
+    localization_data = api_request(
+        token,
+        "GET",
+        f"/v1/appStoreVersions/{app_version['id']}/appStoreVersionLocalizations?limit=200",
+    )["data"]
+    localization_diagnostics = []
+    for localization in localization_data:
+        screenshot_sets = api_request(
+            token,
+            "GET",
+            f"/v1/appStoreVersionLocalizations/{localization['id']}/appScreenshotSets?limit=200",
+        )["data"]
+        localization_diagnostics.append(
+            {
+                "id": localization["id"],
+                "attributes": localization.get("attributes", {}),
+                "screenshotSetCount": len(screenshot_sets),
+            }
+        )
+    review_detail = api_request(
+        token,
+        "GET",
+        f"/v1/appStoreVersions/{app_version['id']}/appStoreReviewDetail",
+        allowed_errors={404},
+    ).get("data")
+    age_rating = api_request(
+        token,
+        "GET",
+        f"/v1/appStoreVersions/{app_version['id']}/ageRatingDeclaration",
+        allowed_errors={404},
+    ).get("data")
+    app_version_diagnostic = {
+        "id": app_version["id"],
+        "attributes": app_version.get("attributes", {}),
+        "localizations": localization_diagnostics,
+        "reviewDetail": None if review_detail is None else review_detail.get("attributes", {}),
+        "ageRating": None if age_rating is None else age_rating.get("attributes", {}),
+    }
     subscription_versions = [
         ensure_subscription_version(token, subscription_id) for subscription_id in SUBSCRIPTIONS
     ]
-    created = api_request(
-        token,
-        "POST",
-        "/v1/reviewSubmissions",
-        {
-            "data": {
-                "type": "reviewSubmissions",
-                "attributes": {"platform": "IOS"},
-                "relationships": {
-                    "app": {"data": {"type": "apps", "id": app_id}}
-                },
-            }
-        },
-        allowed_errors={409, 422},
+    existing = api_request(
+        token, "GET", f"/v1/reviewSubmissions?filter[app]={app_id}&limit=50"
+    )["data"]
+    pending = next(
+        (item for item in existing if not item.get("attributes", {}).get("submitted", False)),
+        None,
     )
-    if "data" not in created:
-        return {"submitted": False, "stage": "create", **response_error(created)}
-    submission_id = created["data"]["id"]
+    if pending is None:
+        created = api_request(
+            token,
+            "POST",
+            "/v1/reviewSubmissions",
+            {
+                "data": {
+                    "type": "reviewSubmissions",
+                    "attributes": {"platform": "IOS"},
+                    "relationships": {
+                        "app": {"data": {"type": "apps", "id": app_id}}
+                    },
+                }
+            },
+            allowed_errors={409, 422},
+        )
+        if "data" not in created:
+            return {
+                "submitted": False,
+                "stage": "create",
+                "appStoreVersion": app_version_diagnostic,
+                **response_error(created),
+            }
+        pending = created["data"]
+    submission_id = pending["id"]
     items = [
         {
             "kind": "appStoreVersion",
@@ -388,6 +440,7 @@ def complete_app_review_submission(token: str) -> dict:
         "submitted": "data" in submitted,
         "submissionId": submission_id,
         "items": items,
+        "appStoreVersion": app_version_diagnostic,
         **({} if "data" in submitted else response_error(submitted)),
     }
 
