@@ -1,0 +1,267 @@
+name: whox-treasury
+
+services:
+  postgres:
+    image: postgres:17-alpine@sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-whox_treasury}
+      POSTGRES_USER: ${POSTGRES_USER:-whox}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-whox}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2
+    command: ["redis-server", "--appendonly", "yes", "--save", "60", "1"]
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+
+  api:
+    profiles: ["backend"]
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.service
+    command: ["node", "services/api/dist/index.js"]
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: 8080
+      APP_ENV: demo
+      DATABASE_URL: postgresql://${POSTGRES_USER:-whox}:${POSTGRES_PASSWORD:-whox}@postgres:5432/${POSTGRES_DB:-whox_treasury}
+      REDIS_URL: redis://redis:6379/0
+      PUBLIC_API_URL: http://localhost:${API_PORT:-8080}
+      CONNECT_WEB_URL: http://localhost:${CONNECTION_WEB_PORT:-4173}
+      ADMIN_WEB_URL: http://localhost:${ADMIN_WEB_PORT:-4174}
+      CORS_ALLOWED_ORIGINS: http://localhost:${CONNECTION_WEB_PORT:-4173},http://localhost:${ADMIN_WEB_PORT:-4174}
+      LIVE_TRADING_ENABLED: "false"
+      ROBINHOOD_PRODUCTION_APPROVED: "false"
+      LEGAL_DOCUMENTS_APPROVED: "false"
+      ADVISORY_COMPLIANCE_APPROVED: "false"
+      APP_STORE_FINANCIAL_ENTITY_APPROVED: "false"
+      OPTIONS_LIVE_TRADING_ENABLED: "false"
+      AUTONOMOUS_MODE_ENABLED: "false"
+    ports:
+      - "127.0.0.1:${API_PORT:-8080}:8080"
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/readyz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: ["/tmp"]
+
+  agent-orchestrator:
+    profiles: ["workers"]
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.service
+    command: ["node", "services/agent-orchestrator/dist/worker-main.js"]
+    environment:
+      NODE_ENV: development
+      APP_ENV: demo
+      HEALTH_PORT: 9101
+      DATABASE_URL: postgresql://${POSTGRES_USER:-whox}:${POSTGRES_PASSWORD:-whox}@postgres:5432/${POSTGRES_DB:-whox_treasury}
+      REDIS_URL: redis://redis:6379/0
+      MARKET_DATA_PROVIDER_ID: whox-demo-fixture
+      APPROVED_MARKET_DATA_PROVIDERS: whox-demo-fixture
+      AGENT_SCHEDULER_POLL_MS: 15000
+      AGENT_SCHEDULER_BATCH_SIZE: 250
+      AGENT_SCHEDULER_LAG_ALERT_SECONDS: 300
+      LIVE_TRADING_ENABLED: "false"
+    ports:
+      - "127.0.0.1:${ORCHESTRATOR_HEALTH_PORT:-9101}:9101"
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:9101/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: ["/tmp"]
+
+  execution-worker:
+    profiles: ["workers"]
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.service
+    command: ["node", "services/execution-worker/dist/worker-main.js"]
+    environment:
+      NODE_ENV: development
+      APP_ENV: demo
+      HEALTH_PORT: 9102
+      DATABASE_URL: postgresql://${POSTGRES_USER:-whox}:${POSTGRES_PASSWORD:-whox}@postgres:5432/${POSTGRES_DB:-whox_treasury}
+      REDIS_URL: redis://redis:6379/0
+      MARKET_DATA_PROVIDER_ID: whox-demo-fixture
+      APPROVED_MARKET_DATA_PROVIDERS: whox-demo-fixture
+      LIVE_TRADING_ENABLED: "false"
+      ROBINHOOD_PRODUCTION_APPROVED: "false"
+      LEGAL_DOCUMENTS_APPROVED: "false"
+      ADVISORY_COMPLIANCE_APPROVED: "false"
+      APP_STORE_FINANCIAL_ENTITY_APPROVED: "false"
+      OPTIONS_LIVE_TRADING_ENABLED: "false"
+      AUTONOMOUS_MODE_ENABLED: "false"
+    ports:
+      - "127.0.0.1:${EXECUTION_HEALTH_PORT:-9102}:9102"
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:9102/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: ["/tmp"]
+
+  notification-worker:
+    profiles: ["workers"]
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.service
+    command: ["node", "services/notification-worker/dist/worker-main.js"]
+    environment:
+      NODE_ENV: development
+      APP_ENV: demo
+      HEALTH_PORT: 9103
+      DATABASE_URL: postgresql://${POSTGRES_USER:-whox}:${POSTGRES_PASSWORD:-whox}@postgres:5432/${POSTGRES_DB:-whox_treasury}
+      REDIS_URL: redis://redis:6379/0
+      LIVE_TRADING_ENABLED: "false"
+    ports:
+      - "127.0.0.1:${NOTIFICATION_HEALTH_PORT:-9103}:9103"
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:9103/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: ["/tmp"]
+
+  market-data-service:
+    profiles: ["workers"]
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.service
+    command: ["node", "services/market-data-service/dist/worker-main.js"]
+    environment:
+      NODE_ENV: development
+      APP_ENV: demo
+      HEALTH_PORT: 9104
+      DATABASE_URL: postgresql://${POSTGRES_USER:-whox}:${POSTGRES_PASSWORD:-whox}@postgres:5432/${POSTGRES_DB:-whox_treasury}
+      REDIS_URL: redis://redis:6379/0
+      MARKET_DATA_PROVIDER_ID: whox-demo-fixture
+      APPROVED_MARKET_DATA_PROVIDERS: whox-demo-fixture
+      LIVE_TRADING_ENABLED: "false"
+    ports:
+      - "127.0.0.1:${MARKET_DATA_HEALTH_PORT:-9104}:9104"
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:9104/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: ["/tmp"]
+
+  # This profile intentionally demonstrates the fail-closed standard artifact:
+  # it exits until a reviewed build injects an approved connector in process.
+  broker-sync-service:
+    profiles: ["approved-broker"]
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.service
+    command: ["node", "services/broker-sync-service/dist/worker-main.js"]
+    environment:
+      NODE_ENV: development
+      APP_ENV: paper
+      HEALTH_PORT: 9105
+      DATABASE_URL: postgresql://${POSTGRES_USER:-whox}:${POSTGRES_PASSWORD:-whox}@postgres:5432/${POSTGRES_DB:-whox_treasury}
+      BROKER_SNAPSHOT_MAX_AGE_SECONDS: 60
+      BROKER_SYNC_INTERVAL_SECONDS: 45
+      LIVE_TRADING_ENABLED: "false"
+      ROBINHOOD_PRODUCTION_APPROVED: "false"
+    ports:
+      - "127.0.0.1:${BROKER_SYNC_HEALTH_PORT:-9105}:9105"
+    depends_on:
+      postgres: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:9105/readyz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: ["/tmp"]
+
+  web-connection:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.web-connection
+      args:
+        BUILD_DEPLOYMENT_ENV: demo
+        BUILD_PAIRING_PROVIDER: mock
+        BUILD_API_BASE_URL: http://localhost:${API_PORT:-8080}
+    ports:
+      - "127.0.0.1:${CONNECTION_WEB_PORT:-4173}:8080"
+    environment:
+      API_CONNECT_SRC: http://localhost:${API_PORT:-8080}
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: ["/tmp", "/var/cache/nginx", "/var/run", "/etc/nginx/conf.d:mode=1777"]
+
+  admin-console:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.admin-console
+      args:
+        BUILD_DEPLOYMENT_ENV: demo
+        BUILD_ADMIN_MODE: mock
+    ports:
+      - "127.0.0.1:${ADMIN_WEB_PORT:-4174}:8080"
+    environment:
+      API_CONNECT_SRC: http://localhost:${API_PORT:-8080}
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: ["/tmp", "/var/cache/nginx", "/var/run", "/etc/nginx/conf.d:mode=1777"]
+
+volumes:
+  postgres-data:
+  redis-data:

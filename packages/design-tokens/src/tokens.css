@@ -1,0 +1,26 @@
+:root {
+  color-scheme: light dark;
+  --whox-accent: #4355d8;
+  --whox-positive: #16794b;
+  --whox-negative: #b33a3a;
+  --whox-warning: #9a5a08;
+  --whox-neutral: #626875;
+  --whox-surface: #ffffff;
+  --whox-background: #f5f6fa;
+  --whox-ink: #11131a;
+  --whox-radius-compact: 10px;
+  --whox-radius-surface: 18px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --whox-accent: #8390ff;
+    --whox-positive: #5fd39b;
+    --whox-negative: #ff8585;
+    --whox-warning: #ffc56f;
+    --whox-neutral: #a9afbc;
+    --whox-surface: #171920;
+    --whox-background: #0d0f14;
+    --whox-ink: #f4f5f8;
+  }
+}

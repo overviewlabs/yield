@@ -1,0 +1,23 @@
+FROM node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd AS build
+WORKDIR /workspace
+COPY package.json package-lock.json tsconfig.base.json ./
+COPY apps/web-connection/package.json apps/web-connection/package.json
+RUN npm ci --ignore-scripts --workspace @whox/web-connection
+COPY apps/web-connection apps/web-connection
+ARG BUILD_DEPLOYMENT_ENV=demo
+ARG BUILD_PAIRING_PROVIDER=mock
+ARG BUILD_API_BASE_URL=http://localhost:8080
+ARG BUILD_ALLOWED_ORIGINS=https://agent.robinhood.com
+RUN VITE_DEPLOYMENT_ENV="$BUILD_DEPLOYMENT_ENV" \
+    VITE_PAIRING_PROVIDER="$BUILD_PAIRING_PROVIDER" \
+    VITE_API_BASE_URL="$BUILD_API_BASE_URL" \
+    VITE_ALLOWED_AUTH_ORIGINS="$BUILD_ALLOWED_ORIGINS" \
+    npm run build --workspace @whox/web-connection
+
+FROM nginxinc/nginx-unprivileged:1.30.4-alpine@sha256:44e36330f74d4f3a1d4e222acca9e23b401fb87811a7597024502bb759c4dd49 AS runtime
+ENV API_CONNECT_SRC=http://localhost:8080 NGINX_ENVSUBST_FILTER=API_CONNECT_SRC
+COPY infrastructure/docker/nginx.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=build /workspace/apps/web-connection/dist /usr/share/nginx/html
+USER 101
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD wget -q -O /dev/null http://127.0.0.1:8080/healthz || exit 1

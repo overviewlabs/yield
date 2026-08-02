@@ -1,0 +1,99 @@
+groups:
+  - name: treasury-safety
+    interval: 30s
+    rules:
+      - alert: DuplicateSubmissionAttempt
+        expr: increase(whox_duplicate_submission_attempts_total[5m]) > 0
+        for: 0m
+        labels: { severity: critical, page: execution }
+        annotations:
+          summary: Duplicate order submission was prevented
+          runbook: /runbooks/emergency-trading-pause.md
+      - alert: ReconciliationDelay
+        expr: max(whox_reconciliation_oldest_seconds) > 120
+        for: 2m
+        labels: { severity: critical, page: operations }
+        annotations:
+          summary: Order reconciliation exceeded the two-minute threshold
+          runbook: /runbooks/broker-outage.md
+      - alert: IncorrectAccountBinding
+        expr: increase(whox_account_binding_rejections_total[5m]) > 0
+        for: 0m
+        labels: { severity: critical, page: security }
+        annotations:
+          summary: Submission was rejected because account binding did not match
+          runbook: /runbooks/emergency-trading-pause.md
+      - alert: BrokerCapabilityChanged
+        expr: changes(whox_broker_capability_set_hash[15m]) > 0
+        for: 0m
+        labels: { severity: warning, page: broker }
+        annotations:
+          summary: Runtime broker capability discovery changed
+          runbook: /runbooks/broker-outage.md
+      - alert: ElevatedRiskRejectionRate
+        expr: sum(rate(whox_proposals_total{result="risk_rejected"}[10m])) / clamp_min(sum(rate(whox_proposals_total[10m])), 0.001) > 0.35
+        for: 10m
+        labels: { severity: warning, page: risk }
+        annotations:
+          summary: Risk rejection rate is above the expected operating band
+          runbook: /runbooks/incident-response.md
+      - alert: SystemWideRiskHalt
+        expr: max(whox_system_risk_halt_active) == 1
+        for: 0m
+        labels: { severity: critical, page: risk }
+        annotations:
+          summary: System-wide risk halt is active
+          runbook: /runbooks/emergency-trading-pause.md
+      - alert: BrokerTokenDecryptionFailure
+        expr: increase(whox_broker_token_decrypt_failures_total[5m]) > 0
+        for: 0m
+        labels: { severity: critical, page: security }
+        annotations:
+          summary: Execution worker could not decrypt a broker token
+          runbook: /runbooks/token-compromise.md
+      - alert: CrossTenantAuthorizationFailures
+        expr: sum(increase(whox_authorization_denials_total{reason="tenant_mismatch"}[10m])) > 5
+        for: 0m
+        labels: { severity: critical, page: security }
+        annotations:
+          summary: Cross-tenant authorization denials are elevated
+          runbook: /runbooks/incident-response.md
+      - alert: MarketDataStalenessBreach
+        expr: max(whox_market_data_age_seconds) > 120
+        for: 1m
+        labels: { severity: critical, page: data }
+        annotations:
+          summary: Market data freshness exceeded the trading limit
+          runbook: /runbooks/emergency-trading-pause.md
+      - alert: ExecutionWorkerUnavailable
+        expr: up{job="execution-worker"} == 0
+        for: 1m
+        labels: { severity: critical, page: execution }
+        annotations:
+          summary: Execution worker is unavailable; submissions must remain blocked
+          runbook: /runbooks/emergency-trading-pause.md
+      - alert: AuditLogWriteFailure
+        expr: increase(whox_audit_log_write_failures_total[5m]) > 0
+        for: 0m
+        labels: { severity: critical, page: compliance }
+        annotations:
+          summary: An immutable audit event could not be written
+          runbook: /runbooks/incident-response.md
+
+  - name: treasury-service-health
+    rules:
+      - alert: ApiHighErrorRate
+        expr: sum(rate(http_server_request_duration_seconds_count{job="api",http_response_status_code=~"5.."}[5m])) / clamp_min(sum(rate(http_server_request_duration_seconds_count{job="api"}[5m])), 0.001) > 0.03
+        for: 5m
+        labels: { severity: warning, page: api }
+        annotations: { summary: API 5xx rate exceeds three percent }
+      - alert: QueueBacklog
+        expr: max by (queue) (whox_queue_visible_messages) > 1000
+        for: 10m
+        labels: { severity: warning, page: operations }
+        annotations: { summary: Durable queue backlog is not recovering }
+      - alert: NotificationDeliveryFailures
+        expr: sum(rate(whox_notification_delivery_total{result="failed"}[10m])) > 1
+        for: 10m
+        labels: { severity: warning, page: notifications }
+        annotations: { summary: Notification delivery failures are elevated }

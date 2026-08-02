@@ -1,0 +1,7 @@
+{
+  "name":"@whox/market-data-service","version":"0.1.0","private":true,"type":"module","main":"./dist/index.js","types":"./dist/index.d.ts",
+  "exports":{".":{"types":"./dist/index.d.ts","import":"./dist/index.js"}},
+  "scripts":{"build":"tsc -p tsconfig.json","typecheck":"tsc -p tsconfig.json --noEmit","lint":"tsc -p tsconfig.json --noEmit","test":"tsx --test test/*.test.ts","start":"node dist/worker-main.js","dev":"tsx src/worker-main.ts","clean":"node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""},
+  "dependencies":{"@whox/contracts":"*","@whox/shared-config":"*","@whox/agent-orchestrator":"*","pg":"^8.16.3"},
+  "devDependencies":{"@types/node":"^22.0.0","@types/pg":"^8.15.5","tsx":"^4.20.0","typescript":"^5.9.0"},"engines":{"node":">=22"}
+}

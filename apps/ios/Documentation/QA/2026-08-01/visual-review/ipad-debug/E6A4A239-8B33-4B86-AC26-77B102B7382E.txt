@@ -1,0 +1,6 @@
+Failed to get matching snapshot: No matches found for Elements matching predicate '"Complete Demo Pairing" IN identifiers' from input {(
+    Button, label: 'Back',
+    Button, label: 'Copy Setup Link',
+    Button, label: 'Email Setup Link',
+    Button, label: 'Continue'
+)}

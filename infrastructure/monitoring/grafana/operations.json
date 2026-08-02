@@ -1,0 +1,21 @@
+{
+  "annotations": { "list": [] },
+  "editable": false,
+  "graphTooltip": 1,
+  "panels": [
+    { "type": "stat", "title": "Execution kill switch", "id": 1, "gridPos": { "h": 5, "w": 6, "x": 0, "y": 0 }, "targets": [{ "expr": "max(whox_execution_kill_switch_active)", "legendFormat": "active" }], "fieldConfig": { "defaults": { "mappings": [{ "type": "value", "options": { "0": { "text": "Inactive" }, "1": { "text": "ACTIVE" } } }], "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } }, "overrides": [] } },
+    { "type": "timeseries", "title": "API latency p95", "id": 2, "gridPos": { "h": 8, "w": 9, "x": 6, "y": 0 }, "targets": [{ "expr": "histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{job=\"api\"}[5m])))", "legendFormat": "p95" }] },
+    { "type": "timeseries", "title": "Queue depth", "id": 3, "gridPos": { "h": 8, "w": 9, "x": 15, "y": 0 }, "targets": [{ "expr": "max by (queue) (whox_queue_visible_messages)", "legendFormat": "{{queue}}" }] },
+    { "type": "timeseries", "title": "Broker and reconciliation", "id": 4, "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }, "targets": [{ "expr": "max(whox_reconciliation_oldest_seconds)", "legendFormat": "oldest reconciliation (s)" }, { "expr": "sum(rate(whox_broker_tool_calls_total{result=\"error\"}[5m]))", "legendFormat": "broker errors/s" }] },
+    { "type": "timeseries", "title": "Safety controls", "id": 5, "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }, "targets": [{ "expr": "sum(rate(whox_proposals_total{result=\"risk_rejected\"}[5m]))", "legendFormat": "risk rejections/s" }, { "expr": "sum(increase(whox_duplicate_submission_attempts_total[5m]))", "legendFormat": "duplicate attempts" }, { "expr": "sum(increase(whox_account_binding_rejections_total[5m]))", "legendFormat": "binding rejections" }] }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["whox", "treasury", "operations"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timezone": "browser",
+  "title": "WHOX Treasury Operations",
+  "uid": "whox-treasury-operations",
+  "version": 1
+}

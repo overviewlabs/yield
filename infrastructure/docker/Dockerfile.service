@@ -1,0 +1,23 @@
+FROM node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd AS build
+WORKDIR /workspace
+COPY package.json package-lock.json tsconfig.base.json ./
+COPY packages ./packages
+COPY services ./services
+RUN npm ci --ignore-scripts
+RUN npm run build --workspaces --if-present
+
+FROM build AS production-dependencies
+RUN npm prune --omit=dev --ignore-scripts
+
+FROM node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd AS runtime
+ENV NODE_ENV=production
+WORKDIR /workspace
+RUN addgroup -S whox && adduser -S -G whox -u 10001 whox \
+    && rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn-v1.22.22 \
+    && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/pnpm /usr/local/bin/pnpx
+COPY --from=build --chown=whox:whox /workspace/package.json /workspace/package-lock.json ./
+COPY --from=production-dependencies --chown=whox:whox /workspace/node_modules ./node_modules
+COPY --from=build --chown=whox:whox /workspace/packages ./packages
+COPY --from=build --chown=whox:whox /workspace/services ./services
+COPY --chown=whox:whox database ./database
+USER 10001

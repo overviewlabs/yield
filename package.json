@@ -1,0 +1,46 @@
+{
+  "name": "whox-treasury",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WHOX Treasury native agentic investing control plane",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "workspaces": [
+    "packages/shared-config",
+    "packages/contracts",
+    "packages/risk-schemas",
+    "packages/agent-definitions",
+    "packages/test-fixtures",
+    "packages/design-tokens",
+    "services/*",
+    "apps/web-connection",
+    "apps/admin-console"
+  ],
+  "scripts": {
+    "build": "npm run build:workspaces",
+    "build:workspaces": "npm run build --workspaces --if-present",
+    "typecheck": "npm run build && npm run typecheck:workspaces",
+    "typecheck:workspaces": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run build && npm run lint:workspaces",
+    "lint:workspaces": "npm run lint --workspaces --if-present",
+    "test": "npm run build && npm run test:workspaces",
+    "test:workspaces": "npm run test --workspaces --if-present",
+    "test:security": "npm run test:security --workspaces --if-present",
+    "safety": "node scripts/verify-safety.mjs",
+    "verify": "npm run safety && npm run build && npm run typecheck:workspaces && npm run lint:workspaces && npm run test:workspaces && npm run test:security",
+    "ios:build": "make -C apps/ios build",
+    "ios:test": "make -C apps/ios test",
+    "dev": "docker compose -f infrastructure/docker/compose.yml up --build",
+    "down": "docker compose -f infrastructure/docker/compose.yml down",
+    "db:migrate": "npm run db:migrate --workspace @whox/api",
+    "db:seed": "npm run db:seed --workspace @whox/api",
+    "db:test": "npm run db:test --workspace @whox/api"
+  },
+  "devDependencies": {
+    "@redocly/cli": "2.43.2",
+    "@types/node": "^22.15.0",
+    "openapi-typescript": "7.13.0",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,12 @@
+[
+  {"id":"terms","title":"Terms of Service","version":"DEMO-2026.08","productionApproved":false,"summary":"Demo fixture only. Counsel-approved terms are required before Live activation."},
+  {"id":"privacy","title":"Privacy Policy","version":"DEMO-2026.08","productionApproved":false,"summary":"Demo fixture only. Runtime data practices must be reflected before release."},
+  {"id":"ai-risk","title":"AI Agent Risk Disclosure","version":"DEMO-2026.08","productionApproved":false,"summary":"Automated analysis can be wrong. Investing can lose money."},
+  {"id":"broker","title":"Brokerage Connection Disclosure","version":"DEMO-2026.08","productionApproved":false,"summary":"WHOX Treasury is not Robinhood and stores no brokerage credential on this device."},
+  {"id":"options","title":"Options Risk Disclosure","version":"DEMO-2026.08","productionApproved":false,"summary":"Options may lose their premium quickly and require separate broker permission."},
+  {"id":"subscription","title":"Subscription Terms","version":"DEMO-2026.08","productionApproved":false,"summary":"Subscriptions provide feature access and never guarantee investment returns."},
+  {"id":"advisory","title":"Investment Advisory Agreement","version":"DEMO-2026.08","productionApproved":false,"summary":"Demo fixture only. An applicable counsel-approved advisory agreement is required before Live activation."},
+  {"id":"electronic","title":"Electronic Communications Consent","version":"DEMO-2026.08","productionApproved":false,"summary":"Demo fixture only. Production consent language and delivery records require approval."},
+  {"id":"performance","title":"Performance Presentation Disclosure","version":"DEMO-2026.08","productionApproved":false,"summary":"Demo, Paper, backtested, and Live results must remain separately and completely labeled."},
+  {"id":"ai-data","title":"Data Processing and Third-Party AI Disclosure","version":"DEMO-2026.08","productionApproved":false,"summary":"Demo fixture only. Production processors and AI data practices must be disclosed from actual runtime behavior."}
+]

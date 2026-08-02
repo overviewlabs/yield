@@ -1,0 +1,7 @@
+# Copy to paper.backend.hcl, replace every placeholder, and keep that file uncommitted.
+bucket       = "replace-with-paper-state-bucket"
+key          = "whox-treasury/paper/terraform.tfstate"
+region       = "us-east-1"
+encrypt      = true
+use_lockfile = true
+kms_key_id   = "replace-with-paper-state-kms-key-arn"

@@ -1,0 +1,13 @@
+{
+  "name": "@whox/load-tests",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "smoke": "node run.mjs --profile smoke",
+    "heavy": "node run.mjs --profile heavy"
+  }
+}

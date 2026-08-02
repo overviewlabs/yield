@@ -1,0 +1,40 @@
+{
+  "name": "@whox/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "tsx --test test/*.test.ts",
+    "test:security": "tsx --test test/security.test.ts",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "db:migrate": "node dist/database-cli.js migrate",
+    "db:seed": "node dist/database-cli.js seed",
+    "db:test": "node dist/database-cli.js test",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@apple/app-store-server-library": "3.1.0",
+    "@whox/agent-definitions": "*",
+    "@whox/contracts": "*",
+    "@whox/risk-schemas": "*",
+    "@whox/shared-config": "*",
+    "@whox/test-fixtures": "*",
+    "pg": "^8.16.3",
+    "redis": "^5.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.15.5",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

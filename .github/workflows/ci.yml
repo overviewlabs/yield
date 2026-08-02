@@ -1,0 +1,203 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typescript:
+    name: TypeScript build and tests
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          cache: npm
+          package-manager-cache: true
+      - run: npm ci
+      - name: Verify locked release posture
+        run: npm run safety
+      - name: Build workspaces
+        run: npm run build
+      - name: Run deterministic load smoke profile
+        run: npm --prefix tests/load run smoke
+      - name: Type-check workspaces
+        run: npm run typecheck:workspaces
+      - name: Lint workspaces
+        run: npm run lint:workspaces
+      - name: Test workspaces
+        run: npm run test:workspaces
+      - name: Run focused security tests
+        run: npm run test:security
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+  database:
+    name: Database migrations and policies
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17-alpine@sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193
+        env:
+          POSTGRES_DB: whox_treasury
+          POSTGRES_USER: whox
+          POSTGRES_PASSWORD: whox
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U whox -d whox_treasury"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
+    env:
+      DATABASE_URL: postgres://whox:whox@127.0.0.1:5432/whox_treasury
+      TEST_DATABASE_URL: postgres://whox:whox@127.0.0.1:5432/whox_treasury
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          cache: npm
+          package-manager-cache: true
+      - run: npm ci
+      - run: npm run build
+      - name: Apply migrations and row-level policies
+        run: npm run db:migrate
+      - name: Load nonproduction Demo fixtures
+        run: npm run db:seed
+      - name: Verify database security invariants
+        run: npm run db:test
+      - name: Verify persistent API and session runtime
+        run: npm run test --workspace @whox/api
+      - name: Verify persistent agent pipeline and durable leases
+        run: npm run test --workspace @whox/agent-orchestrator
+      - name: Verify atomic broker snapshot hydration and replay safety
+        run: npm run test --workspace @whox/broker-sync-service
+      - name: Verify persistent execution repository
+        run: npm run test --workspace @whox/execution-worker
+      - name: Verify persistent notification policy and delivery state
+        run: npm run test --workspace @whox/notification-worker
+
+  openapi:
+    name: OpenAPI quality and compatibility
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository and base history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          cache: npm
+          package-manager-cache: true
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.26.x"
+          cache: false
+      - run: npm ci
+      - name: Lint canonical OpenAPI document
+        run: npx --no-install redocly lint packages/contracts/openapi.json --max-problems 200
+      - name: Generate and compile TypeScript client types
+        run: |
+          npx --no-install openapi-typescript packages/contracts/openapi.json -o /tmp/whox-openapi.d.ts
+          npx tsc --noEmit --skipLibCheck --target ES2022 /tmp/whox-openapi.d.ts
+      - name: Install compatibility checker
+        run: go install github.com/oasdiff/oasdiff@v1.27.0
+      - name: Reject breaking API changes
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if git cat-file -e "origin/${BASE_REF}:packages/contracts/openapi.json"; then
+            git show "origin/${BASE_REF}:packages/contracts/openapi.json" > /tmp/whox-openapi-base.json
+            "$(go env GOPATH)/bin/oasdiff" breaking /tmp/whox-openapi-base.json packages/contracts/openapi.json
+          else
+            echo "No OpenAPI contract exists on the base branch; compatibility check is not applicable."
+          fi
+
+  infrastructure:
+    name: Infrastructure definitions
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: "1.15.8"
+          terraform_wrapper: false
+      - name: Check Terraform formatting
+        run: terraform fmt -check -recursive infrastructure/terraform
+      - name: Validate Paper and Live roots without remote state
+        run: |
+          for environment in paper live; do
+            terraform -chdir="infrastructure/terraform/environments/${environment}" init -backend=false -input=false
+            terraform -chdir="infrastructure/terraform/environments/${environment}" validate
+          done
+      - name: Validate Compose model
+        run: docker compose -f infrastructure/docker/compose.yml config --quiet
+      - name: Validate Prometheus configuration and rules
+        run: |
+          docker run --rm --entrypoint=/bin/promtool \
+            -v "$PWD/infrastructure/monitoring:/etc/prometheus:ro" \
+            prom/prometheus:v3.13.2@sha256:508729e0e2d18e11fd742a5a5ca70e557b940a93948c3c95fd0123a6fd538b69 check config /etc/prometheus/prometheus.yml
+          docker run --rm --entrypoint=/bin/promtool \
+            -v "$PWD/infrastructure/monitoring:/etc/prometheus:ro" \
+            prom/prometheus:v3.13.2@sha256:508729e0e2d18e11fd742a5a5ca70e557b940a93948c3c95fd0123a6fd538b69 check rules /etc/prometheus/alerts.yml
+      - name: Validate OpenTelemetry collector configuration
+        env:
+          OTEL_EXPORTER_OTLP_ENDPOINT: collector.invalid:4317
+          OTEL_EXPORTER_OTLP_AUTHORIZATION: validation-only
+        run: |
+          docker run --rm \
+            -e OTEL_EXPORTER_OTLP_ENDPOINT \
+            -e OTEL_EXPORTER_OTLP_AUTHORIZATION \
+            -v "$PWD/infrastructure/monitoring/otel-collector.yml:/etc/otelcol-contrib/config.yaml:ro" \
+            otel/opentelemetry-collector-contrib:0.157.0@sha256:f2f01157055a9b2aab9df7118e1f1c9abf345e99b23bc7a2bc791db374a7d0f6 validate --config=/etc/otelcol-contrib/config.yaml
+      - name: Validate Grafana dashboard JSON
+        run: jq empty infrastructure/monitoring/grafana/operations.json
+
+  ios:
+    name: iOS format, build, and tests
+    runs-on: macos-26
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Verify stable Xcode 26 toolchain
+        run: |
+          xcodebuild -version
+          xcodebuild -version | grep -Eq '^Xcode 26\.'
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Check Swift formatting
+        run: xcrun swift-format lint --recursive --parallel --strict apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget
+      - name: Generate the Xcode project
+        working-directory: apps/ios
+        run: xcodegen generate
+      - name: Build and test on an available iPhone simulator
+        run: |
+          SIMULATOR_ID="$(xcrun simctl list devices available --json | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid // empty')"
+          test -n "$SIMULATOR_ID"
+          xcodebuild \
+            -project apps/ios/WHOXTreasury.xcodeproj \
+            -scheme WHOXTreasury \
+            -destination "platform=iOS Simulator,id=${SIMULATOR_ID}" \
+            CODE_SIGNING_ALLOWED=NO \
+            test

@@ -1,0 +1,35 @@
+certificate_arn      = "arn:aws:acm:us-east-1:222222222222:certificate/REPLACE"
+api_image            = "222222222222.dkr.ecr.us-east-1.amazonaws.com/whox-api@sha256:REPLACE"
+worker_image         = "222222222222.dkr.ecr.us-east-1.amazonaws.com/whox-worker@sha256:REPLACE"
+public_api_url       = "https://api.example.com"
+connect_web_url      = "https://connect.example.com"
+admin_web_url        = "https://admin.example.com"
+cors_allowed_origins = ["https://connect.example.com", "https://admin.example.com"]
+redis_auth_token     = "REPLACE_VIA_SECRET_CHANNEL_MINIMUM_32_CHARS"
+alert_topic_arn      = "arn:aws:sns:us-east-1:222222222222:whox-live-alerts"
+apple_client_id      = "ai.whox.treasury"
+apple_bundle_id      = "ai.whox.treasury"
+apple_app_id         = 1234567890 # REPLACE with the numeric App Store Connect application ID
+storekit_environments = "production"
+
+# Live execution and orchestration remain at zero in the root module. This gate
+# additionally holds API and every worker at zero until runtime secrets are verified.
+runtime_secrets_bootstrapped = false
+market_data_desired_count    = 0
+market_data_provider_url     = ""
+market_data_provider_id      = ""
+approved_market_data_providers = ""
+hermes_base_url                    = "https://treasury-bot.whox.ai/v1"
+hermes_model                       = "treasury-bot"
+# Live orchestration remains at zero; this must stay false until an independently
+# reviewed, stateless and tool-free Hermes research profile exists.
+hermes_research_profile_tools_disabled = false
+agent_scheduler_poll_ms        = 15000
+agent_scheduler_batch_size     = 250
+agent_scheduler_max_outstanding_jobs = 1000
+agent_scheduler_lag_alert_seconds = 300
+notification_desired_count   = 0
+apns_team_id                  = ""
+apns_key_id                   = ""
+apns_topic                    = "ai.whox.treasury"
+apns_environments             = "production"

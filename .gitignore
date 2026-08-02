@@ -1,0 +1,39 @@
+# Apple
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.swiftpm/
+.build/
+*.xcresult/
+apps/ios/Documentation/QA/**/results/
+apps/ios/Documentation/QA/**/*.mp4
+
+# JavaScript
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Runtime data and secrets
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite3
+*.log
+tmp/
+
+# Infrastructure
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+!*.tfvars.example
+*.backend.hcl
+!*.backend.hcl.example
+.DS_Store
+
+# IDE
+.idea/
+.vscode/

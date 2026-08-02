@@ -1,0 +1,44 @@
+Application, 0x102271ee0, pid: 85960, label: 'WHOX Treasury' <App element pid: 85960>
+  Window (Main), 0x102272620, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4311054720.4>
+    Other, 0x102271100, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4311088160.5>
+      Other, 0x10227adc0, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4311089184.6>
+        Other, 0x102273060, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4311029520.7>
+          Other, 0x1022717f0, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4315998336.8>
+            Other, 0x102298520, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4314078704.9>
+              Other, 0x10227d3e0, {{0.0, 0.0}, {1032.0, 1376.0}}, identifier: 'onboardingFlow' <AX element pid: 85960, elementOrHash.elementID: 4310940064.10>
+                NavigationBar, 0x1022a2a60, {{0.0, 32.0}, {1032.0, 54.0}}, identifier: '_TtGC7SwiftUI32NavigationStackHosting' <AX element pid: 85960, elementOrHash.elementID: 4313932448.47>
+                  Button, 0x10228ba10, {{14.0, 36.0}, {36.0, 36.0}}, label: 'Back' <AX element pid: 85960, elementOrHash.elementID: 4314249072.48>
+                Other, 0x102293a20, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4311099440.11>
+                  Other, 0x102292b50, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4311084432.13>
+                    Other, 0x1022a6c60, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4313926384.15>
+                      Other, 0x1022a6d80, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4315249920.16>
+                        StaticText, 0x1022a6ea0, {{176.0, 98.0}, {123.5, 18.0}}, label: 'Connect Account' <AX element pid: 85960, elementOrHash.elementID: 4316237632.31>
+                        StaticText, 0x1022a6fc0, {{781.5, 99.8}, {74.5, 14.5}}, label: 'Step 10 of 14' <AX element pid: 85960, elementOrHash.elementID: 4316238608.32>
+                        ProgressIndicator, 0x1022a70e0, {{176.0, 124.0}, {680.0, 4.0}}, label: 'Onboarding progress', value: Step 10 of 14 <AX element pid: 85960, elementOrHash.elementID: 4316240176.33>
+                          ProgressIndicator, 0x1022a7200, {{176.0, 114.0}, {680.0, 24.0}}, value: 69% <AX element pid: 85960, elementOrHash.elementID: 4314163680.34>
+                        ScrollView, 0x1022a7320, {{154.0, 128.0}, {724.0, 1248.0}} <AX element pid: 85960, elementOrHash.elementID: 4345591808.17>
+                          Other, 0x1022a7440, {{154.0, 128.0}, {724.0, 723.0}} <AX element pid: 85960, elementOrHash.elementID: 4315155968.18>
+                            StaticText, 0x1022a7560, {{176.0, 152.0}, {666.0, 123.0}}, label: 'Connect on a computer, Robinhood currently requires first-time Agentic Account setup and agent authentication on a desktop. WHOX receives only masked connection status—never your Robinhood password or MCP credentials.' <AX element pid: 85960, elementOrHash.elementID: 4314002064.339>
+                              StaticText, 0x1022a7850, {{176.0, 152.0}, {368.5, 41.0}}, label: 'Connect on a computer' <AX element pid: 85960, elementOrHash.elementID: 4314705280.343>
+                              StaticText, 0x1022a7970, {{176.0, 201.0}, {666.0, 74.0}}, label: 'Robinhood currently requires first-time Agentic Account setup and agent authentication on a desktop. WHOX receives only masked connection status—never your Robinhood password or MCP credentials.' <AX element pid: 85960, elementOrHash.elementID: 4314702192.344>
+                            StaticText, 0x1022a7d20, {{178.0, 293.0}, {659.5, 67.5}}, label: 'Robinhood-controlled desktop requirement, Robinhood’s official instructions say mobile users must copy the onboarding URL to a desktop browser. WHOX will use a system-browser mobile handoff only if Robinhood officially enables one; no embedded webview is used.' <AX element pid: 85960, elementOrHash.elementID: 4314703264.340>
+                              Image, 0x1022a8060, {{178.0, 294.0}, {20.0, 17.0}}, identifier: 'desktopcomputer', label: 'Computer' <AX element pid: 85960, elementOrHash.elementID: 4314002992.345>
+                              StaticText, 0x1022a8180, {{210.0, 293.0}, {310.0, 18.0}}, label: 'Robinhood-controlled desktop requirement' <AX element pid: 85960, elementOrHash.elementID: 4314080320.346>
+                              StaticText, 0x1022a82a0, {{210.0, 314.0}, {627.5, 46.5}}, label: 'Robinhood’s official instructions say mobile users must copy the onboarding URL to a desktop browser. WHOX will use a system-browser mobile handoff only if Robinhood officially enables one; no embedded webview is used.' <AX element pid: 85960, elementOrHash.elementID: 4314354224.347>
+                            Image, 0x1022a8590, {{421.0, 394.5}, {190.0, 190.0}}, label: 'QR code for the short-lived desktop setup link' <AX element pid: 85960, elementOrHash.elementID: 4315450976.351>
+                            StaticText, 0x1022a86b0, {{454.8, 600.5}, {122.5, 26.5}}, label: 'Pairing code, SAFE-482K' <AX element pid: 85960, elementOrHash.elementID: 4315159392.352>
+                            StaticText, 0x1022a87d0, {{480.2, 643.0}, {71.5, 14.5}}, label: 'Expires 9:54' <AX element pid: 85960, elementOrHash.elementID: 4315161664.353>
+                            Button, 0x1022a88f0, {{192.0, 673.5}, {139.5, 20.5}}, label: 'Copy Setup Link' <AX element pid: 85960, elementOrHash.elementID: 4315720736.354>
+                              Image, 0x1022a8a10, {{194.0, 674.5}, {15.0, 18.5}}, identifier: 'doc.on.doc', label: 'Copy' <AX element pid: 85960, elementOrHash.elementID: 4315481712.361>
+                              StaticText, 0x1022a8b30, {{192.0, 673.5}, {139.5, 20.5}}, label: 'Copy Setup Link' <AX element pid: 85960, elementOrHash.elementID: 4315720304.362>
+                            Button, 0x1022a8c50, {{696.5, 675.0}, {143.5, 18.0}}, label: 'Email Setup Link' <AX element pid: 85960, elementOrHash.elementID: 4315318240.355>
+                              Image, 0x1022a8d70, {{698.5, 677.0}, {18.0, 13.0}}, identifier: 'envelope', label: 'Get Mail' <AX element pid: 85960, elementOrHash.elementID: 4315424224.363>
+                              StaticText, 0x1022a8e90, {{696.5, 675.0}, {143.5, 18.0}}, label: 'Email Setup Link' <AX element pid: 85960, elementOrHash.elementID: 4315317808.364>
+                            StaticText, 0x1022a8fb0, {{288.5, 726.5}, {456.8, 18.0}}, label: 'Demo pairing completed. No brokerage credential was created.' <AX element pid: 85960, elementOrHash.elementID: 4315638464.356>
+                            Button, 0x1022a90d0, {{461.5, 760.5}, {109.0, 50.5}}, label: 'Continue' <AX element pid: 85960, elementOrHash.elementID: 4314147184.367>
+                          Other, 0x1022a91f0, {{845.0, 128.0}, {30.0, 1248.0}}, label: 'Vertical scroll bar, 1 page', value: 0% <AX element pid: 85960, elementOrHash.elementID: 4316135216.19>
+                            Other, 0x1022a9310, {{872.0, 948.5}, {3.0, 424.5}} <AX element pid: 85960, elementOrHash.elementID: 4314004272.27>
+                          Other, 0x1022a9430, {{845.0, 128.0}, {30.0, 1248.0}}, label: 'Vertical scroll bar, 1 page', value: 0% <AX element pid: 85960, elementOrHash.elementID: 4316135216.19>
+                            Other, 0x1022a9550, {{872.0, 948.5}, {3.0, 424.5}} <AX element pid: 85960, elementOrHash.elementID: 4314004272.27>
+                Other, 0x1022a9670, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4311102464.12>
+                  Other, 0x1022a9790, {{0.0, 0.0}, {1032.0, 1376.0}} <AX element pid: 85960, elementOrHash.elementID: 4311106192.14>

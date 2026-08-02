@@ -1,0 +1,128 @@
+name: WHOXTreasury
+
+options:
+  bundleIdPrefix: ai.whox
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "26.0"
+  minimumXcodeGenVersion: "2.44.0"
+
+configs:
+  Debug: debug
+  Release: release
+
+settings:
+  base:
+    SWIFT_VERSION: "6.2"
+    DEVELOPMENT_TEAM: 8PN4T7SR2G
+    CODE_SIGN_STYLE: Manual
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: true
+    SWIFT_STRICT_CONCURRENCY: complete
+    ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: true
+    LOCALIZATION_PREFERS_STRING_CATALOGS: true
+    SUPPORTS_MACCATALYST: false
+    TARGETED_DEVICE_FAMILY: "1,2"
+    WHOX_RUNTIME_MODE: demo
+    WHOX_API_BASE_URL: ""
+    WHOX_APNS_ENVIRONMENT: sandbox
+    WHOX_APP_ATTEST_ENVIRONMENT: development
+
+targets:
+  WHOXTreasury:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: Resources
+        excludes:
+          - AppInfo.plist
+          - WHoxTreasury.entitlements
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.treasury
+        PRODUCT_NAME: WHOX Treasury
+        INFOPLIST_FILE: Resources/AppInfo.plist
+        CODE_SIGN_ENTITLEMENTS: Resources/WHoxTreasury.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.finance
+      configs:
+        Debug:
+          WHOX_APNS_ENVIRONMENT: sandbox
+          WHOX_APP_ATTEST_ENVIRONMENT: development
+          WHOX_RUNTIME_MODE: demo
+          WHOX_API_BASE_URL: ""
+        Release:
+          WHOX_APNS_ENVIRONMENT: production
+          WHOX_APP_ATTEST_ENVIRONMENT: production
+          WHOX_RUNTIME_MODE: paper
+          WHOX_API_BASE_URL: "https://api.whox.ai"
+          PROVISIONING_PROFILE_SPECIFIER: WHOX Treasury App Store
+    dependencies:
+      - target: WHOXTreasuryWidget
+        embed: true
+
+  WHOXTreasuryWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Widget
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.treasury.widget
+        PRODUCT_NAME: WHOX Treasury Status
+        INFOPLIST_FILE: Widget/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Widget/WHoxTreasuryWidget.entitlements
+        SKIP_INSTALL: true
+        APPLICATION_EXTENSION_API_ONLY: true
+      configs:
+        Release:
+          PROVISIONING_PROFILE_SPECIFIER: WHOX Treasury Widget App Store
+
+  WHOXTreasuryTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: WHOXTreasury
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.treasury.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/WHOX Treasury.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WHOX Treasury"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+
+  WHOXTreasuryUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: WHOXTreasury
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.treasury.uitests
+        TEST_TARGET_NAME: WHOXTreasury
+
+schemes:
+  WHOXTreasury:
+    build:
+      targets:
+        WHOXTreasury: all
+        WHOXTreasuryWidget: all
+        WHOXTreasuryTests: [test]
+        WHOXTreasuryUITests: [test]
+    run:
+      config: Debug
+      storeKitConfiguration: Resources/Configuration/WHoxTreasury.storekit
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets:
+        - name: WHOXTreasuryTests
+          parallelizable: false
+        - name: WHOXTreasuryUITests
+          parallelizable: false

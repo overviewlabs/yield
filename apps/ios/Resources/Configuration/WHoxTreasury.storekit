@@ -1,0 +1,73 @@
+{
+  "identifier" : "2B349681-1CA9-402D-84B4-D5076A821F9C",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "1E62E36C-90BA-48A0-AD60-814B04380679",
+      "localizations" : [
+        {
+          "description" : "Strategy access and account monitoring for WHOX Treasury.",
+          "displayName" : "Treasury Plans",
+          "locale" : "en_US"
+        }
+      ],
+      "name" : "Treasury Plans",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "29.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "05C55E92-D621-4BE2-9DD7-7E4D3DD5B170",
+          "introductoryOffer" : null,
+          "localizations" : [{"description":"Stocks, ETFs, one active agent, risk controls, and Paper mode.","displayName":"Equity","locale":"en_US"}],
+          "productID" : "whox.treasury.equity.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Equity Monthly",
+          "subscriptionGroupID" : "1E62E36C-90BA-48A0-AD60-814B04380679",
+          "type" : "RecurringSubscription",
+          "winBackOffers" : []
+        },
+        {
+          "adHocOffers" : [], "codeOffers" : [], "displayPrice" : "59.99", "familyShareable" : false, "groupNumber" : 2,
+          "internalID" : "6EEA84F2-6822-442C-9159-561876139081", "introductoryOffer" : null,
+          "localizations" : [{"description":"Up to three agents, faster monitoring, scanners, and advanced analytics.","displayName":"Equity Pro","locale":"en_US"}],
+          "productID" : "whox.treasury.equitypro.monthly", "recurringSubscriptionPeriod" : "P1M", "referenceName" : "Equity Pro Monthly",
+          "subscriptionGroupID" : "1E62E36C-90BA-48A0-AD60-814B04380679", "type" : "RecurringSubscription", "winBackOffers" : []
+        },
+        {
+          "adHocOffers" : [], "codeOffers" : [], "displayPrice" : "129.99", "familyShareable" : false, "groupNumber" : 3,
+          "internalID" : "1BB400B0-1F91-4346-8A51-A5CF68BB751E", "introductoryOffer" : null,
+          "localizations" : [{"description":"Long options and covered strategies with options-specific hard limits.","displayName":"Options","locale":"en_US"}],
+          "productID" : "whox.treasury.options.monthly", "recurringSubscriptionPeriod" : "P1M", "referenceName" : "Options Monthly",
+          "subscriptionGroupID" : "1E62E36C-90BA-48A0-AD60-814B04380679", "type" : "RecurringSubscription", "winBackOffers" : []
+        },
+        {
+          "adHocOffers" : [], "codeOffers" : [], "displayPrice" : "199.99", "familyShareable" : false, "groupNumber" : 4,
+          "internalID" : "8E61DF36-F50E-4B75-91D8-EEC1F1A075B0", "introductoryOffer" : null,
+          "localizations" : [{"description":"Approved defined-risk multi-leg strategies and up to three agents.","displayName":"Options Pro","locale":"en_US"}],
+          "productID" : "whox.treasury.optionspro.monthly", "recurringSubscriptionPeriod" : "P1M", "referenceName" : "Options Pro Monthly",
+          "subscriptionGroupID" : "1E62E36C-90BA-48A0-AD60-814B04380679", "type" : "RecurringSubscription", "winBackOffers" : []
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

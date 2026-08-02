@@ -1,0 +1,38 @@
+certificate_arn      = "arn:aws:acm:us-east-1:111111111111:certificate/REPLACE"
+api_image            = "111111111111.dkr.ecr.us-east-1.amazonaws.com/whox-api@sha256:REPLACE"
+worker_image         = "111111111111.dkr.ecr.us-east-1.amazonaws.com/whox-worker@sha256:REPLACE"
+public_api_url       = "https://api.paper.example.com"
+connect_web_url      = "https://connect.paper.example.com"
+admin_web_url        = "https://admin.paper.example.com"
+cors_allowed_origins = ["https://connect.paper.example.com", "https://admin.paper.example.com"]
+redis_auth_token     = "REPLACE_VIA_SECRET_CHANNEL_MINIMUM_32_CHARS"
+alert_topic_arn      = "arn:aws:sns:us-east-1:111111111111:whox-paper-alerts"
+apple_client_id      = "ai.whox.treasury.paper"
+apple_bundle_id      = "ai.whox.treasury"
+apple_app_id         = 1234567890 # REPLACE with the numeric App Store Connect application ID
+storekit_environments = "sandbox,production"
+
+# Keep capacity at zero during the first apply. Set true only after completing
+# and recording the runtime-secret/database-role bootstrap in the deployment change.
+runtime_secrets_bootstrapped = false
+market_data_desired_count    = 0
+broker_sync_desired_count    = 0 # standard artifact has no approved connector and must remain stopped
+market_data_provider_url     = ""
+market_data_provider_id      = ""
+approved_market_data_providers = ""
+hermes_base_url                    = "https://treasury-bot.whox.ai/v1"
+hermes_model                       = "treasury-bot"
+# Keep false until the dedicated Hermes profile is verified to have every
+# terminal/file/web/memory/skill/plugin/MCP/cron/delegation surface disabled.
+hermes_research_profile_tools_disabled = false
+agent_scheduler_poll_ms        = 15000
+agent_scheduler_batch_size     = 250
+agent_scheduler_max_outstanding_jobs = 1000
+agent_scheduler_lag_alert_seconds = 300
+broker_snapshot_max_age_seconds   = 60
+broker_sync_interval_seconds      = 45
+notification_desired_count   = 0
+apns_team_id                  = ""
+apns_key_id                   = ""
+apns_topic                    = "ai.whox.treasury.paper"
+apns_environments             = "sandbox"

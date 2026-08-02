@@ -1,0 +1,89 @@
+name: Security
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  trivy:
+    name: Secrets, dependencies, configuration, and containers
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Scan repository
+        run: |
+          docker run --rm \
+            -v "$PWD:/repository:ro" \
+            aquasec/trivy:0.72.0@sha256:cffe3f5161a47a6823fbd23d985795b3ed72a4c806da4c4df16266c02accdd6f fs \
+            --scanners vuln,secret,misconfig \
+            --exit-code 1 \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            /repository
+      - name: Build application containers
+        run: |
+          docker build -f infrastructure/docker/Dockerfile.web-connection -t whox/web-connection:ci .
+          docker build -f infrastructure/docker/Dockerfile.admin-console -t whox/admin-console:ci .
+          docker build -f infrastructure/docker/Dockerfile.service -t whox/service:ci .
+      - name: Verify web pairing deep-link fallback and security headers
+        run: |
+          docker run --detach --name whox-web-smoke \
+            --read-only \
+            --tmpfs /tmp --tmpfs /var/cache/nginx --tmpfs /var/run --tmpfs /etc/nginx/conf.d:mode=1777 \
+            -p 127.0.0.1:18081:8080 \
+            whox/web-connection:ci
+          trap 'docker rm --force whox-web-smoke' EXIT
+          ready=false
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:18081/healthz >/dev/null; then
+              ready=true
+              break
+            fi
+            sleep 1
+          done
+          test "$ready" = true
+          curl --fail --silent 'http://127.0.0.1:18081/pair?pairing_code=SAFE-482K' | grep -F '<div id="root"></div>'
+          headers="$(curl --fail --silent --head http://127.0.0.1:18081/pair | tr -d '\r')"
+          grep -Fi 'Content-Security-Policy:' <<<"$headers"
+          grep -Fi 'X-Frame-Options: DENY' <<<"$headers"
+          grep -Fi 'Permissions-Policy:' <<<"$headers"
+      - name: Scan runtime images for critical vulnerabilities
+        run: |
+          for image in whox/web-connection:ci whox/admin-console:ci whox/service:ci; do
+            docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              aquasec/trivy:0.72.0@sha256:cffe3f5161a47a6823fbd23d985795b3ed72a4c806da4c4df16266c02accdd6f image \
+              --exit-code 1 \
+              --severity CRITICAL \
+              --ignore-unfixed \
+              "$image"
+          done
+
+  codeql:
+    name: CodeQL JavaScript and TypeScript
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+      - name: Analyze
+        uses: github/codeql-action/analyze@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4
+        with:
+          category: /language:javascript-typescript
