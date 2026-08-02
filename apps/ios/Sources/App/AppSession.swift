@@ -796,9 +796,9 @@ final class AppSession {
     for attempt in 0..<8 {
       await storeKit.refreshLocalEntitlements()
       if let locallyVerifiedTier = OfferCodeEntitlementResolver.newlyVerifiedTier(
-          previousProductIDs: previousProductIDs,
-          currentProductIDs: storeKit.localVerifiedProductIDs,
-          plans: plans)
+        previousProductIDs: previousProductIDs,
+        currentProductIDs: storeKit.localVerifiedProductIDs,
+        plans: plans)
       {
         // StoreKit's signed transaction is sufficient to let onboarding continue. Server-run
         // features remain protected by authoritativeCurrentPlanTier until reconciliation finishes.
