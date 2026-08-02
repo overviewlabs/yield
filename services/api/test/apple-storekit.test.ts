@@ -37,8 +37,8 @@ const signedNotification = `${"g".repeat(16)}.${"h".repeat(16)}.${"i".repeat(16)
 const transaction = Object.freeze({
   originalTransactionId: "original-1",
   transactionId: "transaction-1",
-  bundleId: "ai.whox.metis",
-  productId: "ai.whox.metis.equity.monthly",
+  bundleId: "ai.whox.yield",
+  productId: "ai.whox.yield.equity.monthly",
   purchaseDate: Date.parse("2026-08-01T14:00:00.000Z"),
   expiresDate: Date.parse("2026-09-01T14:00:00.000Z"),
   type: Type.AUTO_RENEWABLE_SUBSCRIPTION,
@@ -55,8 +55,8 @@ class FakeAppleVerifier implements AppleSignedDataVerifier {
   public transaction: JWSTransactionDecodedPayload = { ...transaction };
   public renewal: JWSRenewalInfoDecodedPayload = {
     originalTransactionId: "original-1",
-    productId: "ai.whox.metis.equity.monthly",
-    autoRenewProductId: "ai.whox.metis.equity.monthly",
+    productId: "ai.whox.yield.equity.monthly",
+    autoRenewProductId: "ai.whox.yield.equity.monthly",
     appAccountToken: accountToken,
     signedDate: Date.parse("2026-08-01T14:00:01.000Z"),
     environment: Environment.SANDBOX
@@ -69,7 +69,7 @@ class FakeAppleVerifier implements AppleSignedDataVerifier {
     signedDate: Date.parse("2026-08-01T14:00:01.000Z"),
     data: {
       environment: Environment.SANDBOX,
-      bundleId: "ai.whox.metis",
+      bundleId: "ai.whox.yield",
       appAppleId: 123456789,
       signedTransactionInfo: signedTransaction,
       signedRenewalInfo: signedRenewal,
@@ -148,10 +148,10 @@ describe("Apple StoreKit signed-data adapters", () => {
       environment: Environment.LOCAL_TESTING
     };
     const unsigned = localJws(payload);
-    const local = new SignedDataVerifier([], false, Environment.LOCAL_TESTING, "ai.whox.metis");
+    const local = new SignedDataVerifier([], false, Environment.LOCAL_TESTING, "ai.whox.yield");
     const decoded = await local.verifyAndDecodeTransaction(unsigned);
     assert.equal(decoded.transactionId, "transaction-1");
-    const sandbox = new SignedDataVerifier([], false, Environment.SANDBOX, "ai.whox.metis");
+    const sandbox = new SignedDataVerifier([], false, Environment.SANDBOX, "ai.whox.yield");
     await assert.rejects(sandbox.verifyAndDecodeTransaction(unsigned), VerificationException);
   });
 
@@ -160,7 +160,7 @@ describe("Apple StoreKit signed-data adapters", () => {
     assert.throws(
       () => createAppleSignedDataVerifiers({
         rootCertificates: [Buffer.from("placeholder")],
-        bundleId: "ai.whox.metis",
+        bundleId: "ai.whox.yield",
         environments: ["Production"]
       }),
       hasCode("STOREKIT_APP_APPLE_ID_REQUIRED")
@@ -194,7 +194,7 @@ describe("Apple StoreKit signed-data adapters", () => {
         APP_STORE_DATABASE_URL: "postgresql://tenant-runtime",
         STOREKIT_ENVIRONMENTS: "sandbox",
         APPLE_ROOT_CA_BUNDLE: "unused",
-        APPLE_BUNDLE_ID: "ai.whox.metis"
+        APPLE_BUNDLE_ID: "ai.whox.yield"
       }),
       hasCode("STOREKIT_DATABASE_CREDENTIAL_NOT_ISOLATED")
     );

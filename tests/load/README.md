@@ -1,6 +1,6 @@
 # Load and backlog tests
 
-This dependency-free Node 22 harness covers the load scenarios required for Metis:
+This dependency-free Node 22 harness covers the load scenarios required for Yield:
 
 - market-open dashboard, portfolio, positions, proposal, and activity traffic;
 - Robinhood connection-status polling;

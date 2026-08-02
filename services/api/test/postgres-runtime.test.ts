@@ -100,7 +100,7 @@ describe("PostgreSQL Paper API runtime",{skip:databaseUrl===undefined},()=>{
       assert.equal(new URL((replayedCreation as typeof created).setupUrl).searchParams.has("pairing_code"),false,"the idempotency response must not persist the plaintext pairing code");
 
       const mobilePairing=await pairings.create(owner.userId,creator.sessionId,new Date(instant.getTime()+95_000).toISOString());
-      const mobileAuthorization=await pairings.beginMobileAuthorization(owner.userId,creator.sessionId,mobilePairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","metis://broker-connection/callback",new Date(instant.getTime()+96_000).toISOString());
+      const mobileAuthorization=await pairings.beginMobileAuthorization(owner.userId,creator.sessionId,mobilePairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","yield://broker-connection/callback",new Date(instant.getTime()+96_000).toISOString());
       assert.equal(mobileAuthorization.state.includes(owner.userId),false,"opaque state must not expose the tenant identifier");
       assert.equal(mobileAuthorization.state.includes(mobilePairing.pairingId),false,"opaque state must not expose the pairing identifier");
       const callbackSecrets=await pairings.mobileCallbackSecrets(mobileAuthorization.state,new Date(instant.getTime()+97_000).toISOString());
@@ -111,24 +111,24 @@ describe("PostgreSQL Paper API runtime",{skip:databaseUrl===undefined},()=>{
       await assert.rejects(pairings.mobileCallbackSecrets(mobileAuthorization.state,new Date(instant.getTime()+97_001).toISOString()),hasCode("MOBILE_OAUTH_CALLBACK_INVALID"));
       await pairings.concludeMobileWithoutConnection(owner.userId,creator.sessionId,mobilePairing.pairingId,mobileAuthorization.state,"canceled",new Date(instant.getTime()+98_000).toISOString());
       assert.equal((await pairings.get(owner.userId,creator.sessionId,mobilePairing.pairingId,new Date(instant.getTime()+98_001).toISOString())).status,"pending");
-      const abortedAuthorization=await pairings.beginMobileAuthorization(owner.userId,creator.sessionId,mobilePairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","metis://broker-connection/callback",new Date(instant.getTime()+99_000).toISOString());
+      const abortedAuthorization=await pairings.beginMobileAuthorization(owner.userId,creator.sessionId,mobilePairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","yield://broker-connection/callback",new Date(instant.getTime()+99_000).toISOString());
       await pairings.abortMobileAuthorization(owner.userId,creator.sessionId,mobilePairing.pairingId,new Date(instant.getTime()+99_001).toISOString());
       assert.equal((await pairings.get(owner.userId,creator.sessionId,mobilePairing.pairingId,new Date(instant.getTime()+99_002).toISOString())).status,"pending");
       await assert.rejects(pairings.mobileCallbackSecrets(abortedAuthorization.state,new Date(instant.getTime()+99_003).toISOString()),hasCode("MOBILE_OAUTH_CALLBACK_INVALID"));
-      const callbackClaimedAuthorization=await pairings.beginMobileAuthorization(owner.userId,creator.sessionId,mobilePairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","metis://broker-connection/callback",new Date(instant.getTime()+99_010).toISOString());
+      const callbackClaimedAuthorization=await pairings.beginMobileAuthorization(owner.userId,creator.sessionId,mobilePairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","yield://broker-connection/callback",new Date(instant.getTime()+99_010).toISOString());
       await pairings.mobileCallbackSecrets(callbackClaimedAuthorization.state,new Date(instant.getTime()+99_011).toISOString());
       await assert.rejects(pairings.cancel(owner.userId,creator.sessionId,mobilePairing.pairingId,new Date(instant.getTime()+99_012).toISOString()),hasCode("PAIRING_AUTHORIZATION_COMMITTED"));
       await pairings.concludeMobileWithoutConnection(owner.userId,creator.sessionId,mobilePairing.pairingId,callbackClaimedAuthorization.state,"canceled",new Date(instant.getTime()+99_013).toISOString());
 
       const revokedCallbackSession=await sessions.create(owner.userId,"revoked-mobile-callback-device",new Date(instant.getTime()+99_100));
       const revokedCallbackPairing=await pairings.create(owner.userId,revokedCallbackSession.sessionId,new Date(instant.getTime()+99_101).toISOString());
-      const revokedCallbackAuthorization=await pairings.beginMobileAuthorization(owner.userId,revokedCallbackSession.sessionId,revokedCallbackPairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","metis://broker-connection/callback",new Date(instant.getTime()+99_102).toISOString());
+      const revokedCallbackAuthorization=await pairings.beginMobileAuthorization(owner.userId,revokedCallbackSession.sessionId,revokedCallbackPairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","yield://broker-connection/callback",new Date(instant.getTime()+99_102).toISOString());
       await sessions.revoke(revokedCallbackSession.sessionId,new Date(instant.getTime()+99_103),owner.userId);
       await assert.rejects(pairings.mobileCallbackSecrets(revokedCallbackAuthorization.state,new Date(instant.getTime()+99_104).toISOString()),hasCode("PAIRING_SESSION_INVALID"));
 
       const sensitiveReplayKey=`POST:/v1/brokers/robinhood/mobile-oauth/start:${suffix}`;
       const sensitiveReplayPayload={pairingId:mobilePairing.pairingId};
-      const sensitiveStart={authorizationUrl:`https://auth.broker.test/authorize?state=${revokedCallbackAuthorization.state}`,callbackScheme:"metis",returnUrl:"metis://broker-connection/callback",pairingId:mobilePairing.pairingId,expiresAt:new Date(instant.getTime()+300_000).toISOString()};
+      const sensitiveStart={authorizationUrl:`https://auth.broker.test/authorize?state=${revokedCallbackAuthorization.state}`,callbackScheme:"yield",returnUrl:"yield://broker-connection/callback",pairingId:mobilePairing.pairingId,expiresAt:new Date(instant.getTime()+300_000).toISOString()};
       let sensitiveExecutions=0;
       await store.idempotentAsync(owner.userId,sensitiveReplayKey,sensitiveReplayPayload,async()=>{sensitiveExecutions+=1;return sensitiveStart;});
       const persistedSensitiveResponse=await database.withTenant(owner.userId,async(transaction)=>(await transaction.query<{response:unknown}>("SELECT response FROM api_idempotency_records WHERE user_id=$1 AND idempotency_key=$2",[owner.userId,sensitiveReplayKey])).rows[0]?.response);
@@ -395,11 +395,11 @@ describe("PostgreSQL Paper API runtime",{skip:databaseUrl===undefined},()=>{
       await store.recordLegalConsents(account.userId,{accepted:true,documentVersions:Object.fromEntries(requiredKeys.map((key)=>[key,legalVersion]))},mobile.sessionId,"surface-mobile-device",legalPublishedAt);
       assert.equal(await store.hasAllRequiredLegalConsents(account.userId),true);
 
-      const verifiedSubscription={productID:"ai.whox.metis.equity.monthly",transactionID:`transaction-${suffix}`,originalTransactionID:`original-${suffix}`,environment:"Sandbox" as const,signedPayloadDigest:"c".repeat(64),appAccountToken:account.userId,purchasedAt:"2026-08-01T13:59:00.000Z",expiresAt:"2026-09-01T14:00:00.000Z",signedAt:"2026-08-01T14:00:00.000Z"};
+      const verifiedSubscription={productID:"ai.whox.yield.equity.monthly",transactionID:`transaction-${suffix}`,originalTransactionID:`original-${suffix}`,environment:"Sandbox" as const,signedPayloadDigest:"c".repeat(64),appAccountToken:account.userId,purchasedAt:"2026-08-01T13:59:00.000Z",expiresAt:"2026-09-01T14:00:00.000Z",signedAt:"2026-08-01T14:00:00.000Z"};
       await store.syncVerifiedSubscription(account.userId,verifiedSubscription);
       assert.equal((await store.entitlements(account.userId)).stockTrading,true);
       const draftAccount=await store.userForAppleSubject(`paper-draft-${suffix}`,`draft-${suffix}@example.test`);
-      await store.syncVerifiedSubscription(draftAccount.userId,{...verifiedSubscription,productID:"ai.whox.metis.equitypro.monthly",transactionID:`draft-transaction-${suffix}`,originalTransactionID:`draft-original-${suffix}`,signedPayloadDigest:"e".repeat(64),appAccountToken:draftAccount.userId});
+      await store.syncVerifiedSubscription(draftAccount.userId,{...verifiedSubscription,productID:"ai.whox.yield.equitypro.monthly",transactionID:`draft-transaction-${suffix}`,originalTransactionID:`draft-original-${suffix}`,signedPayloadDigest:"e".repeat(64),appAccountToken:draftAccount.userId});
       await admin.query(`INSERT INTO entitlements(user_id,subscription_id,feature_key,value,effective_at)
         SELECT $1,subscription.id,override.feature_key,override.value,override.effective_at
         FROM subscriptions AS subscription
@@ -494,7 +494,7 @@ describe("PostgreSQL Paper API runtime",{skip:databaseUrl===undefined},()=>{
         await transaction.query(`INSERT INTO agent_runs(id,user_id,user_agent_id,status,idempotency_key,started_at,completed_at,strategy_version,structured_outcome) VALUES($1,$2,$3,'completed',$4,$5,$5,'foundation-equity-rules-1.0.0','{"outcome":"proposal_created"}')`,[ids.run,account.userId,userAgent.id,`run-${suffix}`,now]);
         const proposal={proposalId:ids.proposal,userId:account.userId,accountId:ids.account,agentDefinitionId:"30000000-0000-4000-8000-000000000001",agentVersion:"1.0.0",environment:"paper",instrumentType:"equity",symbol:"AAPL",optionLegs:[],side:"buy",quantity:1,notionalEstimate:200,orderType:"limit",limitPrice:200,timeInForce:"day",strategyType:"foundation_equity",entryReason:"Test deterministic entry",exitPlan:"Test deterministic exit",invalidationCondition:"Test invalidation",dataTimestamp:now,quoteTimestamp:now,maximumLoss:200,breakevens:[],estimatedPortfolioAllocationAfter:0.1,riskAmount:200,confidenceCategoryWithoutProbabilityClaims:"moderate",requiredApprovalMode:"confirm_every_trade",expirationTimestamp:"2026-08-01T14:05:00.000Z",evidenceReferences:[],warnings:[],deterministicStrategyVersion:"foundation-equity-rules-1.0.0",dataClassification:"broker_snapshot"};
         await transaction.query(`INSERT INTO trade_proposals(id,user_id,broker_account_id,agent_run_id,agent_version_id,environment,status,version,symbol,instrument_type,proposal,proposal_fingerprint,idempotency_key,expires_at,created_at,updated_at) VALUES($1,$2,$3,$4,$5,'paper','AWAITING_USER_APPROVAL',1,'AAPL','equity',$6,$7,$8,$9,$10,$10)`,[ids.proposal,account.userId,ids.account,ids.run,version,proposal,"b".repeat(64),`proposal-${suffix}`,proposal.expirationTimestamp,now]);
-        await transaction.query(`INSERT INTO notifications(id,user_id,notification_type,priority,title,private_body,status,idempotency_key,scheduled_at) VALUES($1,$2,'proposal_ready','normal','Paper proposal ready','Open Metis to review.','queued',$3,$4)`,[ids.notification,account.userId,`notification-${suffix}`,now]);
+        await transaction.query(`INSERT INTO notifications(id,user_id,notification_type,priority,title,private_body,status,idempotency_key,scheduled_at) VALUES($1,$2,'proposal_ready','normal','Paper proposal ready','Open Yield to review.','queued',$3,$4)`,[ids.notification,account.userId,`notification-${suffix}`,now]);
         await transaction.query(`INSERT INTO risk_events(id,user_id,broker_account_id,proposal_id,environment,event_type,severity,reason_code,structured_details,occurred_at) VALUES($1,$2,$3,$4,'paper','policy_check','info','WITHIN_LIMITS','{"source":"deterministic"}',$5)`,[ids.riskEvent,account.userId,ids.account,ids.proposal,now]);
       });
 
@@ -578,10 +578,10 @@ describe("PostgreSQL Paper API runtime",{skip:databaseUrl===undefined},()=>{
       const session=await sessions.create(account.userId,"closing-ios-device",closeInstant);
       await store.registerPushToken(account.userId,{token:"ef".repeat(32),environment:"sandbox",deviceId:"closing-ios-device"});
       const completedPairing=await pairings.create(account.userId,session.sessionId,closeInstant.toISOString());
-      const completedAuthorization=await pairings.beginMobileAuthorization(account.userId,session.sessionId,completedPairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","metis://broker-connection/callback",new Date(closeInstant.getTime()+1).toISOString());
+      const completedAuthorization=await pairings.beginMobileAuthorization(account.userId,session.sessionId,completedPairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","yield://broker-connection/callback",new Date(closeInstant.getTime()+1).toISOString());
       await pairings.mobileCallbackSecrets(completedAuthorization.state,new Date(closeInstant.getTime()+2).toISOString());
       const danglingPairing=await pairings.create(account.userId,session.sessionId,new Date(closeInstant.getTime()+3).toISOString());
-      const danglingAuthorization=await pairings.beginMobileAuthorization(account.userId,session.sessionId,danglingPairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","metis://broker-connection/callback",new Date(closeInstant.getTime()+4).toISOString());
+      const danglingAuthorization=await pairings.beginMobileAuthorization(account.userId,session.sessionId,danglingPairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","yield://broker-connection/callback",new Date(closeInstant.getTime()+4).toISOString());
       const credentialHandle=`vault:close-test:${suffix}`;
       const exchangeTransactionId=randomUUID();
       await pairings.beginMobileExchangeForSession(account.userId,session.sessionId,completedPairing.pairingId,completedAuthorization.state,exchangeTransactionId,new Date(closeInstant.getTime()+60_000).toISOString(),new Date(closeInstant.getTime()+5).toISOString());
@@ -609,7 +609,7 @@ describe("PostgreSQL Paper API runtime",{skip:databaseUrl===undefined},()=>{
       const account=await store.userForAppleSubject(`paper-reconnect-${suffix}`,`reconnect-${suffix}@example.test`);
       const session=await sessions.create(account.userId,"reconnect-ios-device",authorizationInstant);
       const pairing=await pairings.create(account.userId,session.sessionId,authorizationInstant.toISOString());
-      const authorization=await pairings.beginMobileAuthorization(account.userId,session.sessionId,pairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","metis://broker-connection/callback",new Date(authorizationInstant.getTime()+1).toISOString());
+      const authorization=await pairings.beginMobileAuthorization(account.userId,session.sessionId,pairing.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","yield://broker-connection/callback",new Date(authorizationInstant.getTime()+1).toISOString());
       await pairings.mobileCallbackSecrets(authorization.state,new Date(authorizationInstant.getTime()+2).toISOString());
       const exchangeTransactionId=randomUUID();
       await pairings.beginMobileExchangeForSession(account.userId,session.sessionId,pairing.pairingId,authorization.state,exchangeTransactionId,new Date(authorizationInstant.getTime()+60_000).toISOString(),new Date(authorizationInstant.getTime()+3).toISOString());
@@ -617,13 +617,13 @@ describe("PostgreSQL Paper API runtime",{skip:databaseUrl===undefined},()=>{
       assert.equal(await pairings.acknowledgeAuthorizationConfirmation(account.userId,completed.authorizationSagaId,new Date(authorizationInstant.getTime()+5).toISOString()),"confirmed");
       assert.deepEqual(await pairings.authorizationRevocationTarget(account.userId,new Date(authorizationInstant.getTime()+6).toISOString()),{kind:"saga",authorizationSagaId:completed.authorizationSagaId});
       assert.equal(await pairings.requestAuthorizationRevocation(account.userId,completed.authorizationSagaId,"USER_REQUESTED_DISCONNECT",new Date(authorizationInstant.getTime()+7).toISOString()),"revoke_pending");
-      await assert.rejects(pairings.beginMobileAuthorization(account.userId,session.sessionId,(await pairings.create(account.userId,session.sessionId,new Date(authorizationInstant.getTime()+8).toISOString())).pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","metis://broker-connection/callback",new Date(authorizationInstant.getTime()+9).toISOString()),hasCode("BROKER_CONNECTION_REPLACEMENT_REQUIRES_REVOCATION"));
+      await assert.rejects(pairings.beginMobileAuthorization(account.userId,session.sessionId,(await pairings.create(account.userId,session.sessionId,new Date(authorizationInstant.getTime()+8).toISOString())).pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","yield://broker-connection/callback",new Date(authorizationInstant.getTime()+9).toISOString()),hasCode("BROKER_CONNECTION_REPLACEMENT_REQUIRES_REVOCATION"));
       assert.equal(await pairings.acknowledgeAuthorizationRevocation(account.userId,completed.authorizationSagaId,new Date(authorizationInstant.getTime()+10).toISOString()),"revoked");
       assert.deepEqual(await pairings.authorizationRevocationTarget(account.userId,new Date(authorizationInstant.getTime()+11).toISOString()),{kind:"none"});
       const connection=await database.withTenant(account.userId,async(transaction)=>(await transaction.query<{status:string;credentialCleared:boolean}>("SELECT status,credential_handle IS NULL AND credential_bound_at IS NULL AND credential_confirmed_at IS NULL AS \"credentialCleared\" FROM broker_connections WHERE user_id=$1 AND provider='robinhood_mcp'",[account.userId])).rows[0]);
       assert.deepEqual(connection,{status:"revoked",credentialCleared:true});
       const replacement=await pairings.create(account.userId,session.sessionId,new Date(authorizationInstant.getTime()+12).toISOString());
-      assert.equal((await pairings.beginMobileAuthorization(account.userId,session.sessionId,replacement.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","metis://broker-connection/callback",new Date(authorizationInstant.getTime()+13).toISOString())).resumed,false);
+      assert.equal((await pairings.beginMobileAuthorization(account.userId,session.sessionId,replacement.pairingId,"https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback","yield://broker-connection/callback",new Date(authorizationInstant.getTime()+13).toISOString())).resumed,false);
     }finally{await database.close();}
   });
 });

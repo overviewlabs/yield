@@ -29,7 +29,7 @@ private struct TreasuryWidgetProvider: TimelineProvider {
   }
 
   private func loadEntry() -> TreasuryWidgetEntry {
-    let values = UserDefaults(suiteName: "group.ai.whox.metis")?.dictionary(
+    let values = UserDefaults(suiteName: "group.ai.whox.yield")?.dictionary(
       forKey: "widgetSnapshot")
     let lastRunTimestamp = values?["lastRun"] as? Double ?? 0
     return TreasuryWidgetEntry(
@@ -50,7 +50,7 @@ private struct TreasuryWidgetView: View {
   var body: some View {
     Link(
       destination: URL(
-        string: entry.pendingProposals > 0 ? "metis://proposals" : "metis://dashboard"
+        string: entry.pendingProposals > 0 ? "yield://proposals" : "yield://dashboard"
       )!
     ) {
       VStack(alignment: .leading, spacing: family == .systemSmall ? 7 : 10) {
@@ -84,18 +84,18 @@ private struct TreasuryWidgetView: View {
     .containerBackground(.fill.tertiary, for: .widget)
     .accessibilityElement(children: .combine)
     .accessibilityLabel(
-      "Metis, \(entry.mode), agent \(entry.agentStatus), \(entry.pendingProposals) pending proposals, risk \(entry.riskState)"
+      "Yield, \(entry.mode), agent \(entry.agentStatus), \(entry.pendingProposals) pending proposals, risk \(entry.riskState)"
     )
   }
 }
 
 private struct TreasuryStatusWidget: Widget {
-  let kind = "ai.whox.metis.status"
+  let kind = "ai.whox.yield.status"
   var body: some WidgetConfiguration {
     StaticConfiguration(kind: kind, provider: TreasuryWidgetProvider()) { entry in
       TreasuryWidgetView(entry: entry)
     }
-    .configurationDisplayName("Metis Status")
+    .configurationDisplayName("Yield Status")
     .description("Privacy-preserving agent, proposal, and risk status.")
     .supportedFamilies([.systemSmall, .systemMedium])
   }

@@ -11,7 +11,7 @@ struct StaticInstallIdentityProvider: InstallIdentityProviding {
 }
 
 actor KeychainInstallIdentityProvider: InstallIdentityProviding {
-  private let service = "ai.whox.metis.install"
+  private let service = "ai.whox.yield.install"
   private let account = "device-id"
 
   func deviceID() async throws -> String {
@@ -64,7 +64,7 @@ protocol SessionCredentialStoring: Sendable {
 }
 
 actor KeychainSessionCredentialStore: SessionCredentialStoring {
-  private let service = "ai.whox.metis.session"
+  private let service = "ai.whox.yield.session"
 
   func load() async throws -> SessionCredentialPayload? {
     guard let encoded = try KeychainValueStore.read(service: service, account: "current") else {

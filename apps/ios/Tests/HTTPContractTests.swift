@@ -2,7 +2,7 @@ import AuthenticationServices
 import Foundation
 import XCTest
 
-@testable import Metis
+@testable import Yield
 
 final class HTTPContractTests: XCTestCase {
   override func setUp() {
@@ -37,7 +37,7 @@ final class HTTPContractTests: XCTestCase {
     let pairingID = UUID()
     FixtureURLProtocol.responseData = Data(
       """
-      {"authorizationUrl":"https://agent.robinhood.com/oauth/authorize?client_id=treasury&response_type=code&code_challenge=safe","callbackScheme":"metis","returnUrl":"metis://broker-connection/callback","pairingId":"\(pairingID.uuidString)","expiresAt":"2027-08-01T12:10:00Z"}
+      {"authorizationUrl":"https://agent.robinhood.com/oauth/authorize?client_id=treasury&response_type=code&code_challenge=safe","callbackScheme":"yield","returnUrl":"yield://broker-connection/callback","pairingId":"\(pairingID.uuidString)","expiresAt":"2027-08-01T12:10:00Z"}
       """.utf8)
     let client = HTTPBrokerPairingClient(
       baseURL: URL(string: "https://api.whox.ai/")!, urlSession: fixtureSession
@@ -46,8 +46,8 @@ final class HTTPContractTests: XCTestCase {
     let handoff = try await client.startInAppAuthorization(pairingID: pairingID)
 
     XCTAssertEqual(handoff.pairingID, pairingID)
-    XCTAssertEqual(handoff.callbackScheme, "metis")
-    XCTAssertEqual(handoff.returnURL.absoluteString, "metis://broker-connection/callback")
+    XCTAssertEqual(handoff.callbackScheme, "yield")
+    XCTAssertEqual(handoff.returnURL.absoluteString, "yield://broker-connection/callback")
     let request = try XCTUnwrap(FixtureURLProtocol.lastRequest)
     XCTAssertEqual(request.httpMethod, "POST")
     XCTAssertEqual(request.url?.path, "/v1/brokers/robinhood/mobile-oauth/start")
@@ -79,16 +79,16 @@ final class HTTPContractTests: XCTestCase {
 
   func testEntitlementSyncUsesCanonicalJWSWireShape() async throws {
     FixtureURLProtocol.responseData = Data(
-      "{\"entitledProductIDs\":[\"ai.whox.metis.equity.monthly\"],\"reconciledAt\":\"2026-08-01T12:00:00Z\"}"
+      "{\"entitledProductIDs\":[\"ai.whox.yield.equity.monthly\"],\"reconciledAt\":\"2026-08-01T12:00:00Z\"}"
         .utf8)
     let client = HTTPEntitlementSyncClient(
       baseURL: URL(string: "https://api.whox.ai/")!, urlSession: fixtureSession
     ) { "app-token" }
     let envelope = VerifiedTransactionEnvelope(
-      productID: "ai.whox.metis.equity.monthly", transactionID: "123", originalTransactionID: "100",
+      productID: "ai.whox.yield.equity.monthly", transactionID: "123", originalTransactionID: "100",
       signedTransactionJWS: "header.payload.signature")
     let result = try await client.sync(envelope)
-    XCTAssertEqual(result.entitledProductIDs, ["ai.whox.metis.equity.monthly"])
+    XCTAssertEqual(result.entitledProductIDs, ["ai.whox.yield.equity.monthly"])
     let request = try XCTUnwrap(FixtureURLProtocol.lastRequest)
     XCTAssertNotNil(request.value(forHTTPHeaderField: "Idempotency-Key"))
     let body = try XCTUnwrap(FixtureURLProtocol.lastRequestBody)
@@ -266,7 +266,7 @@ final class HTTPContractTests: XCTestCase {
         return (
           200,
           Data(
-            "{\"status\":\"active\",\"planId\":\"equity_pro\",\"productId\":\"ai.whox.metis.equitypro.monthly\",\"source\":\"verified_storekit\",\"renewsAt\":null}"
+            "{\"status\":\"active\",\"planId\":\"equity_pro\",\"productId\":\"ai.whox.yield.equitypro.monthly\",\"source\":\"verified_storekit\",\"renewsAt\":null}"
               .utf8)
         )
       case "/v1/entitlements":
@@ -299,7 +299,7 @@ final class HTTPContractTests: XCTestCase {
     let catalog = APIPlanCatalogEnvelopeDTO(
       data: [
         APIPlanCatalogDTO(
-          id: "equity", name: "Equity", productID: "ai.whox.metis.equity.monthly",
+          id: "equity", name: "Equity", productID: "ai.whox.yield.equity.monthly",
           features: features, agentCatalogVersion: 1,
           agents: [
             APIPlanAgentAssignmentDTO(
@@ -311,7 +311,7 @@ final class HTTPContractTests: XCTestCase {
       ],
       priceSource: "StoreKit; display prices must be supplied by the client StoreKit response")
     let subscription = APISubscriptionDTO(
-      status: "active", planID: "equity", productID: "ai.whox.metis.equity.monthly",
+      status: "active", planID: "equity", productID: "ai.whox.yield.equity.monthly",
       source: "verified_storekit")
 
     XCTAssertThrowsError(
@@ -886,7 +886,7 @@ final class HTTPContractTests: XCTestCase {
     """
 
   private static let planCatalogJSON = """
-    {"data":[{"id":"equity_pro","name":"Equity Pro","productId":"ai.whox.metis.equitypro.monthly","features":{"stockTrading":true,"optionsTrading":false,"multiLegOptions":false,"maximumActiveAgents":3,"automaticMode":true,"monitoringFrequencyMinutes":30,"advancedAnalytics":true,"customWatchlists":true,"scannerAccess":true,"agentCatalog":["foundation-equity","equity-momentum","quality-swing"],"prioritySupport":true},"agentCatalogVersion":1,"agents":[{"agentId":"foundation-equity","displayName":"Foundation Equity","agentVersion":"1.0.0","catalogPosition":1,"releaseStatus":"paper","deterministicStrategyVersion":"foundation-equity-rules-1.0.0","researchUniverse":["AAPL","MSFT","VTI"]},{"agentId":"equity-momentum","displayName":"Equity Momentum","agentVersion":"1.0.0","catalogPosition":2,"releaseStatus":"draft","deterministicStrategyVersion":"equity-momentum-rules-1.0.0","researchUniverse":["AAPL","MSFT","VTI"]},{"agentId":"quality-swing","displayName":"Quality Swing","agentVersion":"1.0.0","catalogPosition":3,"releaseStatus":"draft","deterministicStrategyVersion":"quality-swing-rules-1.0.0","researchUniverse":["AAPL","MSFT","VTI"]}]}],"priceSource":"StoreKit; display prices must be supplied by the client StoreKit response"}
+    {"data":[{"id":"equity_pro","name":"Equity Pro","productId":"ai.whox.yield.equitypro.monthly","features":{"stockTrading":true,"optionsTrading":false,"multiLegOptions":false,"maximumActiveAgents":3,"automaticMode":true,"monitoringFrequencyMinutes":30,"advancedAnalytics":true,"customWatchlists":true,"scannerAccess":true,"agentCatalog":["foundation-equity","equity-momentum","quality-swing"],"prioritySupport":true},"agentCatalogVersion":1,"agents":[{"agentId":"foundation-equity","displayName":"Foundation Equity","agentVersion":"1.0.0","catalogPosition":1,"releaseStatus":"paper","deterministicStrategyVersion":"foundation-equity-rules-1.0.0","researchUniverse":["AAPL","MSFT","VTI"]},{"agentId":"equity-momentum","displayName":"Equity Momentum","agentVersion":"1.0.0","catalogPosition":2,"releaseStatus":"draft","deterministicStrategyVersion":"equity-momentum-rules-1.0.0","researchUniverse":["AAPL","MSFT","VTI"]},{"agentId":"quality-swing","displayName":"Quality Swing","agentVersion":"1.0.0","catalogPosition":3,"releaseStatus":"draft","deterministicStrategyVersion":"quality-swing-rules-1.0.0","researchUniverse":["AAPL","MSFT","VTI"]}]}],"priceSource":"StoreKit; display prices must be supplied by the client StoreKit response"}
     """
 
   private static let proposalRecordJSON = """

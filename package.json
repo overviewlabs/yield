@@ -1,8 +1,8 @@
 {
-  "name": "metis",
+  "name": "yield",
   "version": "0.1.0",
   "private": true,
-  "description": "Metis native agentic investing control plane",
+  "description": "Yield native agentic investing control plane",
   "engines": {
     "node": ">=22.0.0"
   },

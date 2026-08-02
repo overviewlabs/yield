@@ -1,6 +1,6 @@
 import XCTest
 
-@testable import Metis
+@testable import Yield
 
 final class OrderLifecycleTests: XCTestCase {
   func testWireOrderStatesExposeOnlyActuallyCancelableLifecycleStates() {

@@ -362,7 +362,7 @@ export function createApiServer(options: ApiServerOptions = {}): Server {
     try {
       const started = await withBrokerConnectorTimeout(async (signal) => await mobileBrokerAuthorizationConnector.beginAuthorization(request, signal), brokerConnectorTimeoutMs);
       const authorizationUrl = validateAuthorizationDestination(started.authorizationUrl, mobileBrokerMetadata, request);
-      return { authorizationUrl, callbackScheme: "metis", returnUrl: MOBILE_BROKER_RETURN_URI, pairingId, expiresAt: authorization.expiresAt };
+      return { authorizationUrl, callbackScheme: "yield", returnUrl: MOBILE_BROKER_RETURN_URI, pairingId, expiresAt: authorization.expiresAt };
     } catch (error) {
       if (!authorization.resumed) await pairings.resetMobileAuthorization(userId, sessionId, pairingId, authorization.state, now().toISOString());
       if (error instanceof DomainError) throw error;

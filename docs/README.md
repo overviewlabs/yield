@@ -1,4 +1,4 @@
-# Metis documentation
+# Yield documentation
 
 These documents describe the runnable Demo, the implemented but dependency-gated Paper path, and the controlled boundaries required for Live. Paper and Live are not externally production-ready. These are engineering documents, not attorney-approved disclosure language or proof of licensing, App Store approval, Robinhood approval, or provider readiness.
 

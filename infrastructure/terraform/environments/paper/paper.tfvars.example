@@ -7,8 +7,8 @@ admin_web_url        = "https://admin.paper.example.com"
 cors_allowed_origins = ["https://connect.paper.example.com", "https://admin.paper.example.com"]
 redis_auth_token     = "REPLACE_VIA_SECRET_CHANNEL_MINIMUM_32_CHARS"
 alert_topic_arn      = "arn:aws:sns:us-east-1:111111111111:whox-paper-alerts"
-apple_client_id      = "ai.whox.metis.paper"
-apple_bundle_id      = "ai.whox.metis"
+apple_client_id      = "ai.whox.yield.paper"
+apple_bundle_id      = "ai.whox.yield"
 apple_app_id         = 1234567890 # REPLACE with the numeric App Store Connect application ID
 storekit_environments = "sandbox,production"
 
@@ -34,5 +34,5 @@ broker_sync_interval_seconds      = 45
 notification_desired_count   = 0
 apns_team_id                  = ""
 apns_key_id                   = ""
-apns_topic                    = "ai.whox.metis.paper"
+apns_topic                    = "ai.whox.yield.paper"
 apns_environments             = "sandbox"

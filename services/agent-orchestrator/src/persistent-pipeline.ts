@@ -865,8 +865,8 @@ export class PostgresAgentPipeline {
         priority: "time_sensitive",
         title: "Trade proposal ready",
         privateBody: `Review ${proposal.quantity} shares of ${proposal.symbol} at a $${proposal.limitPrice?.toFixed(2)} limit.`,
-        publicBody: "Open Metis to review a trade proposal.",
-        deepLink: "metis://proposals",
+        publicBody: "Open Yield to review a trade proposal.",
+        deepLink: "yield://proposals",
         occurredAt: now,
         notificationIdempotencyKey: notificationKey
       };

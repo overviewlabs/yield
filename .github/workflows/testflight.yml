@@ -1,4 +1,4 @@
-name: Build signed Metis TestFlight IPA
+name: Build signed Yield TestFlight IPA
 
 on:
   workflow_dispatch:
@@ -35,8 +35,8 @@ jobs:
         env:
           P12_BASE64: ${{ secrets.IOS_DISTRIBUTION_P12_BASE64 }}
           P12_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_P12_PASSWORD }}
-          MAIN_PROFILE_BASE64: ${{ secrets.IOS_METIS_APP_STORE_PROFILE_BASE64 }}
-          WIDGET_PROFILE_BASE64: ${{ secrets.IOS_METIS_WIDGET_APP_STORE_PROFILE_BASE64 }}
+          MAIN_PROFILE_BASE64: ${{ secrets.IOS_YIELD_APP_STORE_PROFILE_BASE64 }}
+          WIDGET_PROFILE_BASE64: ${{ secrets.IOS_YIELD_WIDGET_APP_STORE_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
         run: |
           set -euo pipefail
@@ -90,7 +90,7 @@ jobs:
       - name: Upload signed IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: metis-testflight-ipa
+          name: yield-testflight-ipa
           path: ${{ runner.temp }}/export/*.ipa
           if-no-files-found: error
           retention-days: 1

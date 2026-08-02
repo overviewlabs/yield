@@ -54,7 +54,7 @@ describe("authoritative PostgreSQL Paper execution risk context",{skip:databaseU
     await pool!.query(
       `INSERT INTO plans(id,plan_key,display_name,product_id,features,active)
        VALUES($1,$2,'Execution Unmapped Test',$3,$4::jsonb,false)`,
-      [unmappedPlanId,`execution-unmapped-${suffix}`,`ai.whox.metis.execution-unmapped-${suffix}`,JSON.stringify({stockTrading:true,optionsTrading:false,multiLegOptions:false,maximumActiveAgents:1,automaticMode:false,monitoringFrequencyMinutes:60,advancedAnalytics:false,customWatchlists:false,scannerAccess:false,agentCatalog:["equity-momentum"],prioritySupport:false})]
+      [unmappedPlanId,`execution-unmapped-${suffix}`,`ai.whox.yield.execution-unmapped-${suffix}`,JSON.stringify({stockTrading:true,optionsTrading:false,multiLegOptions:false,maximumActiveAgents:1,automaticMode:false,monitoringFrequencyMinutes:60,advancedAnalytics:false,customWatchlists:false,scannerAccess:false,agentCatalog:["equity-momentum"],prioritySupport:false})]
     );
     await pool!.query(
       `INSERT INTO plan_agent_catalog_versions(id,plan_id,version) VALUES($1,$2,1)`,

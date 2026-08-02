@@ -14,10 +14,10 @@
     <false/>
     <key>provisioningProfiles</key>
     <dict>
-        <key>ai.whox.metis</key>
-        <string>Metis App Store</string>
-        <key>ai.whox.metis.widget</key>
-        <string>Metis Widget App Store</string>
+        <key>ai.whox.yield</key>
+        <string>Yield App Store</string>
+        <key>ai.whox.yield.widget</key>
+        <string>Yield Widget App Store</string>
     </dict>
     <key>stripSwiftSymbols</key>
     <true/>

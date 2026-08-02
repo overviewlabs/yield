@@ -111,7 +111,7 @@ struct OnboardingFlowView: View {
       DisclosureNotice(
         title: "Investing involves loss",
         message:
-          "Agents may make errors. Metis does not predict markets or guarantee returns.",
+          "Agents may make errors. Yield does not predict markets or guarantee returns.",
         symbol: "exclamationmark.triangle", color: .orange
       )
       .treasuryCard()
@@ -226,7 +226,7 @@ struct OnboardingFlowView: View {
           .pickerStyle(.menu)
         }
         Toggle(
-          "I understand Metis is not a bank or broker",
+          "I understand Yield is not a bank or broker",
           isOn: binding(\.understandsNotBroker))
       }
       .treasuryCard()
@@ -876,7 +876,7 @@ struct OnboardingFlowView: View {
       )
     case .unavailable:
       VStack(alignment: .leading, spacing: 14) {
-        Label("Metis is unavailable", systemImage: "person.crop.circle.badge.xmark")
+        Label("Yield is unavailable", systemImage: "person.crop.circle.badge.xmark")
           .font(.title3.bold())
           .foregroundStyle(.red)
         Text(assessment.messages.joined(separator: " "))

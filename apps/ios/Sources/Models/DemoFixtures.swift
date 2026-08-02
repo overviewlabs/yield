@@ -175,7 +175,7 @@ enum DemoFixtures {
   static var plans: [SubscriptionPlan] {
     [
       SubscriptionPlan(
-        tier: .equity, productID: "ai.whox.metis.equity.monthly",
+        tier: .equity, productID: "ai.whox.yield.equity.monthly",
         summary: "Long-only stocks and ETFs with one active agent.",
         features: [
           "Stocks and ETFs", "One active agent", "Daily scheduled analysis", "Confirm Every Trade",
@@ -184,7 +184,7 @@ enum DemoFixtures {
         maximumActiveAgents: 1, supportsOptions: false, supportsAutomaticMode: false
       ),
       SubscriptionPlan(
-        tier: .equityPro, productID: "ai.whox.metis.equitypro.monthly",
+        tier: .equityPro, productID: "ai.whox.yield.equitypro.monthly",
         summary: "More agents, monitoring, scanners, and analytics.",
         features: [
           "Up to three agents", "Momentum and quality strategies", "Advanced watchlists",
@@ -193,7 +193,7 @@ enum DemoFixtures {
         maximumActiveAgents: 3, supportsOptions: false, supportsAutomaticMode: true
       ),
       SubscriptionPlan(
-        tier: .options, productID: "ai.whox.metis.options.monthly",
+        tier: .options, productID: "ai.whox.yield.options.monthly",
         summary: "Defined-premium long and covered options strategies.",
         features: [
           "Long calls and puts", "Covered calls", "Protective puts", "Expiration monitoring",
@@ -202,7 +202,7 @@ enum DemoFixtures {
         maximumActiveAgents: 3, supportsOptions: true, supportsAutomaticMode: true
       ),
       SubscriptionPlan(
-        tier: .optionsPro, productID: "ai.whox.metis.optionspro.monthly",
+        tier: .optionsPro, productID: "ai.whox.yield.optionspro.monthly",
         summary: "Approved limited-risk multi-leg strategies and advanced analytics.",
         features: [
           "Defined-risk spreads", "Limited-risk range structures", "Up to three agents",
@@ -578,7 +578,7 @@ enum DemoFixtures {
       LegalDocument(
         id: "broker", title: "Brokerage Connection Disclosure", version: "DEMO-2026.08",
         productionApproved: false,
-        summary: "Metis is not Robinhood and stores no brokerage credential on this device."
+        summary: "Yield is not Robinhood and stores no brokerage credential on this device."
       ),
       LegalDocument(
         id: "options", title: "Options Risk Disclosure", version: "DEMO-2026.08",

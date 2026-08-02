@@ -1153,7 +1153,7 @@ final class AppSession {
 
   func handle(url: URL) {
     guard let route = TreasuryRoute.parse(url) else {
-      alertMessage = "That Metis link is not supported."
+      alertMessage = "That Yield link is not supported."
       return
     }
     navigate(to: route)
@@ -1341,7 +1341,7 @@ final class AppSession {
 
   func signOutOtherDevices() async {
     do {
-      try await localAuthentication.authenticate(reason: "Sign out all other Metis devices")
+      try await localAuthentication.authenticate(reason: "Sign out all other Yield devices")
       let count = try await authClient.revokeOtherSessions()
       alertMessage =
         mode == .demo
@@ -1372,7 +1372,7 @@ final class AppSession {
       return false
     }
     do {
-      try await localAuthentication.authenticate(reason: "Delete this Metis account")
+      try await localAuthentication.authenticate(reason: "Delete this Yield account")
     } catch {
       alertMessage = error.localizedDescription
       return false
@@ -1593,7 +1593,7 @@ final class AppSession {
     pairingService.clearAfterAccountDeletion()
     defaults.removeObject(forKey: StorageKey.preferences)
     preferences = AppPreferences()
-    if let sharedDefaults = UserDefaults(suiteName: "group.ai.whox.metis") {
+    if let sharedDefaults = UserDefaults(suiteName: "group.ai.whox.yield") {
       sharedDefaults.removeObject(forKey: "widgetSnapshot")
       sharedDefaults.removeObject(forKey: "pendingIntentURL")
     }
@@ -1672,7 +1672,7 @@ final class AppSession {
   }
 
   private func consumePendingIntentRoute() {
-    guard let defaults = UserDefaults(suiteName: "group.ai.whox.metis"),
+    guard let defaults = UserDefaults(suiteName: "group.ai.whox.yield"),
       let rawURL = defaults.string(forKey: "pendingIntentURL"),
       let url = URL(string: rawURL)
     else { return }
@@ -1681,7 +1681,7 @@ final class AppSession {
   }
 
   private func publishWidgetSnapshot() {
-    guard let defaults = UserDefaults(suiteName: "group.ai.whox.metis") else { return }
+    guard let defaults = UserDefaults(suiteName: "group.ai.whox.yield") else { return }
     let payload: [String: Any] = [
       "mode": mode.title,
       "agentStatus": activeAgents.first?.runtimeStatus.title ?? "No active agent",

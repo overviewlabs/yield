@@ -1,6 +1,6 @@
 # Production preflight evidence — 2026-08-02
 
-This report records observed evidence from the `Metis` workspace and the
+This report records observed evidence from the `Yield` workspace and the
 current WHOX host. It contains no credentials. It is not an authorization to
 enable Live trading, submit an infrastructure apply, change DNS, or place an
 order.

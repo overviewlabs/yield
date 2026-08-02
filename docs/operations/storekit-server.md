@@ -9,7 +9,7 @@ Apple's verifier requires DER-encoded Apple root certificates, the exact app bun
 | Variable | Requirement |
 |---|---|
 | `APPLE_ROOT_CA_BUNDLE` | One or more current, self-signed Apple root CA certificates in PEM form; secret-managed multiline value. |
-| `APPLE_BUNDLE_ID` | Exact approved app bundle identifier, currently `ai.whox.metis`. |
+| `APPLE_BUNDLE_ID` | Exact approved app bundle identifier, currently `ai.whox.yield`. |
 | `APPLE_APP_ID` | Positive numeric App Apple ID; required whenever Production verification is enabled. |
 | `STOREKIT_ENVIRONMENTS` | Exact `sandbox`, `production`, or `sandbox,production`. |
 | `APP_STORE_DATABASE_URL` | Dedicated login granted only `whox_app_store_notifications`; must differ from the tenant API credential. |

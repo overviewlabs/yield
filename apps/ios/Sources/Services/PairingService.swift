@@ -13,7 +13,7 @@ enum PairingClientError: LocalizedError, Equatable {
     switch self {
     case .invalidResponse:
       "The connection service returned an unreadable response. Regenerate the setup session."
-    case .unauthorized: "Your Metis session expired. Sign in again before connecting."
+    case .unauthorized: "Your Yield session expired. Sign in again before connecting."
     case .notFound: "The pairing session is already expired or canceled. Generate a new code."
     case .unavailable:
       "The connection service is temporarily unavailable. Your brokerage account was not changed."
@@ -68,7 +68,7 @@ enum MobileAuthorizationError: LocalizedError, Equatable {
 }
 
 enum MobileAuthorizationURLPolicy {
-  private static let callbackScheme = "metis"
+  private static let callbackScheme = "yield"
   private static let callbackHost = "broker-connection"
   private static let callbackPath = "/callback"
   private static let prohibitedAuthorizationQueryNames: Set<String> = [
@@ -331,8 +331,8 @@ actor DemoBrokerPairingClient: BrokerPairingClient {
       authorizationURL: URL(
         string: "https://agent.robinhood.com/demo/setup?pairing_id=\(pairingID.uuidString)"
       )!,
-      callbackScheme: "metis",
-      returnURL: URL(string: "metis://broker-connection/callback")!,
+      callbackScheme: "yield",
+      returnURL: URL(string: "yield://broker-connection/callback")!,
       pairingID: pairingID,
       expiresAt: session.expiresAt
     )

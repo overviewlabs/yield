@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>com.apple.security.application-groups</key>
-	<array><string>group.ai.whox.metis</string></array>
+	<array><string>group.ai.whox.yield</string></array>
 </dict>
 </plist>

@@ -196,7 +196,7 @@ final class WHoxTreasuryUITests: XCTestCase {
       "Authentication was not completed. No sensitive action was taken."
     ]
     XCTAssertTrue(failureMessage.waitForExistence(timeout: 10))
-    let alert = app.alerts["Metis"]
+    let alert = app.alerts["Yield"]
     XCTAssertTrue(alert.exists)
     alert.buttons["OK"].tap()
     XCTAssertTrue(approve.waitForExistence(timeout: 5))

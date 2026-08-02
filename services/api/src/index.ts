@@ -20,7 +20,7 @@ if(process.argv[1]!==undefined&&import.meta.url===new URL(`file://${process.argv
   try {
     const runtime=loadApiRuntimeConfiguration();
     const server=createApiServer(runtime.serverOptions);
-    server.listen(runtime.port,runtime.host,()=>process.stdout.write(`Metis API listening on http://${runtime.host}:${runtime.port}\n`));
+    server.listen(runtime.port,runtime.host,()=>process.stdout.write(`Yield API listening on http://${runtime.host}:${runtime.port}\n`));
     let stopping=false;
     const stop=():void=>{if(stopping)return;stopping=true;server.close(()=>{void runtime.close().then(()=>{process.exitCode=0;}).catch((error:unknown)=>{process.stderr.write(`${error instanceof Error?error.message:"API runtime cleanup failed"}\n`);process.exitCode=1;});});};
     process.once("SIGTERM",stop);

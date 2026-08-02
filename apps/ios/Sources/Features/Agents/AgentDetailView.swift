@@ -134,7 +134,7 @@ struct AgentDetailView: View {
   private var historicalResultsEmptyMessage: String {
     switch session.mode {
     case .demo:
-      "Metis does not invent performance. A complete methodology and approved dataset are required before results appear."
+      "Yield does not invent performance. A complete methodology and approved dataset are required before results appear."
     case .paper:
       "Agent-level results are not inferred from seeded Demo fixtures or the current Paper account. Approved Paper methodology and authoritative results are required before they appear."
     case .live:

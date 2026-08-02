@@ -4,10 +4,10 @@ The test configuration defines one subscription group with four monthly products
 
 | Product ID | Display name |
 | --- | --- |
-| `ai.whox.metis.equity.monthly` | Equity |
-| `ai.whox.metis.equitypro.monthly` | Equity Pro |
-| `ai.whox.metis.options.monthly` | Options |
-| `ai.whox.metis.optionspro.monthly` | Options Pro |
+| `ai.whox.yield.equity.monthly` | Equity |
+| `ai.whox.yield.equitypro.monthly` | Equity Pro |
+| `ai.whox.yield.options.monthly` | Options |
+| `ai.whox.yield.optionspro.monthly` | Options Pro |
 
 Prices in `WHoxTreasury.storekit` are local test fixtures. Production UI prices come only from StoreKit's localized `Product.displayPrice`; never copy fixture prices into app copy or backend merchandising.
 

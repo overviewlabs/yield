@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key><string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key><string>Metis</string>
+	<key>CFBundleDisplayName</key><string>Yield</string>
 	<key>CFBundleExecutable</key><string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key><string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
@@ -37,8 +37,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key><string>ai.whox.metis.navigation</string>
-			<key>CFBundleURLSchemes</key><array><string>metis</string></array>
+			<key>CFBundleURLName</key><string>ai.whox.yield.navigation</string>
+			<key>CFBundleURLSchemes</key><array><string>yield</string></array>
 		</dict>
 	</array>
 </dict>

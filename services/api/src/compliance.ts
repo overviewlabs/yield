@@ -177,7 +177,7 @@ export function assessEligibility(input: Readonly<Record<string, unknown>>, id: 
   const reviewReasons: EligibilityReason[] = [];
   if (!ageEligible) ineligibleReasons.push({ code: "MINIMUM_AGE_NOT_MET", message: "The minimum age requirement is not met." });
   if (!ownAccount) ineligibleReasons.push({ code: "INDIVIDUAL_ACCOUNT_REQUIRED", message: "This product supports only a person acting for their own individual account." });
-  if (!understands) ineligibleReasons.push({ code: "ROLE_ACKNOWLEDGMENT_REQUIRED", message: "The user must acknowledge that Metis is not a bank or broker." });
+  if (!understands) ineligibleReasons.push({ code: "ROLE_ACKNOWLEDGMENT_REQUIRED", message: "The user must acknowledge that Yield is not a bank or broker." });
   if (normalizedCountry !== "US") reviewReasons.push({ code: "JURISDICTION_REVIEW_REQUIRED", message: "Availability for this jurisdiction has not been approved and requires compliance review." });
   if (classification !== "self_directed") reviewReasons.push({ code: "ADVISER_CLASSIFICATION_REVIEW_REQUIRED", message: "The adviser-client classification requires compliance review before onboarding can continue." });
   const status: EligibilityStatus = ineligibleReasons.length > 0 ? "ineligible" : reviewReasons.length > 0 ? "review_required" : "eligible";

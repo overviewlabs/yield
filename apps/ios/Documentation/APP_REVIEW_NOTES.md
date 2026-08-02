@@ -4,7 +4,7 @@ This file is a submission template, not evidence of approval. Replace every **PR
 
 ## Purpose
 
-Metis is an agent-assisted investing interface for viewing portfolio information, configuring bounded strategies, reviewing proposals, and controlling future agent activity. The submitted build keeps Live trading and autonomous execution disabled. It never asks the reviewer to enter brokerage credentials on iOS.
+Yield is an agent-assisted investing interface for viewing portfolio information, configuring bounded strategies, reviewing proposals, and controlling future agent activity. The submitted build keeps Live trading and autonomous execution disabled. It never asks the reviewer to enter brokerage credentials on iOS.
 
 ## Demo access
 

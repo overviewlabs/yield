@@ -8,7 +8,7 @@ import {
   type MobileBrokerAuthorizationStartRequest
 } from "@whox/contracts";
 
-export const MOBILE_BROKER_RETURN_URI = "metis://broker-connection/callback";
+export const MOBILE_BROKER_RETURN_URI = "yield://broker-connection/callback";
 
 function exactHttps(value: string, field: string, allowQuery = false): URL {
   let parsed: URL;
@@ -63,7 +63,7 @@ export function validateMobileBrokerConnector(
     throw new DomainError("MOBILE_BROKER_METADATA_INVALID", "redirectUri must target the reserved server callback", 500);
   }
   if (metadata.mobileReturnUri !== MOBILE_BROKER_RETURN_URI) {
-    throw new DomainError("MOBILE_BROKER_METADATA_INVALID", "mobileReturnUri must use the fixed Metis callback", 500);
+    throw new DomainError("MOBILE_BROKER_METADATA_INVALID", "mobileReturnUri must use the fixed Yield callback", 500);
   }
   if (!connectorIdentitiesMatch(connector.identity, metadata.identity)) {
     throw new DomainError("MOBILE_BROKER_CONNECTOR_NOT_APPROVED", "Authorization lifecycle identity does not match mobile connector metadata", 500);

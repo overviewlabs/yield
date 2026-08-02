@@ -445,7 +445,7 @@ private struct InvestorProfileReviewView: View {
       Section("Classification") {
         LabeledContent("Internal profile", value: session.profile.riskClassification)
         Text(
-          "This classification explains strategy eligibility inside Metis and is not brokerage options approval."
+          "This classification explains strategy eligibility inside Yield and is not brokerage options approval."
         )
       }
       Section("Current \(session.mode.title) answers") {
@@ -995,7 +995,7 @@ private struct DataPrivacyView: View {
       }
       Section("Retention and processors") {
         Text(
-          "Production disclosures must list actual processors and explain regulatory retention. Metis never claims deletion of records that law requires it to retain."
+          "Production disclosures must list actual processors and explain regulatory retention. Yield never claims deletion of records that law requires it to retain."
         )
       }
       Section("Controls") {
@@ -1106,7 +1106,7 @@ private struct HelpSupportView: View {
       Section {
         Button("Copy Diagnostic Summary") {
           UIPasteboard.general.string =
-            "Metis | mode=\(session.mode.title) | connection=\(session.connection.status.title) | app=1.0"
+            "Yield | mode=\(session.mode.title) | connection=\(session.connection.status.title) | app=1.0"
           session.alertMessage = "Privacy-safe diagnostic summary copied."
         }
       } header: {
@@ -1128,7 +1128,7 @@ private struct AccountDeletionView: View {
       Form {
         Section {
           DisclosureNotice(
-            title: "Delete Metis account",
+            title: "Delete Yield account",
             message:
               "Account closure disables local access and future automation, revokes WHOX sessions, and durably requests broker authorization revocation. It never closes brokerage positions or open orders, and records required by law remain restricted and retained.",
             symbol: "exclamationmark.triangle", color: .red)

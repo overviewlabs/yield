@@ -3,16 +3,16 @@ import Foundation
 
 private enum IntentRouteWriter {
   static func store(_ url: String) {
-    UserDefaults(suiteName: "group.ai.whox.metis")?.set(url, forKey: "pendingIntentURL")
+    UserDefaults(suiteName: "group.ai.whox.yield")?.set(url, forKey: "pendingIntentURL")
   }
 }
 
 struct OpenDashboardIntent: AppIntent {
   static let title: LocalizedStringResource = "Open Dashboard"
-  static let description = IntentDescription("Open the privacy-protected Metis dashboard.")
+  static let description = IntentDescription("Open the privacy-protected Yield dashboard.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("metis://dashboard")
+    IntentRouteWriter.store("yield://dashboard")
     return .result()
   }
 }
@@ -23,7 +23,7 @@ struct OpenPendingProposalsIntent: AppIntent {
     "Open proposals for authenticated in-app review. This intent never approves a trade.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("metis://proposals")
+    IntentRouteWriter.store("yield://proposals")
     return .result()
   }
 }
@@ -33,7 +33,7 @@ struct OpenActiveAgentIntent: AppIntent {
   static let description = IntentDescription("Open the active investment agent status.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("metis://active-agent")
+    IntentRouteWriter.store("yield://active-agent")
     return .result()
   }
 }
@@ -43,7 +43,7 @@ struct OpenRiskControlsIntent: AppIntent {
   static let description = IntentDescription("Open risk controls without changing any limits.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("metis://risk")
+    IntentRouteWriter.store("yield://risk")
     return .result()
   }
 }
@@ -54,7 +54,7 @@ struct OpenPauseAllReviewIntent: AppIntent {
     "Open the protected Pause All review. The intent itself never pauses or trades.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("metis://risk/pause")
+    IntentRouteWriter.store("yield://risk/pause")
     return .result()
   }
 }

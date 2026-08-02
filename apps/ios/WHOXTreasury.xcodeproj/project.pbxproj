@@ -703,8 +703,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.metis;
-				PRODUCT_NAME = Metis;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.yield;
+				PRODUCT_NAME = Yield;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WHOX_API_BASE_URL = "";
@@ -723,10 +723,10 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.metis.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.yield.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Metis.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Metis";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Yield.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Yield";
 			};
 			name = Debug;
 		};
@@ -743,8 +743,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.metis;
-				PRODUCT_NAME = Metis;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.yield;
+				PRODUCT_NAME = Yield;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WHOX_API_BASE_URL = "https://api.whox.ai";
@@ -763,7 +763,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.metis.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.yield.uitests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = WHOXTreasury;
@@ -858,8 +858,8 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.metis.widget;
-				PRODUCT_NAME = "Metis Status";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.yield.widget;
+				PRODUCT_NAME = "Yield Status";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -875,10 +875,10 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.metis.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.yield.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Metis.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Metis";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Yield.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Yield";
 			};
 			name = Release;
 		};
@@ -893,8 +893,8 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.metis.widget;
-				PRODUCT_NAME = "Metis Status";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.yield.widget;
+				PRODUCT_NAME = "Yield Status";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -910,7 +910,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.metis.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.whox.yield.uitests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = WHOXTreasury;
