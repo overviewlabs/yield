@@ -811,6 +811,17 @@ private struct SubscriptionSettingsView: View {
         )
       }
     }
+    .offerCodeRedemption(isPresented: $isPresentingOfferCodeRedemption) { result in
+      switch result {
+      case .success:
+        Task {
+          await session.restoreOnboardingPurchases()
+          session.alertMessage = "Promo code redeemed. Your verified subscription access was refreshed."
+        }
+      case .failure(let error):
+        session.alertMessage = "The promo code was not redeemed. \(error.localizedDescription)"
+      }
+    }
     .navigationTitle("Subscription")
   }
 
@@ -882,20 +893,9 @@ private struct NotificationSettingsView: View {
             ) {
               ForEach(0..<24, id: \.self) {
                 Text(String(format: "%02d:00", $0)).tag(Optional($0))
-      }
-    }
-    .offerCodeRedemption(isPresented: $isPresentingOfferCodeRedemption) { result in
-      switch result {
-      case .success:
-        Task {
-          await session.restoreOnboardingPurchases()
-          session.alertMessage = "Promo code redeemed. Your verified subscription access was refreshed."
-        }
-      case .failure(let error):
-        session.alertMessage = "The promo code was not redeemed. \(error.localizedDescription)"
-      }
-    }
-  }
+              }
+            }
+          }
         }
         Section {
           Button("Request System Permission") {
