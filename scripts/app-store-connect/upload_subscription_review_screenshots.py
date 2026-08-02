@@ -98,14 +98,17 @@ def ensure_subscription_availability(token: str, subscription_id: str) -> None:
             },
         )
     else:
-        api_request(
+        available = api_request(
             token,
-            "PATCH",
+            "GET",
             f"/v1/subscriptionAvailabilities/{availability['id']}"
-            "/relationships/availableTerritories",
-            {"data": territory_links},
-        )
-    print(f"{subscription_id}: enabled in {len(territory_links)} storefronts")
+            "/availableTerritories?limit=200",
+        )["data"]
+        if not available:
+            raise RuntimeError(
+                f"Subscription {subscription_id} has no enabled App Store territories"
+            )
+        print(f"{subscription_id}: available in {len(available)} storefronts")
 
 
 def upload_asset(operation: dict, blob: bytes) -> None:
