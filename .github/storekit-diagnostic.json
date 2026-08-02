@@ -1,4 +1,38 @@
 {
+  "reviewSubmission": {
+    "items": [
+      {
+        "added": false,
+        "kind": "appStoreVersion",
+        "message": "This resource cannot be reviewed, please check associated errors to see why.",
+        "status": 409
+      },
+      {
+        "added": true,
+        "id": "3676f212-a18c-463a-879b-01cfa482cac8",
+        "kind": "subscriptionVersion"
+      },
+      {
+        "added": true,
+        "id": "0f62bb6e-4e91-451b-a718-152fc9a38118",
+        "kind": "subscriptionVersion"
+      },
+      {
+        "added": true,
+        "id": "f9b2021a-b0fd-4adb-b620-17a295c18f2b",
+        "kind": "subscriptionVersion"
+      },
+      {
+        "added": true,
+        "id": "d704945d-c643-4680-ac00-1bd4abfdd827",
+        "kind": "subscriptionVersion"
+      }
+    ],
+    "message": "App 6797214529 must have an approved appStoreVersions for platform IOS, or an appStoreVersions must be included in this review submission.",
+    "status": 409,
+    "submissionId": "06157a82-8a3f-4fa5-9080-d345b62e188a",
+    "submitted": false
+  },
   "submissionAttempts": [
     {
       "message": "This subscription cannot be reviewed, please check associated errors.",
