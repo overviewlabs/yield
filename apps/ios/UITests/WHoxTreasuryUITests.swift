@@ -228,17 +228,16 @@ final class WHoxTreasuryUITests: XCTestCase {
     assertText("Connect Robinhood")
     XCTAssertTrue(app.staticTexts["Robinhood-controlled setup"].exists)
     attachScreenshot("10-connection-empty")
-    let generate = app.buttons["Connect to Robinhood"]
-    scrollUntilHittable(generate)
-    generate.tap()
+    let connect = app.buttons["Connect Robinhood"]
+    scrollUntilHittable(connect)
+    connect.tap()
     let completeDemo = app.buttons["Complete Demo Pairing"]
     if completeDemo.waitForExistence(timeout: 2) {
-      let pairingCode = app.staticTexts["pairingCode"]
-      scrollUntilHittable(pairingCode)
-      XCTAssertTrue(pairingCode.isHittable)
-      XCTAssertTrue(app.staticTexts["Authorization link"].exists)
-      XCTAssertTrue(app.buttons["Copy Robinhood Link"].exists)
-      XCTAssertTrue(app.buttons["Share Robinhood Link"].exists)
+      XCTAssertFalse(app.staticTexts["Authorization link"].exists)
+      XCTAssertFalse(app.staticTexts["pairingCode"].exists)
+      XCTAssertFalse(app.images.matching(identifier: "QR code").firstMatch.exists)
+      XCTAssertFalse(app.buttons["Copy Robinhood Link"].exists)
+      XCTAssertFalse(app.buttons["Share Robinhood Link"].exists)
       scrollUpUntilHittable(completeDemo)
       XCTAssertTrue(completeDemo.isHittable)
       completeDemo.tap()

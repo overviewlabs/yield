@@ -60,9 +60,9 @@ enum MobileAuthorizationError: LocalizedError, Equatable {
     case .invalidReturn:
       "Robinhood returned an invalid completion message. No connection was accepted on this device."
     case .presentationUnavailable:
-      "The secure Robinhood setup window could not be presented. Keep this pairing and use Copy or Share to open the link in another trusted browser."
+      "The secure Robinhood sign-in browser could not be presented. Tap Connect Robinhood to try again."
     case .unavailable:
-      "The secure Robinhood setup window closed unexpectedly. Keep this pairing and use Copy or Share to open the link in another trusted browser."
+      "The secure Robinhood sign-in browser closed unexpectedly. Tap Connect Robinhood to try again."
     }
   }
 }
@@ -677,7 +677,7 @@ final class PairingService {
   private(set) var isPolling = false
   private(set) var isAuthorizingInApp = false
   private(set) var statusMessage =
-    "Start securely in the app. You can reopen, copy, share, or scan the same short-lived authorization if needed."
+    "Tap Connect Robinhood to open secure sign-in inside the app."
   private(set) var lastScheduledDelay: Double?
   private(set) var pollAttempt = 0
   @ObservationIgnored private let client: any BrokerPairingClient
@@ -761,7 +761,7 @@ final class PairingService {
       case .canceled:
         lifecycleStatus = .authorizing
         statusMessage =
-          "The secure browser was closed. The same short-lived Robinhood authorization remains active; reopen it or use Copy, Share, or QR in another trusted browser."
+          "The secure browser was closed. Tap Connect Robinhood to reopen sign-in."
       case .failed:
         await replacePairingAfterMobileFailure(
           "Robinhood could not complete browser setup. A fresh pairing is ready for another attempt."
@@ -780,7 +780,7 @@ final class PairingService {
         lifecycleStatus = .authorizing
         statusMessage =
           message
-          + " The same short-lived Robinhood authorization remains available below for browser retry."
+          + " Tap Connect Robinhood to try the secure sign-in again."
       } else {
         _ = await restorePendingPairing(
           pairing, message: message + " This pairing remains available for browser retry.")

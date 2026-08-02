@@ -601,11 +601,7 @@ private struct BrokerPairingSheet: View {
     NavigationStack {
       ScrollView {
         VStack(spacing: 18) {
-          if let pairing = session.pairingService.session {
-            let browserURL = session.pairingService.browserAuthorizationURL ?? pairing.setupURL
-            let browserExpiresAt =
-              session.pairingService.browserAuthorizationExpiresAt ?? pairing.expiresAt
-            let hasAuthorizationURL = session.pairingService.browserAuthorizationURL != nil
+          if session.pairingService.session != nil {
             DisclosureNotice(
               title: "Secure Robinhood handoff",
               message:
@@ -620,7 +616,7 @@ private struct BrokerPairingSheet: View {
               }
               .buttonStyle(.borderedProminent).controlSize(.large)
             } else {
-              Button("Open Robinhood Sign In", systemImage: "safari") {
+              Button("Connect Robinhood", systemImage: "safari") {
                 Task {
                   await session.pairingService.connectInApp()
                   session.adoptCompletedPairing()
@@ -644,39 +640,8 @@ private struct BrokerPairingSheet: View {
                   session.adoptCompletedPairing()
                 }
               }
-              Button("Regenerate") { Task { await session.pairingService.regenerate() } }
               Button("Cancel Setup", role: .destructive) {
                 Task { await session.pairingService.cancel() }
-              }
-            }
-
-            if session.pairingService.lifecycleStatus != .connected {
-              Divider()
-              DisclosureNotice(
-                title: "Authorization link",
-                message:
-                  hasAuthorizationURL
-                  ? "Reopen this exact short-lived Robinhood authorization here, or use QR, Copy, or Share in another trusted browser."
-                  : "Use QR, Copy, or Share if you prefer to continue this short-lived setup in another trusted browser.",
-                symbol: "link", color: .blue)
-              QRCodeView(url: browserURL).frame(width: 210, height: 210)
-              Text(pairing.code).font(.title2.monospaced().bold())
-                .accessibilityLabel("Pairing code, \(pairing.code)")
-              Text("Expires \(browserExpiresAt, style: .timer)").font(.caption).foregroundStyle(
-                .secondary)
-              ViewThatFits {
-                HStack {
-                  copyLinkButton(browserURL)
-                  ShareLink(item: browserURL) {
-                    Label("Share Robinhood Link", systemImage: "square.and.arrow.up")
-                  }
-                }
-                VStack {
-                  copyLinkButton(browserURL)
-                  ShareLink(item: browserURL) {
-                    Label("Share Robinhood Link", systemImage: "square.and.arrow.up")
-                  }
-                }
               }
             }
           } else {
@@ -715,12 +680,6 @@ private struct BrokerPairingSheet: View {
     }
   }
 
-  private func copyLinkButton(_ url: URL) -> some View {
-    Button("Copy Link", systemImage: "doc.on.doc") {
-      UIPasteboard.general.url = url
-      session.alertMessage = "The short-lived Robinhood authorization link was copied."
-    }
-  }
 }
 
 private struct SubscriptionSettingsView: View {

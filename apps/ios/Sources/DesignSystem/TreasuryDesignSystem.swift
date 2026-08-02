@@ -1,4 +1,3 @@
-import CoreImage.CIFilterBuiltins
 import SwiftUI
 import UIKit
 
@@ -194,36 +193,6 @@ struct PrivacyShieldView: View {
       .padding(32)
     }
     .accessibilityElement(children: .contain)
-  }
-}
-
-struct QRCodeView: View {
-  let url: URL
-
-  var body: some View {
-    if let image = makeQRCode(from: url.absoluteString) {
-      Image(uiImage: image)
-        .interpolation(.none)
-        .resizable()
-        .scaledToFit()
-        .accessibilityLabel("QR code for the short-lived Robinhood authorization link")
-    } else {
-      Image(systemName: "qrcode")
-        .resizable()
-        .scaledToFit()
-        .accessibilityLabel("QR code unavailable. Use Copy Robinhood Link instead.")
-    }
-  }
-
-  private func makeQRCode(from string: String) -> UIImage? {
-    let filter = CIFilter.qrCodeGenerator()
-    filter.message = Data(string.utf8)
-    filter.correctionLevel = "M"
-    guard let output = filter.outputImage?.transformed(by: CGAffineTransform(scaleX: 8, y: 8))
-    else { return nil }
-    let context = CIContext(options: [.useSoftwareRenderer: false])
-    guard let cgImage = context.createCGImage(output, from: output.extent) else { return nil }
-    return UIImage(cgImage: cgImage)
   }
 }
 

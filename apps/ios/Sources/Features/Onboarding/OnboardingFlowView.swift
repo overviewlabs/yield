@@ -541,15 +541,11 @@ struct OnboardingFlowView: View {
       DisclosureNotice(
         title: "Robinhood-controlled setup",
         message:
-          "Treasury uses Apple’s secure authentication browser, never an embedded webview. Sign in and approve within Robinhood. QR, Copy, and Share are optional ways to reopen the same short-lived authorization.",
+          "Treasury opens Apple’s secure in-app authentication browser. Sign in and approve within Robinhood, then return here while Yield verifies the connection.",
         symbol: "safari", color: .blue
       )
 
-      if let pairing = session.pairingService.session {
-        let browserURL = session.pairingService.browserAuthorizationURL ?? pairing.setupURL
-        let browserExpiresAt =
-          session.pairingService.browserAuthorizationExpiresAt ?? pairing.expiresAt
-        let hasAuthorizationURL = session.pairingService.browserAuthorizationURL != nil
+      if session.pairingService.session != nil {
         VStack(spacing: 16) {
           Label(
             session.pairingService.statusMessage,
@@ -559,7 +555,7 @@ struct OnboardingFlowView: View {
           .font(.subheadline).foregroundStyle(
             session.pairingService.lifecycleStatus == .connected ? .green : .secondary)
           if session.pairingService.lifecycleStatus != .connected {
-            Button("Open Robinhood Sign In", systemImage: "safari") {
+            Button("Connect Robinhood", systemImage: "safari") {
               Task {
                 await session.pairingService.connectInApp()
                 session.adoptCompletedPairing()
@@ -583,7 +579,6 @@ struct OnboardingFlowView: View {
                 session.adoptCompletedPairing()
               }
             }
-            Button("Regenerate Code") { Task { await session.pairingService.regenerate() } }
             Button("Cancel Pairing", role: .destructive) {
               Task { await session.pairingService.cancel() }
             }
@@ -598,41 +593,6 @@ struct OnboardingFlowView: View {
             .controlSize(.large)
             .frame(maxWidth: .infinity)
           }
-
-          if session.pairingService.lifecycleStatus != .connected {
-            Divider()
-            Text("Authorization link").font(.headline).frame(
-              maxWidth: .infinity, alignment: .leading)
-            Text(
-              hasAuthorizationURL
-                ? "Reopen this exact short-lived Robinhood authorization here, or use QR, Copy, or Share in another trusted browser."
-                : "Use QR, Copy, or Share if you prefer to continue this short-lived setup in another trusted browser."
-            )
-            .font(.subheadline).foregroundStyle(.secondary)
-            QRCodeView(url: browserURL).frame(width: 190, height: 190)
-            Text(pairing.code)
-              .font(.title2.monospaced().weight(.semibold))
-              .accessibilityLabel("Pairing code, \(pairing.code)")
-              .accessibilityIdentifier("pairingCode")
-            Text("Expires \(browserExpiresAt, style: .timer)").font(.caption).foregroundStyle(
-              .secondary)
-            ViewThatFits {
-              HStack {
-                copySetupLinkButton(browserURL)
-                Spacer()
-                ShareLink(item: browserURL) {
-                  Label("Share Robinhood Link", systemImage: "square.and.arrow.up")
-                }
-              }
-              VStack(alignment: .leading) {
-                copySetupLinkButton(browserURL)
-                ShareLink(item: browserURL) {
-                  Label("Share Robinhood Link", systemImage: "square.and.arrow.up")
-                }
-              }
-            }
-            .font(.subheadline)
-          }
         }
         .treasuryCard()
       } else {
@@ -643,7 +603,7 @@ struct OnboardingFlowView: View {
           symbol: "timer"
         )
         .treasuryCard()
-        Button("Connect to Robinhood", systemImage: "safari") {
+        Button("Connect Robinhood", systemImage: "safari") {
           Task {
             await session.pairingService.connectInApp()
             session.adoptCompletedPairing()
@@ -988,13 +948,6 @@ struct OnboardingFlowView: View {
   private func legalLink(id: String) -> some View {
     Button(session.legalDocuments.first(where: { $0.id == id })?.title ?? "Legal") {
       selectedLegalDocument = session.legalDocuments.first(where: { $0.id == id })
-    }
-  }
-
-  private func copySetupLinkButton(_ url: URL) -> some View {
-    Button("Copy Robinhood Link", systemImage: "doc.on.doc") {
-      UIPasteboard.general.url = url
-      session.alertMessage = "The short-lived Robinhood authorization link was copied."
     }
   }
 

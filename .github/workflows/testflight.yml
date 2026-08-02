@@ -84,7 +84,7 @@ jobs:
       - name: Archive
         env:
           MARKETING_VERSION: ${{ inputs.version || '1.0' }}
-          BUILD_NUMBER: ${{ inputs.build_number || '7' }}
+          BUILD_NUMBER: ${{ inputs.build_number || '8' }}
         run: |
           set -euo pipefail
           xcodebuild \
