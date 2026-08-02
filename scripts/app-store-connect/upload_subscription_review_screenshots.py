@@ -360,6 +360,21 @@ def complete_app_review_submission(token: str) -> dict:
                 "id": localization["id"],
                 "attributes": localization.get("attributes", {}),
                 "screenshotSetCount": len(screenshot_sets),
+                "screenshotSets": [
+                    {
+                        "id": item["id"],
+                        "attributes": item.get("attributes", {}),
+                        "screenshots": [
+                            screenshot.get("attributes", {})
+                            for screenshot in api_request(
+                                token,
+                                "GET",
+                                f"/v1/appScreenshotSets/{item['id']}/appScreenshots?limit=200",
+                            )["data"]
+                        ],
+                    }
+                    for item in screenshot_sets
+                ],
             }
         )
     review_detail = api_request(
@@ -368,10 +383,37 @@ def complete_app_review_submission(token: str) -> dict:
         f"/v1/appStoreVersions/{app_version['id']}/appStoreReviewDetail",
         allowed_errors={404},
     ).get("data")
-    age_rating = api_request(
+    app_infos = api_request(token, "GET", f"/v1/apps/{app_id}/appInfos?limit=10")["data"]
+    app_info_diagnostics = []
+    for app_info in app_infos:
+        age_rating = api_request(
+            token, "GET", f"/v1/appInfos/{app_info['id']}/ageRatingDeclaration"
+        ).get("data")
+        app_info_diagnostics.append(
+            {
+                "id": app_info["id"],
+                "attributes": app_info.get("attributes", {}),
+                "ageRating": None
+                if age_rating is None
+                else age_rating.get("attributes", {}),
+            }
+        )
+    build = api_request(
         token,
         "GET",
-        f"/v1/appStoreVersions/{app_version['id']}/ageRatingDeclaration",
+        f"/v1/appStoreVersions/{app_version['id']}/build",
+        allowed_errors={404},
+    ).get("data")
+    availability = api_request(
+        token,
+        "GET",
+        f"/v1/apps/{app_id}/appAvailabilityV2",
+        allowed_errors={404},
+    ).get("data")
+    price_schedule = api_request(
+        token,
+        "GET",
+        f"/v1/apps/{app_id}/appPriceSchedule",
         allowed_errors={404},
     ).get("data")
     app_version_diagnostic = {
@@ -379,7 +421,12 @@ def complete_app_review_submission(token: str) -> dict:
         "attributes": app_version.get("attributes", {}),
         "localizations": localization_diagnostics,
         "reviewDetail": None if review_detail is None else review_detail.get("attributes", {}),
-        "ageRating": None if age_rating is None else age_rating.get("attributes", {}),
+        "appInfos": app_info_diagnostics,
+        "build": None if build is None else build.get("attributes", {}),
+        "availability": None if availability is None else availability.get("attributes", {}),
+        "priceSchedule": None
+        if price_schedule is None
+        else price_schedule.get("attributes", {}),
     }
     subscription_versions = [
         ensure_subscription_version(token, subscription_id) for subscription_id in SUBSCRIPTIONS
