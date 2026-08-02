@@ -69,10 +69,16 @@ jobs:
 
       - name: Apply and verify Swift formatting
         run: |
+          set +e
+          FORMAT_LOG="$RUNNER_TEMP/swift-format.log"
           xcrun swift-format format --in-place --recursive --parallel \
-            apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget
+            apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget \
+            >"$FORMAT_LOG" 2>&1
+          FORMAT_STATUS=$?
           xcrun swift-format lint --recursive --parallel --strict \
-            apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget
+            apps/ios/Sources apps/ios/Tests apps/ios/UITests apps/ios/Widget \
+            >>"$FORMAT_LOG" 2>&1
+          LINT_STATUS=$?
           if ! git diff --quiet; then
             git config user.name github-actions
             git config user.email github-actions@github.com
@@ -80,6 +86,11 @@ jobs:
             git commit -m "Apply Swift formatting"
             git push
           fi
+          if [ "$FORMAT_STATUS" -ne 0 ] || [ "$LINT_STATUS" -ne 0 ]; then
+            cat "$FORMAT_LOG"
+            exit 1
+          fi
+          set -e
 
       - name: Archive
         env:
