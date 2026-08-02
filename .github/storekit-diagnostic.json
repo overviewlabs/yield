@@ -1,5 +1,38 @@
 {
   "reviewSubmission": {
+    "appStoreVersion": {
+      "ageRating": null,
+      "attributes": {
+        "appStoreState": "PREPARE_FOR_SUBMISSION",
+        "appVersionState": "PREPARE_FOR_SUBMISSION",
+        "copyright": null,
+        "createdDate": "2026-08-02T03:47:49-07:00",
+        "downloadable": true,
+        "earliestReleaseDate": null,
+        "platform": "IOS",
+        "releaseType": "AFTER_APPROVAL",
+        "reviewType": "APP_STORE",
+        "usesIdfa": null,
+        "versionString": "1.0"
+      },
+      "id": "ab09b751-8852-4775-9654-62bc8747ea99",
+      "localizations": [
+        {
+          "attributes": {
+            "description": null,
+            "keywords": null,
+            "locale": "en-US",
+            "marketingUrl": null,
+            "promotionalText": null,
+            "supportUrl": null,
+            "whatsNew": null
+          },
+          "id": "fa881a76-aeb6-4be5-b447-6be66a13fc13",
+          "screenshotSetCount": 0
+        }
+      ],
+      "reviewDetail": null
+    },
     "items": [
       {
         "added": false,
@@ -8,24 +41,32 @@
         "status": 409
       },
       {
-        "added": true,
+        "added": false,
         "id": "3676f212-a18c-463a-879b-01cfa482cac8",
-        "kind": "subscriptionVersion"
+        "kind": "subscriptionVersion",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"4956363b-f6ce-4344-9555-987f262a3ee0\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "status": 409
       },
       {
-        "added": true,
+        "added": false,
         "id": "0f62bb6e-4e91-451b-a718-152fc9a38118",
-        "kind": "subscriptionVersion"
+        "kind": "subscriptionVersion",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"ea80bd33-1064-478b-a387-87919b518e9b\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "status": 409
       },
       {
-        "added": true,
+        "added": false,
         "id": "f9b2021a-b0fd-4adb-b620-17a295c18f2b",
-        "kind": "subscriptionVersion"
+        "kind": "subscriptionVersion",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"f3dff417-9028-4126-bd3f-47dc3a963a9f\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "status": 409
       },
       {
-        "added": true,
+        "added": false,
         "id": "d704945d-c643-4680-ac00-1bd4abfdd827",
-        "kind": "subscriptionVersion"
+        "kind": "subscriptionVersion",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"afe095cc-bf05-4c8b-b8d9-a2af32fe011a\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "status": 409
       }
     ],
     "message": "App 6797214529 must have an approved appStoreVersions for platform IOS, or an appStoreVersions must be included in this review submission.",
@@ -35,25 +76,25 @@
   },
   "submissionAttempts": [
     {
-      "message": "This subscription cannot be reviewed, please check associated errors.",
+      "message": "Subscription 6797232006 has no pending version for submission",
       "status": 409,
       "submitted": false,
       "subscriptionId": "6797232006"
     },
     {
-      "message": "This subscription cannot be reviewed, please check associated errors.",
+      "message": "Subscription 6797231871 has no pending version for submission",
       "status": 409,
       "submitted": false,
       "subscriptionId": "6797231871"
     },
     {
-      "message": "This subscription cannot be reviewed, please check associated errors.",
+      "message": "Subscription 6797231801 has no pending version for submission",
       "status": 409,
       "submitted": false,
       "subscriptionId": "6797231801"
     },
     {
-      "message": "This subscription cannot be reviewed, please check associated errors.",
+      "message": "Subscription 6797231900 has no pending version for submission",
       "status": 409,
       "submitted": false,
       "subscriptionId": "6797231900"
