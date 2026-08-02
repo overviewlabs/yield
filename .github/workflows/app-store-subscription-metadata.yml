@@ -1,0 +1,34 @@
+name: Upload Yield subscription review metadata
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Create App Store Connect environment
+        run: |
+          python3 -m venv "$RUNNER_TEMP/asc-venv"
+          "$RUNNER_TEMP/asc-venv/bin/pip" install PyJWT cryptography
+
+      - name: Upload subscription review screenshots
+        env:
+          ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          ASC_PRIVATE_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64 }}
+          ASC_PRIVATE_KEY_PATH: ${{ runner.temp }}/AuthKey.p8
+        run: |
+          set -euo pipefail
+          test -n "$ASC_KEY_ID"
+          test -n "$ASC_ISSUER_ID"
+          test -n "$ASC_PRIVATE_KEY_BASE64"
+          printf '%s' "$ASC_PRIVATE_KEY_BASE64" | base64 --decode > "$ASC_PRIVATE_KEY_PATH"
+          "$RUNNER_TEMP/asc-venv/bin/python" scripts/app-store-connect/upload_subscription_review_screenshots.py
