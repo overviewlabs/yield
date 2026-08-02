@@ -61,7 +61,1261 @@
         "versionString": "1.0"
       },
       "availability": {
-        "availableInNewTerritories": true
+        "availableInNewTerritories": true,
+        "territoryIssues": [
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNTkUifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MNE"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNU1IifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MSR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJFQ1UifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ECU"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJLR1oifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "KGZ"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJVU0EifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "USA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUVU4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TUN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCTVUifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BMU"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJWVVQifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "VUT"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJMQ0EifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "LCA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJET00ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "DOM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJOTEQifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "NLD"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBVVQifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "AUT"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJETUEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "DMA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDUkkifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "CRI"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJJUlEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "IRQ"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJORVIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "NER"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTTFYifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SLV"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDQU4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "CAN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNREcifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MDG"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTVFAifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "STP"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNTEkifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MLI"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJOUEwifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "NPL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJFU1AifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "ESP"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJQUlQifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "PRT"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJMVFUifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "LTU"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJMQU8ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "LAO"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJMQlkifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "LBY"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJQTFcifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "PLW"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJWRU4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "VEN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDWkUifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "CZE"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHTkIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "GNB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHTUIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "GMB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCVE4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BTN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJERVUifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "DEU"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJIVU4ifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "HUN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNVVMifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MUS"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTV0UifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "SWE"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJJU0wifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ISL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBSUEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "AIA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTVVIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SUR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJWQ1QifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "VCT"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJJTkQifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "IND"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDUFYifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "CPV"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDSVYifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "CIV"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJVUlkifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "URY"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNS0QifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MKD"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJLV1QifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "KWT"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJJUkwifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "IRL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBUk0ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ARM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTVk4ifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "SVN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJVR0EifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "UGA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHQUIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "GAB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTTEUifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SLE"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBRkcifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "AFG"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUV04ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TWN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDT0wifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "COL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCRkEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BFA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJZRU0ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "YEM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCV0EifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BWA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBUkUifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ARE"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCRUwifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "BEL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCRU4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BEN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCR1IifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "BGR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHRU8ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "GEO"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJQQU4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "PAN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNRFYifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MDV"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTRU4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SEN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJQTkcifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "PNG"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJJVEEifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "ITA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCUkEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BRA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJLQVoifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "KAZ"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJQSEwifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "PHL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBUkcifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ARG"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUVVIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TUR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJITkQifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "HND"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBTEIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ALB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTWUMifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SYC"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJST1UifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "ROU"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJIS0cifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "HKG"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJMS0EifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "LKA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJGU00ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "FSM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNTVIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MMR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHSEEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "GHA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJJU1IifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ISR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJQUlkifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "PRY"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJMVVgifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "LUX"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBR08ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "AGO"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJEWkEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "DZA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDSEwifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "CHL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJGUkEifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "FRA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUWkEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TZA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJQRVIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "PER"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCUk4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BRN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJKUE4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "JPN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUSEEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "THA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNV0kifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MWI"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTUkIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SRB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTV1oifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SWZ"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJKQU0ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "JAM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTQVUifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SAU"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUSksifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TJK"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJGSkkifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "FJI"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNQUMifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MAC"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDTVIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "CMR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJaV0UifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ZWE"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNT1oifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MOZ"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUVE8ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TTO"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCT0wifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BOL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHUkMifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "GRC"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJaQUYifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ZAF"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJOT1IifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "NOR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJWR0IifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "VGB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDSE4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "CHN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNQVIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MAR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJETksifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "DNK"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJLTkEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "KNA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJVS1IifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "UKR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNREEifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MDA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCTFIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BLR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJGSU4ifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "FIN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJSVVMifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "RUS"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUS00ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TKM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJJRE4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "IDN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJOSUMifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "NIC"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDWVAifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "CYP"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJOWkwifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "NZL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJOQU0ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "NAM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJWTk0ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "VNM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJIUlYifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "HRV"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUQ0EifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TCA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJKT1IifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "JOR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJPTU4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "OMN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJYS1MifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "XKS"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCSFMifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BHS"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJaTUIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ZMB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTTEIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SLB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCSUgifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BIH"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJQT0wifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "POL"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHVE0ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "GTM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUT04ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TON"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNRVgifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MEX"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJMVkEifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "LVA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJLRU4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "KEN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJOR0EifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "NGA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCUkIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BRB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCTFoifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BLZ"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDSEUifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "CHE"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHUkQifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "GRD"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJLSE0ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "KHM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJFR1kifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "EGY"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNTkcifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MNG"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTR1AifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "SGP"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJTVksifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "SVK"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHQlIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "GBR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNUlQifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MRT"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDT0cifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "COG"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJQQUsifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "PAK"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDWU0ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "CYM"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJVWkIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "UZB"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJOUlUifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "NRU"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBWkUifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "AZE"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJCSFIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "BHR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNTFQifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "MLT"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBVVMifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "AUS"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJHVVkifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "GUY"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJDT0QifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "COD"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJNWVMifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "MYS"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJFU1QifQ",
+            "statuses": [
+              "TRADER_STATUS_NOT_PROVIDED",
+              "CANNOT_SELL"
+            ],
+            "territory": "EST"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJSV0EifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "RWA"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJLT1IifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "KOR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJRQVQifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "QAT"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJMQlIifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "LBR"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJBVEcifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "ATG"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJMQk4ifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "LBN"
+          },
+          {
+            "availabilityId": "eyJzIjoiNjc5NzIxNDUyOSIsInQiOiJUQ0QifQ",
+            "statuses": [
+              "CANNOT_SELL"
+            ],
+            "territory": "TCD"
+          }
+        ]
       },
       "build": {
         "buildAudienceType": "APP_STORE_ELIGIBLE",
@@ -153,7 +1407,7 @@
                     "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f0/d6/35/f0d63542-18e0-1115-a638-3883f1928a7b/yield-APP_IPAD_PRO_3GEN_129-3-E7EEA644-1AC0-44AB-9D0B-504B905765FE.png/{w}x{h}bb.{f}",
                     "width": 2064
                   },
-                  "sourceFileChecksum": null,
+                  "sourceFileChecksum": "4dd62f3eb64467c4c4a00e61fb20e0b8",
                   "uploadOperations": null
                 },
                 {
@@ -171,7 +1425,7 @@
                     "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/18/61/54/186154f5-96c8-9582-e0a3-33a0ce699b40/yield-APP_IPAD_PRO_3GEN_129-4-00EFE791-DF7C-445D-A333-A136ED35674B.png/{w}x{h}bb.{f}",
                     "width": 2064
                   },
-                  "sourceFileChecksum": null,
+                  "sourceFileChecksum": "2ca0571bb4af249bdec7b534f40a0bcf",
                   "uploadOperations": null
                 },
                 {
@@ -189,7 +1443,7 @@
                     "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b6/2b/2b/b62b2b82-0759-c6b0-6372-b0b262bb0400/yield-APP_IPAD_PRO_3GEN_129-5-3F156749-FE4C-468A-BD05-2B8D7CF6D966.png/{w}x{h}bb.{f}",
                     "width": 2064
                   },
-                  "sourceFileChecksum": null,
+                  "sourceFileChecksum": "010934e8c434cb6ed5a9330c90a11a62",
                   "uploadOperations": null
                 }
               ]
@@ -322,28 +1576,28 @@
         "added": false,
         "id": "3676f212-a18c-463a-879b-01cfa482cac8",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"6289d175-de82-4a47-9bea-d635e68a6140\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"35b03987-98c5-42f9-9cfb-22d221fa5976\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "0f62bb6e-4e91-451b-a718-152fc9a38118",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"530e8911-f03b-4db2-a624-cd04c798ba6b\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"6cfe5027-1f97-464c-95fa-60e2f69c33a7\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "f9b2021a-b0fd-4adb-b620-17a295c18f2b",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"c348d457-ae2e-4c5f-bc73-d3284c5821bd\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"c3b376b2-4a8e-4c6c-b5a3-f37e64f5328d\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "d704945d-c643-4680-ac00-1bd4abfdd827",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"2d7ceda8-87a9-44d0-8702-d6e05d290290\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"2694e691-d414-4fc6-8263-38bbb190118b\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       }
     ],
