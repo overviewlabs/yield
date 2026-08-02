@@ -1,4 +1,4 @@
-# WHOX Treasury icon source
+# Metis icon source
 
 These three transparent SVG files are ordered back-to-front and sized on Apple's 1024 × 1024 iPhone, iPad, and Mac canvas. They are intentionally free of masks, shadows, blurs, gradients, and specular effects so those properties remain editable in Icon Composer.
 

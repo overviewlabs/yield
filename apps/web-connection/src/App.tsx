@@ -17,7 +17,7 @@ const accountMode = deployment === "live" ? "Live" : deployment === "paper" ? "P
 
 function TreasuryMark() {
   return (
-    <svg className="brand-mark" viewBox="0 0 48 48" role="img" aria-label="WHOX Treasury">
+    <svg className="brand-mark" viewBox="0 0 48 48" role="img" aria-label="Metis">
       <path d="M24 4 40 12v12c0 10.2-6.3 16.5-16 20C14.3 40.5 8 34.2 8 24V12L24 4Z" />
       <path d="M16 28V18h16v10M13 32h22M20 18v10m8-10v10" />
     </svg>
@@ -180,7 +180,7 @@ export default function App() {
     <div className="app-shell">
       <a className="skip-link" href="#connection-content">Skip to connection</a>
       <header className="site-header">
-        <a className="brand" href="/" aria-label="WHOX Treasury connection home">
+        <a className="brand" href="/" aria-label="Metis connection home">
           <TreasuryMark />
           <span><strong>WHOX</strong> Treasury</span>
         </a>
@@ -194,7 +194,7 @@ export default function App() {
           <p className="eyebrow">Secure browser connection</p>
           <h1>Connect without sharing credentials.</h1>
           <p>
-            Pair WHOX Treasury with a dedicated Robinhood Agentic Account. Authentication happens on the
+            Pair Metis with a dedicated Robinhood Agentic Account. Authentication happens on the
             broker’s authorization page; WHOX never asks for your Robinhood password.
           </p>
           <ul className="trust-list">
@@ -204,7 +204,7 @@ export default function App() {
           </ul>
           <p id="risk-disclosure" className="risk-note">
             Investing involves risk, including possible loss of principal. Automated strategies can make errors.
-            WHOX Treasury is not Robinhood and is not represented as endorsed by Robinhood.
+            Metis is not Robinhood and is not represented as endorsed by Robinhood.
           </p>
         </aside>
 
@@ -331,7 +331,7 @@ export default function App() {
             <div className="flow-step centered">
               <span className="success-mark" aria-hidden="true">✓</span>
               <p className="eyebrow success-text">All set</p>
-              <h2 id="flow-title">Return to WHOX Treasury</h2>
+              <h2 id="flow-title">Return to Metis</h2>
               <p>The app will receive the connection status through its secure status channel. You may close this tab.</p>
               <button
                 className="secondary-button"
@@ -350,7 +350,7 @@ export default function App() {
             <div className="flow-step">
               <p className="eyebrow">Session expired</p>
               <h2 id="flow-title">Create a new pairing code</h2>
-              <p>This code is no longer valid. Return to WHOX Treasury, generate a new code, then enter it here.</p>
+              <p>This code is no longer valid. Return to Metis, generate a new code, then enter it here.</p>
               <button className="primary-button" type="button" onClick={() => dispatch({ type: "RESET" })}>Enter a new code</button>
             </div>
           )}
@@ -358,7 +358,7 @@ export default function App() {
       </main>
 
       <footer>
-        <span>WHOX Treasury · Automated Strategy Control</span>
+        <span>Metis · Automated Strategy Control</span>
         <nav aria-label="Page information"><a href="#connection-security">Security</a><a href="#risk-disclosure">Risk disclosure</a></nav>
       </footer>
       <p className="sr-only" aria-live="polite">{announcement}</p>

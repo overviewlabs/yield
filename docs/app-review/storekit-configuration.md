@@ -4,7 +4,7 @@
 
 ## Product families
 
-Suggested monthly identifiers are `whox.treasury.equity.monthly`, `whox.treasury.equitypro.monthly`, `whox.treasury.options.monthly`, and `whox.treasury.optionspro.monthly`; annual products may be added after pricing/legal review. Production identifiers, pricing, names, terms, and availability come from App Store Connect and backend plan configuration.
+Suggested monthly identifiers are `ai.whox.metis.equity.monthly`, `ai.whox.metis.equitypro.monthly`, `ai.whox.metis.options.monthly`, and `ai.whox.metis.optionspro.monthly`; annual products may be added after pricing/legal review. Production identifiers, pricing, names, terms, and availability come from App Store Connect and backend plan configuration.
 
 ## Validation
 

@@ -7,8 +7,8 @@ admin_web_url        = "https://admin.example.com"
 cors_allowed_origins = ["https://connect.example.com", "https://admin.example.com"]
 redis_auth_token     = "REPLACE_VIA_SECRET_CHANNEL_MINIMUM_32_CHARS"
 alert_topic_arn      = "arn:aws:sns:us-east-1:222222222222:whox-live-alerts"
-apple_client_id      = "ai.whox.treasury"
-apple_bundle_id      = "ai.whox.treasury"
+apple_client_id      = "ai.whox.metis"
+apple_bundle_id      = "ai.whox.metis"
 apple_app_id         = 1234567890 # REPLACE with the numeric App Store Connect application ID
 storekit_environments = "production"
 
@@ -31,5 +31,5 @@ agent_scheduler_lag_alert_seconds = 300
 notification_desired_count   = 0
 apns_team_id                  = ""
 apns_key_id                   = ""
-apns_topic                    = "ai.whox.treasury"
+apns_topic                    = "ai.whox.metis"
 apns_environments             = "production"

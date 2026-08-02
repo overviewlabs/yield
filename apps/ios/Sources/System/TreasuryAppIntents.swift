@@ -3,7 +3,7 @@ import Foundation
 
 private enum IntentRouteWriter {
   static func store(_ url: String) {
-    UserDefaults(suiteName: "group.ai.whox.treasury")?.set(url, forKey: "pendingIntentURL")
+    UserDefaults(suiteName: "group.ai.whox.metis")?.set(url, forKey: "pendingIntentURL")
   }
 }
 
@@ -12,7 +12,7 @@ struct OpenDashboardIntent: AppIntent {
   static let description = IntentDescription("Open the privacy-protected Metis dashboard.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("whoxtreasury://dashboard")
+    IntentRouteWriter.store("metis://dashboard")
     return .result()
   }
 }
@@ -23,7 +23,7 @@ struct OpenPendingProposalsIntent: AppIntent {
     "Open proposals for authenticated in-app review. This intent never approves a trade.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("whoxtreasury://proposals")
+    IntentRouteWriter.store("metis://proposals")
     return .result()
   }
 }
@@ -33,7 +33,7 @@ struct OpenActiveAgentIntent: AppIntent {
   static let description = IntentDescription("Open the active investment agent status.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("whoxtreasury://active-agent")
+    IntentRouteWriter.store("metis://active-agent")
     return .result()
   }
 }
@@ -43,7 +43,7 @@ struct OpenRiskControlsIntent: AppIntent {
   static let description = IntentDescription("Open risk controls without changing any limits.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("whoxtreasury://risk")
+    IntentRouteWriter.store("metis://risk")
     return .result()
   }
 }
@@ -54,7 +54,7 @@ struct OpenPauseAllReviewIntent: AppIntent {
     "Open the protected Pause All review. The intent itself never pauses or trades.")
   static let openAppWhenRun = true
   func perform() async throws -> some IntentResult {
-    IntentRouteWriter.store("whoxtreasury://risk/pause")
+    IntentRouteWriter.store("metis://risk/pause")
     return .result()
   }
 }

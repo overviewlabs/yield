@@ -1,8 +1,8 @@
 {
-  "name": "whox-treasury",
+  "name": "metis",
   "version": "0.1.0",
   "private": true,
-  "description": "WHOX Treasury native agentic investing control plane",
+  "description": "Metis native agentic investing control plane",
   "engines": {
     "node": ">=22.0.0"
   },

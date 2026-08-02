@@ -14,8 +14,8 @@ const payload = (key: string): NotificationJobPayload => Object.freeze({
   priority: "normal",
   title: "Proposal ready",
   privateBody: "Review the pending AAPL proposal.",
-  publicBody: "Open WHOX Treasury to review.",
-  deepLink: "whoxtreasury://proposals",
+  publicBody: "Open Metis to review.",
+  deepLink: "metis://proposals",
   occurredAt: "2026-08-01T14:00:00.000Z",
   notificationIdempotencyKey: key
 });

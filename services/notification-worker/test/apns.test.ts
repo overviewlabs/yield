@@ -19,8 +19,8 @@ class Transport implements APNsTransport {
 }
 
 const privateKey = generateKeyPairSync("ec", { namedCurve: "P-256" }).privateKey.export({ type: "pkcs8", format: "pem" }).toString();
-const configuration = { teamId: "TEAMID1234", keyId: "KEYID12345", privateKey, topic: "ai.whox.treasury", allowedEnvironments: new Set(["sandbox", "production"] as const) } as const;
-const message = { userId: "user-1", title: "Proposal ready", body: "Open WHOX Treasury to review.", priority: "normal", deepLink: "whoxtreasury://proposals", collapseId: "notification-key-1" } as const;
+const configuration = { teamId: "TEAMID1234", keyId: "KEYID12345", privateKey, topic: "ai.whox.metis", allowedEnvironments: new Set(["sandbox", "production"] as const) } as const;
+const message = { userId: "user-1", title: "Proposal ready", body: "Open Metis to review.", priority: "normal", deepLink: "metis://proposals", collapseId: "notification-key-1" } as const;
 
 describe("APNs provider", () => {
   it("sends privacy-safe payloads to each environment and invalidates permanent token failures", async () => {

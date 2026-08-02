@@ -24,7 +24,7 @@ enum TreasuryRoute: Hashable, Identifiable, Sendable {
   }
 
   static func parse(_ url: URL) -> TreasuryRoute? {
-    guard url.scheme == "whoxtreasury" else { return nil }
+    guard url.scheme == "metis" else { return nil }
     let components = [url.host()].compactMap { $0 } + url.pathComponents.filter { $0 != "/" }
     guard let first = components.first else { return nil }
     switch first {

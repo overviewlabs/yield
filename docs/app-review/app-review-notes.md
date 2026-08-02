@@ -39,7 +39,7 @@ The app's seven Live release gates remain false. Do not submit a build that repr
 
 **Subscription products**
 
-Development fixture identifiers are `whox.treasury.equity.monthly`, `whox.treasury.equitypro.monthly`, `whox.treasury.options.monthly`, and `whox.treasury.optionspro.monthly`. App Store Connect product status, localized terms, pricing, and review approval are **BLOCKED / TBD** until verified. The Demo path requires no purchase, and purchasing a product never authorizes a brokerage order or options strategy.
+Development fixture identifiers are `ai.whox.metis.equity.monthly`, `ai.whox.metis.equitypro.monthly`, `ai.whox.metis.options.monthly`, and `ai.whox.metis.optionspro.monthly`. App Store Connect product status, localized terms, pricing, and review approval are **BLOCKED / TBD** until verified. The Demo path requires no purchase, and purchasing a product never authorizes a brokerage order or options strategy.
 
 **Data handling**
 

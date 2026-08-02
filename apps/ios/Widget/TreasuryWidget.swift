@@ -29,7 +29,7 @@ private struct TreasuryWidgetProvider: TimelineProvider {
   }
 
   private func loadEntry() -> TreasuryWidgetEntry {
-    let values = UserDefaults(suiteName: "group.ai.whox.treasury")?.dictionary(
+    let values = UserDefaults(suiteName: "group.ai.whox.metis")?.dictionary(
       forKey: "widgetSnapshot")
     let lastRunTimestamp = values?["lastRun"] as? Double ?? 0
     return TreasuryWidgetEntry(
@@ -50,7 +50,7 @@ private struct TreasuryWidgetView: View {
   var body: some View {
     Link(
       destination: URL(
-        string: entry.pendingProposals > 0 ? "whoxtreasury://proposals" : "whoxtreasury://dashboard"
+        string: entry.pendingProposals > 0 ? "metis://proposals" : "metis://dashboard"
       )!
     ) {
       VStack(alignment: .leading, spacing: family == .systemSmall ? 7 : 10) {
@@ -90,7 +90,7 @@ private struct TreasuryWidgetView: View {
 }
 
 private struct TreasuryStatusWidget: Widget {
-  let kind = "ai.whox.treasury.status"
+  let kind = "ai.whox.metis.status"
   var body: some WidgetConfiguration {
     StaticConfiguration(kind: kind, provider: TreasuryWidgetProvider()) { entry in
       TreasuryWidgetView(entry: entry)

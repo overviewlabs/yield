@@ -37,8 +37,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key><string>ai.whox.treasury.navigation</string>
-			<key>CFBundleURLSchemes</key><array><string>whoxtreasury</string></array>
+			<key>CFBundleURLName</key><string>ai.whox.metis.navigation</string>
+			<key>CFBundleURLSchemes</key><array><string>metis</string></array>
 		</dict>
 	</array>
 </dict>

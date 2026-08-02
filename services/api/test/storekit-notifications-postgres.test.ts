@@ -24,7 +24,7 @@ function notification(
     signedPayloadDigest: "a".repeat(64),
     appStoreStatus: 1,
     transaction: Object.freeze({
-      productID: "whox.treasury.equity.monthly",
+      productID: "ai.whox.metis.equity.monthly",
       transactionID: `transaction-${notificationUUID}`,
       originalTransactionID: `original-${notificationUUID}`,
       environment: "Sandbox",

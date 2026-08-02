@@ -38,12 +38,12 @@ export interface BrandConfiguration {
 }
 
 export const defaultBrandConfiguration: BrandConfiguration = Object.freeze({
-  appName: "WHOX Treasury",
+  appName: "Metis",
   descriptor: "Automated Strategy Control",
   tagline: "Put strategy within limits.",
-  legalEntityName: "WHOX Treasury (development configuration)",
+  legalEntityName: "Metis (development configuration)",
   supportEmail: "support@whox.ai",
-  bundleIdentifier: "ai.whox.treasury",
+  bundleIdentifier: "ai.whox.metis",
   apiURL: new URL("https://api.whox.ai"),
   connectionURL: new URL("https://connect.whox.ai"),
   privacyURL: new URL("https://whox.ai/privacy"),

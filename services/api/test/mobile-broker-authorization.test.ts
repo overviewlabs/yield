@@ -35,7 +35,7 @@ class TestMobileConnector implements ApprovedMobileBrokerAuthorizationConnector 
     provisionalCredentialTtlSeconds: 120,
     authorizationEndpoint: "https://auth.broker.test/authorize",
     redirectUri: "https://api.whox.test/v1/brokers/robinhood/mobile-oauth/callback",
-    mobileReturnUri: "whoxtreasury://broker-connection/callback"
+    mobileReturnUri: "metis://broker-connection/callback"
   });
   public readonly starts: MobileBrokerAuthorizationStartRequest[] = [];
   public readonly exchanges: MobileBrokerAuthorizationExchangeRequest[] = [];
@@ -176,8 +176,8 @@ describe("server-driven mobile broker authorization", () => {
     const first = await startMobile(base, accessToken, pairing.pairingId, "start-mobile-authorization");
     assert.equal(first.status, 200);
     const started = await first.json() as { authorizationUrl: string; callbackScheme: string; returnUrl: string; pairingId: string; expiresAt: string };
-    assert.equal(started.callbackScheme, "whoxtreasury");
-    assert.equal(started.returnUrl, "whoxtreasury://broker-connection/callback");
+    assert.equal(started.callbackScheme, "metis");
+    assert.equal(started.returnUrl, "metis://broker-connection/callback");
     assert.equal(started.pairingId, pairing.pairingId);
     assert.equal(connector.starts.length, 1);
     assert.equal(connector.starts[0]!.nonce, undefined, "OAuth-only metadata must not invent an OIDC nonce");
@@ -204,7 +204,7 @@ describe("server-driven mobile broker authorization", () => {
     const completed = await fetch(callback, { redirect: "manual" });
     assert.equal(completed.status, 302);
     const appReturn = new URL(completed.headers.get("location")!);
-    assert.equal(appReturn.protocol, "whoxtreasury:");
+    assert.equal(appReturn.protocol, "metis:");
     assert.deepEqual([...appReturn.searchParams.keys()].sort(), ["pairingId", "result"]);
     assert.equal(appReturn.searchParams.get("result"), "verification_pending");
     assert.equal(appReturn.searchParams.get("pairingId"), pairing.pairingId);

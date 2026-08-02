@@ -68,7 +68,7 @@ enum MobileAuthorizationError: LocalizedError, Equatable {
 }
 
 enum MobileAuthorizationURLPolicy {
-  private static let callbackScheme = "whoxtreasury"
+  private static let callbackScheme = "metis"
   private static let callbackHost = "broker-connection"
   private static let callbackPath = "/callback"
   private static let prohibitedAuthorizationQueryNames: Set<String> = [
@@ -331,8 +331,8 @@ actor DemoBrokerPairingClient: BrokerPairingClient {
       authorizationURL: URL(
         string: "https://agent.robinhood.com/demo/setup?pairing_id=\(pairingID.uuidString)"
       )!,
-      callbackScheme: "whoxtreasury",
-      returnURL: URL(string: "whoxtreasury://broker-connection/callback")!,
+      callbackScheme: "metis",
+      returnURL: URL(string: "metis://broker-connection/callback")!,
       pairingID: pairingID,
       expiresAt: session.expiresAt
     )

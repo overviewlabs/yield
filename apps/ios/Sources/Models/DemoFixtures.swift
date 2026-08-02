@@ -175,7 +175,7 @@ enum DemoFixtures {
   static var plans: [SubscriptionPlan] {
     [
       SubscriptionPlan(
-        tier: .equity, productID: "whox.treasury.equity.monthly",
+        tier: .equity, productID: "ai.whox.metis.equity.monthly",
         summary: "Long-only stocks and ETFs with one active agent.",
         features: [
           "Stocks and ETFs", "One active agent", "Daily scheduled analysis", "Confirm Every Trade",
@@ -184,7 +184,7 @@ enum DemoFixtures {
         maximumActiveAgents: 1, supportsOptions: false, supportsAutomaticMode: false
       ),
       SubscriptionPlan(
-        tier: .equityPro, productID: "whox.treasury.equitypro.monthly",
+        tier: .equityPro, productID: "ai.whox.metis.equitypro.monthly",
         summary: "More agents, monitoring, scanners, and analytics.",
         features: [
           "Up to three agents", "Momentum and quality strategies", "Advanced watchlists",
@@ -193,7 +193,7 @@ enum DemoFixtures {
         maximumActiveAgents: 3, supportsOptions: false, supportsAutomaticMode: true
       ),
       SubscriptionPlan(
-        tier: .options, productID: "whox.treasury.options.monthly",
+        tier: .options, productID: "ai.whox.metis.options.monthly",
         summary: "Defined-premium long and covered options strategies.",
         features: [
           "Long calls and puts", "Covered calls", "Protective puts", "Expiration monitoring",
@@ -202,7 +202,7 @@ enum DemoFixtures {
         maximumActiveAgents: 3, supportsOptions: true, supportsAutomaticMode: true
       ),
       SubscriptionPlan(
-        tier: .optionsPro, productID: "whox.treasury.optionspro.monthly",
+        tier: .optionsPro, productID: "ai.whox.metis.optionspro.monthly",
         summary: "Approved limited-risk multi-leg strategies and advanced analytics.",
         features: [
           "Defined-risk spreads", "Limited-risk range structures", "Up to three agents",

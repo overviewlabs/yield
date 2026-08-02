@@ -6,7 +6,7 @@ import { performance } from "node:perf_hooks";
 
 const FIXED_NOW = "2026-08-01T14:00:00.000Z";
 const PRIVATE_NOTIFICATION_BODY = "AAPL moved through the configured private threshold.";
-const SAFE_NOTIFICATION_BODY = "Open WHOX Treasury to view this notification.";
+const SAFE_NOTIFICATION_BODY = "Open Metis to view this notification.";
 
 const PROFILES = Object.freeze({
   smoke: Object.freeze({
@@ -260,7 +260,7 @@ async function runNotificationBurst() {
         criticalNotificationsEnabled: false,
         occurredAt: FIXED_NOW,
         notificationIdempotencyKey: `load-notification-${index}`,
-        deepLink: index % 2 === 0 ? "whoxtreasury://dashboard" : "whoxtreasury://proposals"
+        deepLink: index % 2 === 0 ? "metis://dashboard" : "metis://proposals"
       }),
       idempotencyKey: `load-notification-job-${index}`
     });

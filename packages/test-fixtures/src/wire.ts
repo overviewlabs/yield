@@ -10,5 +10,5 @@ export const PAIRING_RESPONSE_FIXTURE = Object.freeze({
 });
 
 export const STOREKIT_SYNC_RESPONSE_FIXTURE = Object.freeze({
-  entitledProductIDs:["whox.treasury.equity.monthly"],reconciledAt:"2026-08-01T14:00:00.000Z"
+  entitledProductIDs:["ai.whox.metis.equity.monthly"],reconciledAt:"2026-08-01T14:00:00.000Z"
 });

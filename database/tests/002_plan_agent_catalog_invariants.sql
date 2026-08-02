@@ -60,7 +60,7 @@ END $$;
 
 INSERT INTO plans(id,plan_key,display_name,product_id,features,active) VALUES (
   '01900000-0000-4000-8000-000000000001','catalog-invariant-test','Catalog Invariant Test',
-  'whox.treasury.catalog-invariant-test','{"stockTrading":true,"optionsTrading":false,"multiLegOptions":false,"maximumActiveAgents":3,"automaticMode":false,"monitoringFrequencyMinutes":60,"advancedAnalytics":false,"customWatchlists":false,"scannerAccess":false,"agentCatalog":[],"prioritySupport":false}',false
+  'ai.whox.metis.catalog-invariant-test','{"stockTrading":true,"optionsTrading":false,"multiLegOptions":false,"maximumActiveAgents":3,"automaticMode":false,"monitoringFrequencyMinutes":60,"advancedAnalytics":false,"customWatchlists":false,"scannerAccess":false,"agentCatalog":[],"prioritySupport":false}',false
 );
 INSERT INTO plan_agent_catalog_versions(id,plan_id,version) VALUES
 ('32900000-0000-4000-8000-000000000001','01900000-0000-4000-8000-000000000001',1);

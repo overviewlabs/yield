@@ -1,6 +1,6 @@
 # Load and backlog tests
 
-This dependency-free Node 22 harness covers the load scenarios required for WHOX Treasury:
+This dependency-free Node 22 harness covers the load scenarios required for Metis:
 
 - market-open dashboard, portfolio, positions, proposal, and activity traffic;
 - Robinhood connection-status polling;

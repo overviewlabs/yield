@@ -1593,7 +1593,7 @@ final class AppSession {
     pairingService.clearAfterAccountDeletion()
     defaults.removeObject(forKey: StorageKey.preferences)
     preferences = AppPreferences()
-    if let sharedDefaults = UserDefaults(suiteName: "group.ai.whox.treasury") {
+    if let sharedDefaults = UserDefaults(suiteName: "group.ai.whox.metis") {
       sharedDefaults.removeObject(forKey: "widgetSnapshot")
       sharedDefaults.removeObject(forKey: "pendingIntentURL")
     }
@@ -1672,7 +1672,7 @@ final class AppSession {
   }
 
   private func consumePendingIntentRoute() {
-    guard let defaults = UserDefaults(suiteName: "group.ai.whox.treasury"),
+    guard let defaults = UserDefaults(suiteName: "group.ai.whox.metis"),
       let rawURL = defaults.string(forKey: "pendingIntentURL"),
       let url = URL(string: rawURL)
     else { return }
@@ -1681,7 +1681,7 @@ final class AppSession {
   }
 
   private func publishWidgetSnapshot() {
-    guard let defaults = UserDefaults(suiteName: "group.ai.whox.treasury") else { return }
+    guard let defaults = UserDefaults(suiteName: "group.ai.whox.metis") else { return }
     let payload: [String: Any] = [
       "mode": mode.title,
       "agentStatus": activeAgents.first?.runtimeStatus.title ?? "No active agent",

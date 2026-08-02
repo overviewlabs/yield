@@ -16,7 +16,7 @@ const numberValue=(value:unknown):number=>typeof value==="number"?value:Number(v
 const iso=(value:unknown):string=>{if(value instanceof Date)return value.toISOString();const parsed=Date.parse(String(value));return Number.isFinite(parsed)?new Date(parsed).toISOString():String(value);};
 const canonicalJson=(value:unknown):string=>{if(value===null||typeof value!=="object")return JSON.stringify(value)??"null";if(Array.isArray(value))return `[${value.map(canonicalJson).join(",")}]`;return `{${Object.entries(value as Readonly<Record<string,unknown>>).sort(([left],[right])=>left.localeCompare(right)).map(([key,item])=>`${JSON.stringify(key)}:${canonicalJson(item)}`).join(",")}}`;};
 const sensitiveIdempotencyReplayMarker=Object.freeze({reexecuteSensitiveResponse:true});
-const persistenceSafeResponse=(value:unknown):unknown=>{if(typeof value!=="object"||value===null||Array.isArray(value))return value;const record=value as Readonly<Record<string,unknown>>;if(typeof record.authorizationUrl==="string"&&record.callbackScheme==="whoxtreasury"&&record.returnUrl==="whoxtreasury://broker-connection/callback"&&typeof record.pairingId==="string"&&typeof record.expiresAt==="string")return sensitiveIdempotencyReplayMarker;if(typeof record.pairingId!=="string"||typeof record.code!=="string"||typeof record.setupUrl!=="string")return value;let setupUrl=record.setupUrl;try{const parsed=new URL(setupUrl);parsed.search="";parsed.hash="";setupUrl=parsed.href;}catch{setupUrl="";}return {...record,code:"",setupUrl};};
+const persistenceSafeResponse=(value:unknown):unknown=>{if(typeof value!=="object"||value===null||Array.isArray(value))return value;const record=value as Readonly<Record<string,unknown>>;if(typeof record.authorizationUrl==="string"&&record.callbackScheme==="metis"&&record.returnUrl==="metis://broker-connection/callback"&&typeof record.pairingId==="string"&&typeof record.expiresAt==="string")return sensitiveIdempotencyReplayMarker;if(typeof record.pairingId!=="string"||typeof record.code!=="string"||typeof record.setupUrl!=="string")return value;let setupUrl=record.setupUrl;try{const parsed=new URL(setupUrl);parsed.search="";parsed.hash="";setupUrl=parsed.href;}catch{setupUrl="";}return {...record,code:"",setupUrl};};
 const reexecutesSensitiveResponse=(value:unknown):boolean=>typeof value==="object"&&value!==null&&!Array.isArray(value)&&(value as Readonly<Record<string,unknown>>).reexecuteSensitiveResponse===true&&Object.keys(value).length===1;
 const AGENT_SYMBOL_PATTERN=/^[A-Z][A-Z0-9.-]{0,14}$/;
 const agentConfiguration=(agentId:string,value:unknown):Readonly<Record<string,unknown>>=>{if(typeof value!=="object"||value===null||Array.isArray(value))throw new DomainError("AGENT_CONFIGURATION_INVALID","Agent configuration must be an object",422);const configuration=value as Readonly<Record<string,unknown>>;if(agentId==="foundation-equity"){const symbol=typeof configuration.symbol==="string"?configuration.symbol.trim().toUpperCase():"";const targetOrderAmount=configuration.targetOrderAmount;if(!AGENT_SYMBOL_PATTERN.test(symbol)||typeof targetOrderAmount!=="number"||!Number.isFinite(targetOrderAmount)||targetOrderAmount<=0)throw new DomainError("AGENT_CONFIGURATION_INVALID","Foundation Equity requires a valid symbol and positive targetOrderAmount",422);return Object.freeze({...configuration,symbol,targetOrderAmount});}if(Object.keys(configuration).length===0)throw new DomainError("AGENT_CONFIGURATION_INVALID","An agent configuration is required",422);return Object.freeze({...configuration});};
@@ -118,8 +118,8 @@ async function recordAgentRemovalConfirmation(
       priority:"normal",
       title:"Agent removed",
       privateBody:"The agent was removed. Unsubmitted work was canceled and positions were not changed.",
-      publicBody:"Open WHOX Treasury to review the agent removal confirmation.",
-      deepLink:"whoxtreasury://agents",
+      publicBody:"Open Metis to review the agent removal confirmation.",
+      deepLink:"metis://agents",
       occurredAt:now,
       notificationIdempotencyKey:notificationKey
     }),notificationKey,now]
@@ -154,8 +154,8 @@ async function recordPauseConfirmation(
       privateBody:allAgents?
         "All automation is paused. Unsubmitted proposals and scheduled work were canceled; positions were not changed.":
         "This agent is paused. Its unsubmitted proposals and scheduled work were canceled; positions were not changed.",
-      publicBody:"Open WHOX Treasury to review the pause confirmation.",
-      deepLink:"whoxtreasury://risk/pause",
+      publicBody:"Open Metis to review the pause confirmation.",
+      deepLink:"metis://risk/pause",
       occurredAt:now,
       notificationIdempotencyKey:notificationKey
     }),notificationKey,now]

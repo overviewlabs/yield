@@ -41,14 +41,14 @@ final class PairingServiceTests: XCTestCase {
         string:
           "https://agent.robinhood.com/oauth/authorize?client_id=treasury&response_type=code&code_challenge=safe"
       )!,
-      callbackScheme: "whoxtreasury",
-      returnURL: URL(string: "whoxtreasury://broker-connection/callback")!,
+      callbackScheme: "metis",
+      returnURL: URL(string: "metis://broker-connection/callback")!,
       pairingID: pairingID, expiresAt: .now.addingTimeInterval(300))
 
     XCTAssertNoThrow(try MobileAuthorizationURLPolicy.validate(handoff, pairing: pairing))
     let callback = URL(
       string:
-        "whoxtreasury://broker-connection/callback?result=verification_pending&pairingId=\(pairingID.uuidString)"
+        "metis://broker-connection/callback?result=verification_pending&pairingId=\(pairingID.uuidString)"
     )!
     XCTAssertEqual(
       try MobileAuthorizationURLPolicy.result(
@@ -62,7 +62,7 @@ final class PairingServiceTests: XCTestCase {
       id: pairingID, code: "TEST-CODE",
       setupURL: URL(string: "https://connect.whox.ai/pair/test")!,
       expiresAt: .now.addingTimeInterval(600))
-    let returnURL = URL(string: "whoxtreasury://broker-connection/callback")!
+    let returnURL = URL(string: "metis://broker-connection/callback")!
     let invalidURLs = [
       "https://robinhood.com.evil.example/oauth/authorize",
       "http://agent.robinhood.com/oauth/authorize",
@@ -73,7 +73,7 @@ final class PairingServiceTests: XCTestCase {
 
     for rawURL in invalidURLs {
       let handoff = MobileAuthorizationHandoff(
-        authorizationURL: URL(string: rawURL)!, callbackScheme: "whoxtreasury",
+        authorizationURL: URL(string: rawURL)!, callbackScheme: "metis",
         returnURL: returnURL, pairingID: pairingID, expiresAt: .now.addingTimeInterval(300))
       XCTAssertThrowsError(try MobileAuthorizationURLPolicy.validate(handoff, pairing: pairing))
     }
@@ -81,14 +81,14 @@ final class PairingServiceTests: XCTestCase {
 
   func testMobileAuthorizationPolicyRejectsUnboundOrSensitiveCallbacks() {
     let pairingID = UUID()
-    let returnURL = URL(string: "whoxtreasury://broker-connection/callback")!
+    let returnURL = URL(string: "metis://broker-connection/callback")!
     let invalidCallbacks = [
-      "whoxtreasury://broker-connection/callback?result=connected&pairingId=\(pairingID.uuidString)",
-      "whoxtreasury://broker-connection/callback?result=verification_pending&pairingId=\(UUID().uuidString)",
-      "whoxtreasury://broker-connection/callback?result=verification_pending&pairingId=\(pairingID.uuidString)&token=secret",
-      "whoxtreasury://broker-connection/callback?result=verification_pending&result=failed&pairingId=\(pairingID.uuidString)",
-      "whoxtreasury://broker-connection/callback?result=verification_pending&pairingId=\(pairingID.uuidString)#fragment",
-      "whoxtreasury://other/callback?result=verification_pending&pairingId=\(pairingID.uuidString)",
+      "metis://broker-connection/callback?result=connected&pairingId=\(pairingID.uuidString)",
+      "metis://broker-connection/callback?result=verification_pending&pairingId=\(UUID().uuidString)",
+      "metis://broker-connection/callback?result=verification_pending&pairingId=\(pairingID.uuidString)&token=secret",
+      "metis://broker-connection/callback?result=verification_pending&result=failed&pairingId=\(pairingID.uuidString)",
+      "metis://broker-connection/callback?result=verification_pending&pairingId=\(pairingID.uuidString)#fragment",
+      "metis://other/callback?result=verification_pending&pairingId=\(pairingID.uuidString)",
     ]
 
     for rawURL in invalidCallbacks {
@@ -296,8 +296,8 @@ private actor FixedPairingClient: BrokerPairingClient {
   func startInAppAuthorization(pairingID: UUID) async throws -> MobileAuthorizationHandoff {
     MobileAuthorizationHandoff(
       authorizationURL: URL(string: "https://agent.robinhood.com/oauth/authorize")!,
-      callbackScheme: "whoxtreasury",
-      returnURL: URL(string: "whoxtreasury://broker-connection/callback")!,
+      callbackScheme: "metis",
+      returnURL: URL(string: "metis://broker-connection/callback")!,
       pairingID: pairingID, expiresAt: session.expiresAt)
   }
   func abortInAppAuthorization(pairingID: UUID) async throws {}
@@ -324,8 +324,8 @@ private actor MobileAuthorizationPairingClient: BrokerPairingClient {
     mobileAuthorizationStarted = true
     return MobileAuthorizationHandoff(
       authorizationURL: URL(string: "https://agent.robinhood.com/oauth/authorize")!,
-      callbackScheme: "whoxtreasury",
-      returnURL: URL(string: "whoxtreasury://broker-connection/callback")!,
+      callbackScheme: "metis",
+      returnURL: URL(string: "metis://broker-connection/callback")!,
       pairingID: pairingID, expiresAt: pairing.expiresAt)
   }
 
@@ -367,8 +367,8 @@ private actor AbortFailingMobilePairingClient: BrokerPairingClient {
     guard let pairing, pairing.id == pairingID else { throw PairingClientError.notFound }
     return MobileAuthorizationHandoff(
       authorizationURL: URL(string: "https://agent.robinhood.com/oauth/authorize")!,
-      callbackScheme: "whoxtreasury",
-      returnURL: URL(string: "whoxtreasury://broker-connection/callback")!,
+      callbackScheme: "metis",
+      returnURL: URL(string: "metis://broker-connection/callback")!,
       pairingID: pairingID, expiresAt: pairing.expiresAt)
   }
 
@@ -409,8 +409,8 @@ private actor ReconnectPairingClient: BrokerPairingClient {
     starts.append(pairingID)
     return MobileAuthorizationHandoff(
       authorizationURL: URL(string: "https://agent.robinhood.com/oauth/authorize")!,
-      callbackScheme: "whoxtreasury",
-      returnURL: URL(string: "whoxtreasury://broker-connection/callback")!,
+      callbackScheme: "metis",
+      returnURL: URL(string: "metis://broker-connection/callback")!,
       pairingID: pairingID, expiresAt: currentPairing.expiresAt)
   }
 

@@ -144,7 +144,7 @@ variable "hermes_base_url" {
   default = "https://treasury-bot.whox.ai/v1"
   validation {
     condition     = var.hermes_base_url == "https://treasury-bot.whox.ai/v1"
-    error_message = "hermes_base_url must equal the reviewed WHOX Treasury Hermes API origin."
+    error_message = "hermes_base_url must equal the reviewed Metis Hermes API origin."
   }
 }
 variable "hermes_model" {

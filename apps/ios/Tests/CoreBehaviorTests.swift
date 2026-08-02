@@ -35,10 +35,10 @@ final class CoreBehaviorTests: XCTestCase {
   }
 
   func testDeepLinkRouting() {
-    XCTAssertEqual(TreasuryRoute.parse(URL(string: "whoxtreasury://dashboard")!), .dashboard)
-    XCTAssertEqual(TreasuryRoute.parse(URL(string: "whoxtreasury://risk/pause")!), .pauseAllReview)
+    XCTAssertEqual(TreasuryRoute.parse(URL(string: "metis://dashboard")!), .dashboard)
+    XCTAssertEqual(TreasuryRoute.parse(URL(string: "metis://risk/pause")!), .pauseAllReview)
     XCTAssertEqual(
-      TreasuryRoute.parse(URL(string: "whoxtreasury://activity/act-proposal")!),
+      TreasuryRoute.parse(URL(string: "metis://activity/act-proposal")!),
       .activity("act-proposal"))
     XCTAssertNil(TreasuryRoute.parse(URL(string: "https://example.com")!))
   }
@@ -47,13 +47,13 @@ final class CoreBehaviorTests: XCTestCase {
     let identifiers = DemoFixtures.plans.map(\.productID)
     XCTAssertEqual(Set(identifiers).count, 4)
     XCTAssertTrue(
-      identifiers.allSatisfy { $0.hasPrefix("whox.treasury.") && $0.hasSuffix(".monthly") })
+      identifiers.allSatisfy { $0.hasPrefix("ai.whox.metis.") && $0.hasSuffix(".monthly") })
   }
 
   func testServerEntitlementProductIDsMapOnlyToKnownPlanTiers() {
     let productIDs: Set<String> = [
-      "whox.treasury.equity.monthly",
-      "whox.treasury.optionspro.monthly",
+      "ai.whox.metis.equity.monthly",
+      "ai.whox.metis.optionspro.monthly",
       "unknown.product",
     ]
     XCTAssertEqual(

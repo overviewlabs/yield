@@ -42,7 +42,7 @@ targets:
         buildPhase: resources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.treasury
+        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.metis
         PRODUCT_NAME: Metis
         INFOPLIST_FILE: Resources/AppInfo.plist
         CODE_SIGN_ENTITLEMENTS: Resources/WHoxTreasury.entitlements
@@ -61,7 +61,7 @@ targets:
           WHOX_RUNTIME_MODE: paper
           WHOX_API_BASE_URL: "https://api.whox.ai"
           CODE_SIGN_IDENTITY: Apple Distribution
-          PROVISIONING_PROFILE_SPECIFIER: WHOX Treasury App Store
+          PROVISIONING_PROFILE_SPECIFIER: Metis App Store
     dependencies:
       - target: WHOXTreasuryWidget
         embed: true
@@ -73,7 +73,7 @@ targets:
       - path: Widget
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.treasury.widget
+        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.metis.widget
         PRODUCT_NAME: Metis Status
         INFOPLIST_FILE: Widget/Info.plist
         CODE_SIGN_ENTITLEMENTS: Widget/WHoxTreasuryWidget.entitlements
@@ -82,7 +82,7 @@ targets:
       configs:
         Release:
           CODE_SIGN_IDENTITY: Apple Distribution
-          PROVISIONING_PROFILE_SPECIFIER: WHOX Treasury Widget App Store
+          PROVISIONING_PROFILE_SPECIFIER: Metis Widget App Store
 
   WHOXTreasuryTests:
     type: bundle.unit-test
@@ -93,7 +93,7 @@ targets:
       - target: WHOXTreasury
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.treasury.tests
+        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.metis.tests
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Metis.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Metis"
         BUNDLE_LOADER: "$(TEST_HOST)"
 
@@ -106,7 +106,7 @@ targets:
       - target: WHOXTreasury
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.treasury.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: ai.whox.metis.uitests
         TEST_TARGET_NAME: WHOXTreasury
 
 schemes:

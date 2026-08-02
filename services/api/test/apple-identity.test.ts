@@ -13,10 +13,10 @@ describe("official Apple identity verification",()=>{
     const now=new Date("2026-08-01T14:00:00.000Z");
     const header=encode({alg:"RS256",kid:jwk.kid,typ:"JWT"});
     const rawNonce="raw-client-nonce-0123456789abcdef";
-    const payload=encode({iss:"https://appleid.apple.com",aud:"ai.whox.treasury",sub:"apple-production-subject",iat:Math.floor(now.getTime()/1000)-10,exp:Math.floor(now.getTime()/1000)+300,nonce:createHash("sha256").update(rawNonce).digest("hex"),email:"relay@example.test",email_verified:"true"});
+    const payload=encode({iss:"https://appleid.apple.com",aud:"ai.whox.metis",sub:"apple-production-subject",iat:Math.floor(now.getTime()/1000)-10,exp:Math.floor(now.getTime()/1000)+300,nonce:createHash("sha256").update(rawNonce).digest("hex"),email:"relay@example.test",email_verified:"true"});
     const input=`${header}.${payload}`;
     const token=`${input}.${sign("RSA-SHA256",Buffer.from(input),privateKey).toString("base64url")}`;
-    const verifier=new AppleIdentityTokenVerifier({clientId:"ai.whox.treasury",fetcher:async()=>new Response(JSON.stringify({keys:[jwk]}),{status:200,headers:{"content-type":"application/json"}})});
+    const verifier=new AppleIdentityTokenVerifier({clientId:"ai.whox.metis",fetcher:async()=>new Response(JSON.stringify({keys:[jwk]}),{status:200,headers:{"content-type":"application/json"}})});
     await assert.rejects(verifier.verify(token,{now}),(error:unknown)=>error instanceof DomainError&&error.code==="APPLE_NONCE_REQUIRED");
     await assert.rejects(verifier.verify(token,{nonce:"different-raw-nonce-0123456789",now}),(error:unknown)=>error instanceof DomainError&&error.code==="APPLE_IDENTITY_INVALID");
     const identity=await verifier.verify(token,{nonce:rawNonce,now});

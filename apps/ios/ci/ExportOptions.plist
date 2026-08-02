@@ -14,10 +14,10 @@
     <false/>
     <key>provisioningProfiles</key>
     <dict>
-        <key>ai.whox.treasury</key>
-        <string>WHOX Treasury App Store</string>
-        <key>ai.whox.treasury.widget</key>
-        <string>WHOX Treasury Widget App Store</string>
+        <key>ai.whox.metis</key>
+        <string>Metis App Store</string>
+        <key>ai.whox.metis.widget</key>
+        <string>Metis Widget App Store</string>
     </dict>
     <key>stripSwiftSymbols</key>
     <true/>
