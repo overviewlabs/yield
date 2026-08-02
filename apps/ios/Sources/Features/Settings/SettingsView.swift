@@ -625,7 +625,8 @@ private struct BrokerPairingSheet: View {
               }
               .buttonStyle(.borderedProminent)
               .controlSize(.large)
-              .disabled(session.pairingService.isAuthorizingInApp || normalizedRobinhoodEmail.isEmpty)
+              .disabled(
+                session.pairingService.isAuthorizingInApp || normalizedRobinhoodEmail.isEmpty)
               desktopLinkCountdown
               if session.mode == .demo {
                 Button("Complete Demo Pairing") {
