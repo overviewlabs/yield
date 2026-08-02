@@ -48,6 +48,15 @@ jobs:
           git diff --cached --quiet || git commit -m "Record StoreKit product status"
           git push
 
+      - name: Preserve private TestFlight offer codes
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yield-options-pro-sandbox-offer-codes
+          path: .github/sandbox-offer-codes.csv
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Preserve sanitized App Store validation error
         if: failure()
         run: |

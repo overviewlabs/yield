@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+from datetime import date, timedelta
 from pathlib import Path
 import subprocess
 import time
@@ -25,6 +26,10 @@ SUBSCRIPTIONS = {
 BUNDLE_ID = "ai.whox.yield"
 BETA_GROUP_ID = "18c04eab-014a-43a2-ad12-7b8aaa07a5f5"
 BUILD_NUMBER = "6"
+OPTIONS_PRO_SUBSCRIPTION_ID = "6797231900"
+PROMO_OFFER_NAME = "WHOX Options Pro 30 Day"
+PRODUCTION_PROMO_CODE = "WHOX-5GXC"
+SANDBOX_CODES_PATH = Path(".github/sandbox-offer-codes.csv")
 DIAGNOSTIC_PATH = Path(".github/storekit-diagnostic.json")
 PRIVACY_URL = "https://github.com/overviewlabs/yield/blob/main/PRIVACY.md"
 SUPPORT_URL = "https://github.com/overviewlabs/yield/blob/main/SUPPORT.md"
@@ -87,6 +92,188 @@ def api_request(
         if allowed_errors is not None and error.code in allowed_errors:
             return {"errorStatus": error.code, "errorDetail": detail}
         raise RuntimeError(f"App Store Connect returned HTTP {error.code}: {detail}") from error
+
+
+def api_request_bytes(token: str, path: str) -> bytes:
+    request = urllib.request.Request(
+        API_BASE + path,
+        method="GET",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=60) as response:
+            return response.read()
+    except urllib.error.HTTPError as error:
+        detail = error.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"App Store Connect returned HTTP {error.code}: {detail}") from error
+
+
+def ensure_options_pro_offer(token: str) -> dict:
+    """Create the 30-day Pro offer and a private batch of TestFlight sandbox codes."""
+    offers = api_request(
+        token,
+        "GET",
+        f"/v1/subscriptions/{OPTIONS_PRO_SUBSCRIPTION_ID}/offerCodes?limit=200",
+    )["data"]
+    offer = next(
+        (
+            item
+            for item in offers
+            if item.get("attributes", {}).get("name") == PROMO_OFFER_NAME
+            and item.get("attributes", {}).get("active", True)
+        ),
+        None,
+    )
+    if offer is None:
+        territories = api_request(token, "GET", "/v1/territories?limit=200")["data"]
+        price_links = []
+        included = []
+        for territory in territories:
+            inline_id = "${offer-" + territory["id"] + "}"
+            price_links.append(
+                {"type": "subscriptionOfferCodePrices", "id": inline_id}
+            )
+            included.append(
+                {
+                    "type": "subscriptionOfferCodePrices",
+                    "id": inline_id,
+                    "relationships": {
+                        "territory": {
+                            "data": {"type": "territories", "id": territory["id"]}
+                        }
+                    },
+                }
+            )
+        offer = api_request(
+            token,
+            "POST",
+            "/v1/subscriptionOfferCodes",
+            {
+                "data": {
+                    "type": "subscriptionOfferCodes",
+                    "attributes": {
+                        "name": PROMO_OFFER_NAME,
+                        "customerEligibilities": ["NEW", "EXISTING", "EXPIRED"],
+                        "offerEligibility": "REPLACE_INTRO_OFFERS",
+                        "duration": "ONE_MONTH",
+                        "offerMode": "FREE_TRIAL",
+                        "numberOfPeriods": 1,
+                        "autoRenewEnabled": True,
+                    },
+                    "relationships": {
+                        "subscription": {
+                            "data": {
+                                "type": "subscriptions",
+                                "id": OPTIONS_PRO_SUBSCRIPTION_ID,
+                            }
+                        },
+                        "prices": {"data": price_links},
+                    },
+                },
+                "included": included,
+            },
+        )["data"]
+        print(f"{PROMO_OFFER_NAME}: offer created")
+    else:
+        print(f"{PROMO_OFFER_NAME}: offer already configured")
+
+    batches = api_request(
+        token,
+        "GET",
+        f"/v1/subscriptionOfferCodes/{offer['id']}/oneTimeUseCodes?limit=200",
+    )["data"]
+    sandbox_batch = next(
+        (
+            item
+            for item in batches
+            if item.get("attributes", {}).get("environment") == "SANDBOX"
+            and item.get("attributes", {}).get("active", True)
+        ),
+        None,
+    )
+    if sandbox_batch is None:
+        sandbox_batch = api_request(
+            token,
+            "POST",
+            "/v1/subscriptionOfferCodeOneTimeUseCodes",
+            {
+                "data": {
+                    "type": "subscriptionOfferCodeOneTimeUseCodes",
+                    "attributes": {
+                        "environment": "SANDBOX",
+                        "expirationDate": (date.today() + timedelta(days=179)).isoformat(),
+                        "numberOfCodes": 10,
+                    },
+                    "relationships": {
+                        "offerCode": {
+                            "data": {
+                                "type": "subscriptionOfferCodes",
+                                "id": offer["id"],
+                            }
+                        }
+                    },
+                }
+            },
+        )["data"]
+        print(f"{PROMO_OFFER_NAME}: 10 sandbox codes created")
+
+    SANDBOX_CODES_PATH.write_bytes(
+        api_request_bytes(
+            token,
+            f"/v1/subscriptionOfferCodeOneTimeUseCodes/{sandbox_batch['id']}/values",
+        )
+    )
+
+    custom_codes = api_request(
+        token,
+        "GET",
+        f"/v1/subscriptionOfferCodes/{offer['id']}/customCodes?limit=200",
+    )["data"]
+    custom_ready = any(
+        item.get("attributes", {}).get("customCode") == PRODUCTION_PROMO_CODE
+        and item.get("attributes", {}).get("active", True)
+        for item in custom_codes
+    )
+    if not custom_ready:
+        subscription = api_request(
+            token, "GET", f"/v1/subscriptions/{OPTIONS_PRO_SUBSCRIPTION_ID}"
+        )["data"]
+        if subscription.get("attributes", {}).get("state") == "APPROVED":
+            api_request(
+                token,
+                "POST",
+                "/v1/subscriptionOfferCodeCustomCodes",
+                {
+                    "data": {
+                        "type": "subscriptionOfferCodeCustomCodes",
+                        "attributes": {
+                            "customCode": PRODUCTION_PROMO_CODE,
+                            "numberOfCodes": 25000,
+                        },
+                        "relationships": {
+                            "offerCode": {
+                                "data": {
+                                    "type": "subscriptionOfferCodes",
+                                    "id": offer["id"],
+                                }
+                            }
+                        },
+                    }
+                },
+            )
+            custom_ready = True
+            print(f"{PRODUCTION_PROMO_CODE}: production custom code created")
+        else:
+            print(
+                f"{PRODUCTION_PROMO_CODE}: deferred until Options Pro is approved; "
+                "Apple does not permit custom codes before approval"
+            )
+    return {
+        "offerId": offer["id"],
+        "name": PROMO_OFFER_NAME,
+        "sandboxCodeCount": sandbox_batch.get("attributes", {}).get("numberOfCodes"),
+        "productionCustomCodeReady": custom_ready,
+    }
 
 
 def ensure_subscription_availability(token: str, subscription_id: str) -> None:
@@ -1011,6 +1198,7 @@ def complete_app_store_metadata(
 
 def main() -> None:
     token = access_token()
+    promo_offer = ensure_options_pro_offer(token)
     blob = SCREENSHOT.read_bytes()
     checksum = hashlib.md5(blob, usedforsecurity=False).hexdigest()
     submissions = []
@@ -1079,6 +1267,7 @@ def main() -> None:
                 "subscriptions": diagnostics,
                 "submissionAttempts": submissions,
                 "reviewSubmission": review_submission,
+                "promoOffer": promo_offer,
             },
             indent=2,
             sort_keys=True,
