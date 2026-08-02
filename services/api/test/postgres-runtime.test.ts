@@ -369,6 +369,19 @@ describe("PostgreSQL Paper API runtime",{skip:databaseUrl===undefined},()=>{
     const now="2026-08-01T14:00:00.000Z";
     try{
       const account=await store.userForAppleSubject(`paper-surface-${suffix}`,`surface-${suffix}@example.test`);
+      assert.deepEqual(await store.entitlements(account.userId),{
+        stockTrading:false,
+        optionsTrading:false,
+        multiLegOptions:false,
+        maximumActiveAgents:0,
+        automaticMode:false,
+        monitoringFrequencyMinutes:0,
+        advancedAnalytics:false,
+        customWatchlists:false,
+        scannerAccess:false,
+        agentCatalog:[],
+        prioritySupport:false
+      },"a Paper user without a verified subscription must receive the fully inactive wire contract");
       const mobile=await sessions.create(account.userId,"surface-mobile-device",new Date(now));
       const desktop=await sessions.create(account.userId,"surface-desktop-device",new Date(now));
       const allPlans=await store.plans(account.userId);
