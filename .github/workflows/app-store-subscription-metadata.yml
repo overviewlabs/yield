@@ -50,7 +50,7 @@ jobs:
 
       - name: Preserve private TestFlight offer codes
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: yield-options-pro-sandbox-offer-codes
           path: .github/sandbox-offer-codes.csv
