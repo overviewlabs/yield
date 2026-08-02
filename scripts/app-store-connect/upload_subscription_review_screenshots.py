@@ -11,7 +11,6 @@ import subprocess
 import time
 import urllib.error
 import urllib.request
-import uuid
 
 import jwt
 
@@ -308,7 +307,7 @@ def ensure_free_app_price(token: str, app_id: str) -> dict:
     if free_point is None:
         raise RuntimeError("Apple returned no free app price point for the USA storefront")
 
-    inline_id = str(uuid.uuid4())
+    inline_id = "${yield-free-price}"
     response = api_request(
         token,
         "POST",
