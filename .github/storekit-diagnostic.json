@@ -1327,19 +1327,19 @@
         "buildAudienceType": "APP_STORE_ELIGIBLE",
         "computedMinMacOsVersion": "26.0",
         "computedMinVisionOsVersion": "26.0",
-        "expirationDate": "2026-10-31T08:44:49-07:00",
+        "expirationDate": "2026-10-31T09:06:29-07:00",
         "expired": false,
         "iconAssetToken": {
           "height": 152,
-          "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/bf/0e/77/bf0e7731-dd07-3f0d-8cd9-0560fcac4278/AppIcon76x76@2x_U007eipad.png/{w}x{h}bb.{f}",
+          "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/17/64/64/17646460-0456-1412-1e26-03100e7bfa87/AppIcon76x76@2x_U007eipad.png/{w}x{h}bb.{f}",
           "width": 152
         },
         "lsMinimumSystemVersion": null,
         "minOsVersion": "26.0",
         "processingState": "VALID",
-        "uploadedDate": "2026-08-02T08:44:49-07:00",
+        "uploadedDate": "2026-08-02T09:06:29-07:00",
         "usesNonExemptEncryption": false,
-        "version": "7"
+        "version": "8"
       },
       "id": "ab09b751-8852-4775-9654-62bc8747ea99",
       "localizations": [
@@ -1582,28 +1582,28 @@
         "added": false,
         "id": "3676f212-a18c-463a-879b-01cfa482cac8",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"a28f90a6-5e7d-4a0e-a86d-9fae04599a9b\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"7ac24d32-6d12-45c7-99d1-edd6e3052451\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "0f62bb6e-4e91-451b-a718-152fc9a38118",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"a8f87296-0789-4eed-885d-24406fff8c05\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"77d00d73-4a8b-4cd7-8875-89bf7f72b512\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "f9b2021a-b0fd-4adb-b620-17a295c18f2b",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"c2f5ec4b-fc75-4218-a28b-6be194e714f2\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"54f3eccc-3b4e-4511-8164-33ba996cf839\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "d704945d-c643-4680-ac00-1bd4abfdd827",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"9e463d96-38d7-495e-94f0-ec8b5d121a36\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"92c4bf90-f8a7-4aa2-9569-727b52920785\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       }
     ],
