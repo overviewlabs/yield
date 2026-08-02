@@ -94,8 +94,106 @@
             "whatsNew": null
           },
           "id": "fa881a76-aeb6-4be5-b447-6be66a13fc13",
-          "screenshotSetCount": 1,
+          "screenshotSetCount": 2,
           "screenshotSets": [
+            {
+              "attributes": {
+                "screenshotDisplayType": "APP_IPAD_PRO_3GEN_129"
+              },
+              "id": "07a1bd84-64d7-4b5d-88e4-9978231c689b",
+              "screenshots": [
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource211/v4/e6/ca/d4/e6cad422-1d83-59a3-41cf-b22ec4a2513a/yield-APP_IPAD_PRO_3GEN_129-1-4ACFB550-FF5B-40D9-9E24-C9B70258FA0B.png",
+                  "assetType": "SortedJ320ScreenShot",
+                  "fileName": "yield-APP_IPAD_PRO_3GEN_129-1-4ACFB550-FF5B-40D9-9E24-C9B70258FA0B.png",
+                  "fileSize": 361382,
+                  "imageAsset": {
+                    "height": 2752,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/e6/ca/d4/e6cad422-1d83-59a3-41cf-b22ec4a2513a/yield-APP_IPAD_PRO_3GEN_129-1-4ACFB550-FF5B-40D9-9E24-C9B70258FA0B.png/{w}x{h}bb.{f}",
+                    "width": 2064
+                  },
+                  "sourceFileChecksum": "c851fc94b44c546aa1c63cbf9af68c67",
+                  "uploadOperations": null
+                },
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource221/v4/d9/5e/8b/d95e8b15-ff83-1ec6-b680-aba4a8c15d56/yield-APP_IPAD_PRO_3GEN_129-2-800D685E-AC31-4F32-8C22-AD584891D344.png",
+                  "assetType": "SortedJ320ScreenShot",
+                  "fileName": "yield-APP_IPAD_PRO_3GEN_129-2-800D685E-AC31-4F32-8C22-AD584891D344.png",
+                  "fileSize": 333438,
+                  "imageAsset": {
+                    "height": 2752,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d9/5e/8b/d95e8b15-ff83-1ec6-b680-aba4a8c15d56/yield-APP_IPAD_PRO_3GEN_129-2-800D685E-AC31-4F32-8C22-AD584891D344.png/{w}x{h}bb.{f}",
+                    "width": 2064
+                  },
+                  "sourceFileChecksum": "4a877086d1a8e5f227b56f3770ec83b9",
+                  "uploadOperations": null
+                },
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource211/v4/f0/d6/35/f0d63542-18e0-1115-a638-3883f1928a7b/yield-APP_IPAD_PRO_3GEN_129-3-E7EEA644-1AC0-44AB-9D0B-504B905765FE.png",
+                  "assetType": "SortedJ320ScreenShot",
+                  "fileName": "yield-APP_IPAD_PRO_3GEN_129-3-E7EEA644-1AC0-44AB-9D0B-504B905765FE.png",
+                  "fileSize": 341444,
+                  "imageAsset": {
+                    "height": 2752,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f0/d6/35/f0d63542-18e0-1115-a638-3883f1928a7b/yield-APP_IPAD_PRO_3GEN_129-3-E7EEA644-1AC0-44AB-9D0B-504B905765FE.png/{w}x{h}bb.{f}",
+                    "width": 2064
+                  },
+                  "sourceFileChecksum": null,
+                  "uploadOperations": null
+                },
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource221/v4/18/61/54/186154f5-96c8-9582-e0a3-33a0ce699b40/yield-APP_IPAD_PRO_3GEN_129-4-00EFE791-DF7C-445D-A333-A136ED35674B.png",
+                  "assetType": "SortedJ320ScreenShot",
+                  "fileName": "yield-APP_IPAD_PRO_3GEN_129-4-00EFE791-DF7C-445D-A333-A136ED35674B.png",
+                  "fileSize": 334373,
+                  "imageAsset": {
+                    "height": 2752,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/18/61/54/186154f5-96c8-9582-e0a3-33a0ce699b40/yield-APP_IPAD_PRO_3GEN_129-4-00EFE791-DF7C-445D-A333-A136ED35674B.png/{w}x{h}bb.{f}",
+                    "width": 2064
+                  },
+                  "sourceFileChecksum": null,
+                  "uploadOperations": null
+                },
+                {
+                  "assetDeliveryState": {
+                    "errors": [],
+                    "state": "COMPLETE",
+                    "warnings": null
+                  },
+                  "assetToken": "PurpleSource211/v4/b6/2b/2b/b62b2b82-0759-c6b0-6372-b0b262bb0400/yield-APP_IPAD_PRO_3GEN_129-5-3F156749-FE4C-468A-BD05-2B8D7CF6D966.png",
+                  "assetType": "SortedJ320ScreenShot",
+                  "fileName": "yield-APP_IPAD_PRO_3GEN_129-5-3F156749-FE4C-468A-BD05-2B8D7CF6D966.png",
+                  "fileSize": 301098,
+                  "imageAsset": {
+                    "height": 2752,
+                    "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b6/2b/2b/b62b2b82-0759-c6b0-6372-b0b262bb0400/yield-APP_IPAD_PRO_3GEN_129-5-3F156749-FE4C-468A-BD05-2B8D7CF6D966.png/{w}x{h}bb.{f}",
+                    "width": 2064
+                  },
+                  "sourceFileChecksum": null,
+                  "uploadOperations": null
+                }
+              ]
+            },
             {
               "attributes": {
                 "screenshotDisplayType": "APP_IPHONE_61"
@@ -224,28 +322,28 @@
         "added": false,
         "id": "3676f212-a18c-463a-879b-01cfa482cac8",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"0691aa40-89e8-4efd-8e17-282c4a31acd6\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"6289d175-de82-4a47-9bea-d635e68a6140\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "0f62bb6e-4e91-451b-a718-152fc9a38118",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"222bc4bf-49ed-4a2c-9a51-08d55120910e\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"530e8911-f03b-4db2-a624-cd04c798ba6b\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "f9b2021a-b0fd-4adb-b620-17a295c18f2b",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"46fd443c-0f9d-49e2-b7af-9120e04b13b4\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"c348d457-ae2e-4c5f-bc73-d3284c5821bd\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "d704945d-c643-4680-ac00-1bd4abfdd827",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"127c3941-5d4a-4dd8-8cbc-c8b3412b75d8\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"2d7ceda8-87a9-44d0-8702-d6e05d290290\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       }
     ],
