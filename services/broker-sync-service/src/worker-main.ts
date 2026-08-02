@@ -22,7 +22,7 @@ function positiveInteger(value: string | undefined, fallback: number): number {
 async function main(): Promise<void> {
   const mode = parseRuntimeMode(process.env.APP_ENV);
   if (mode !== "paper") throw new DomainError("BROKER_SYNC_MODE_INVALID", "Broker sync runs only in the Paper environment until Live is separately approved", 503);
-  const databaseUrl = process.env.DATABASE_URL?.trim();
+  const databaseUrl = environmentValue(process.env,"DATABASE_URL");
   if (databaseUrl === undefined || databaseUrl === "") throw new DomainError("DATABASE_URL_REQUIRED", "Paper broker sync requires PostgreSQL", 500);
   const clientId=environmentValue(process.env,"ROBINHOOD_OAUTH_CLIENT_ID");
   const redirectUri=environmentValue(process.env,"ROBINHOOD_OAUTH_REDIRECT_URI");
