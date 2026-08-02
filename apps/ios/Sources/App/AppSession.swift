@@ -10,6 +10,26 @@ enum ContentLoadPhase: Equatable {
   case failed(String)
 }
 
+enum OfferCodeReconciliationOutcome: Equatable {
+  case noVerifiedRedemption
+  case activated(PlanTier)
+  case awaitingServer
+}
+
+enum OfferCodeEntitlementResolver {
+  static func activatedTier(
+    previousProductIDs: Set<String>,
+    currentProductIDs: Set<String>,
+    authoritativeTier: PlanTier?,
+    plans: [SubscriptionPlan]
+  ) -> PlanTier? {
+    let newlyVerifiedProductIDs = currentProductIDs.subtracting(previousProductIDs)
+    return plans.first(where: {
+      newlyVerifiedProductIDs.contains($0.productID) && authoritativeTier == $0.tier
+    })?.tier
+  }
+}
+
 @MainActor
 @Observable
 final class AppSession {
@@ -756,6 +776,46 @@ final class AppSession {
       alertMessage =
         "Purchases were checked, but the current server plan could not be refreshed. \(error.localizedDescription)"
     }
+  }
+
+  /// The StoreKit redemption sheet reports a successful presentation even when the user closes it.
+  /// Only a newly verified transaction that is also acknowledged by the server counts as redemption.
+  func reconcileOfferCodeRedemption(
+    previousProductIDs: Set<String>
+  ) async -> OfferCodeReconciliationOutcome {
+    var sawNewVerifiedTransaction = false
+
+    for attempt in 0..<8 {
+      await storeKit.refreshEntitlements()
+      let newlyVerifiedProductIDs = storeKit.localVerifiedProductIDs.subtracting(previousProductIDs)
+      sawNewVerifiedTransaction = sawNewVerifiedTransaction || !newlyVerifiedProductIDs.isEmpty
+
+      if sawNewVerifiedTransaction {
+        do {
+          applyPlanCatalog(try await repository.planCatalog())
+          if let activatedTier = OfferCodeEntitlementResolver.activatedTier(
+            previousProductIDs: previousProductIDs,
+            currentProductIDs: storeKit.localVerifiedProductIDs,
+            authoritativeTier: authoritativeCurrentPlanTier,
+            plans: plans
+          ) {
+            onboardingDraft.selectedPlan = activatedTier
+            await storeKit.loadProducts(plans: plans)
+            persistDraft()
+            return .activated(activatedTier)
+          }
+        } catch {
+          // Keep polling briefly. The App Store transaction can arrive before the server catalog
+          // reflects the corresponding entitlement acknowledgement.
+        }
+      }
+
+      let lastAttempt = sawNewVerifiedTransaction ? 7 : 3
+      guard attempt < lastAttempt else { break }
+      try? await Task.sleep(for: .milliseconds(500))
+    }
+
+    return sawNewVerifiedTransaction ? .awaitingServer : .noVerifiedRedemption
   }
 
   func reloadOnboardingPlans() async {

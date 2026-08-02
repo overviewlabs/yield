@@ -1,1 +1,1 @@
-Build 5: restore StoreKit plan availability and retry behavior.
+Build 6: verify promo-code redemption before confirming and advance onboarding on activation.

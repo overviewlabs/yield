@@ -10,6 +10,7 @@ struct OnboardingFlowView: View {
   @State private var eligibilityDeletionConfirmation = ""
   @State private var pendingAppleNonce: String?
   @State private var isPresentingOfferCodeRedemption = false
+  @State private var productIDsBeforeOfferCodeRedemption: Set<String> = []
 
   var body: some View {
     NavigationStack {
@@ -362,6 +363,7 @@ struct OnboardingFlowView: View {
         Button("Restore Purchases") { Task { await session.restoreOnboardingPurchases() } }
           .buttonStyle(.bordered)
         Button("Redeem Promo Code", systemImage: "ticket") {
+          productIDsBeforeOfferCodeRedemption = session.storeKit.localVerifiedProductIDs
           isPresentingOfferCodeRedemption = true
         }
         .buttonStyle(.bordered)
@@ -1007,9 +1009,19 @@ struct OnboardingFlowView: View {
     switch result {
     case .success:
       Task {
-        await session.restoreOnboardingPurchases()
-        session.alertMessage =
-          "Promo code redeemed. Your verified subscription access was refreshed."
+        switch await session.reconcileOfferCodeRedemption(
+          previousProductIDs: productIDsBeforeOfferCodeRedemption)
+        {
+        case .activated:
+          if session.onboardingDraft.step == .subscription {
+            _ = await session.advanceOnboarding()
+          }
+        case .awaitingServer:
+          session.alertMessage =
+            "The promo code was accepted by the App Store. Server access is still syncing; try Continue again shortly."
+        case .noVerifiedRedemption:
+          break
+        }
       }
     case .failure(let error):
       session.alertMessage = "The promo code was not redeemed. \(error.localizedDescription)"

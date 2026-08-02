@@ -24,7 +24,7 @@ SUBSCRIPTIONS = {
 }
 BUNDLE_ID = "ai.whox.yield"
 BETA_GROUP_ID = "18c04eab-014a-43a2-ad12-7b8aaa07a5f5"
-BUILD_NUMBER = "5"
+BUILD_NUMBER = "6"
 DIAGNOSTIC_PATH = Path(".github/storekit-diagnostic.json")
 PRIVACY_URL = "https://github.com/overviewlabs/yield/blob/main/PRIVACY.md"
 SUPPORT_URL = "https://github.com/overviewlabs/yield/blob/main/SUPPORT.md"

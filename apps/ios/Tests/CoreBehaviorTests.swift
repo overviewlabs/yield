@@ -62,6 +62,37 @@ final class CoreBehaviorTests: XCTestCase {
     )
   }
 
+  func testOfferCodeDismissalDoesNotActivateAPlan() {
+    let productIDs: Set<String> = [DemoFixtures.plans[0].productID]
+    XCTAssertNil(
+      OfferCodeEntitlementResolver.activatedTier(
+        previousProductIDs: productIDs,
+        currentProductIDs: productIDs,
+        authoritativeTier: .optionsPro,
+        plans: DemoFixtures.plans
+      ))
+  }
+
+  func testOfferCodeActivatesOnlyANewServerAuthorizedPlan() {
+    let optionsPro = DemoFixtures.plans.first(where: { $0.tier == .optionsPro })!
+    XCTAssertEqual(
+      OfferCodeEntitlementResolver.activatedTier(
+        previousProductIDs: [],
+        currentProductIDs: [optionsPro.productID],
+        authoritativeTier: .optionsPro,
+        plans: DemoFixtures.plans
+      ),
+      .optionsPro
+    )
+    XCTAssertNil(
+      OfferCodeEntitlementResolver.activatedTier(
+        previousProductIDs: [],
+        currentProductIDs: [optionsPro.productID],
+        authoritativeTier: .equity,
+        plans: DemoFixtures.plans
+      ))
+  }
+
   @MainActor
   func testPurchaseStateTransitionsForUnavailableProductAndMockedRestore() async {
     let unavailable = StoreKitService(arguments: ["tests"])
