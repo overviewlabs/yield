@@ -191,6 +191,38 @@ def subscription_diagnostic(token: str, subscription_id: str) -> dict:
     }
 
 
+def submit_subscription(token: str, subscription_id: str) -> dict:
+    response = api_request(
+        token,
+        "POST",
+        "/v1/subscriptionSubmissions",
+        {
+            "data": {
+                "type": "subscriptionSubmissions",
+                "relationships": {
+                    "subscription": {
+                        "data": {"type": "subscriptions", "id": subscription_id}
+                    }
+                },
+            }
+        },
+        allowed_errors={403, 409, 422},
+    )
+    if "data" in response:
+        return {"submitted": True, "submissionId": response["data"]["id"]}
+    detail = response.get("errorDetail", "")
+    try:
+        errors = json.loads(detail).get("errors", [])
+        message = errors[0].get("detail", detail) if errors else detail
+    except json.JSONDecodeError:
+        message = detail
+    return {
+        "submitted": False,
+        "status": response.get("errorStatus"),
+        "message": message,
+    }
+
+
 def upload_asset(operation: dict, blob: bytes) -> None:
     offset = operation["offset"]
     chunk = blob[offset : offset + operation["length"]]
@@ -218,11 +250,10 @@ def main() -> None:
     token = access_token()
     blob = SCREENSHOT.read_bytes()
     checksum = hashlib.md5(blob, usedforsecurity=False).hexdigest()
-    diagnostics = []
+    submissions = []
 
     for subscription_id, label in SUBSCRIPTIONS.items():
         ensure_subscription_availability(token, subscription_id)
-        diagnostics.append(subscription_diagnostic(token, subscription_id))
         response = api_request(
             token, "GET", f"/v1/subscriptions/{subscription_id}/appStoreReviewScreenshot"
         )
@@ -271,10 +302,20 @@ def main() -> None:
                 },
             )
         print(f"{label}: review screenshot submitted")
+        submissions.append(
+            {"subscriptionId": subscription_id, **submit_subscription(token, subscription_id)}
+        )
 
     assign_testflight_build(token)
+    time.sleep(5)
+    diagnostics = [subscription_diagnostic(token, item) for item in SUBSCRIPTIONS]
     DIAGNOSTIC_PATH.write_text(
-        json.dumps({"subscriptions": diagnostics}, indent=2, sort_keys=True) + "\n",
+        json.dumps(
+            {"subscriptions": diagnostics, "submissionAttempts": submissions},
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
         encoding="utf-8",
     )
 
