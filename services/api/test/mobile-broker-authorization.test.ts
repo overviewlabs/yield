@@ -225,6 +225,26 @@ describe("server-driven mobile broker authorization", () => {
     assert.equal(connector.exchanges.length, 1, "callback state and verifier are one-time use");
   });
 
+  it("returns desktop OAuth callbacks to a token-free completion page", async () => {
+    const connector = new TestMobileConnector();
+    const base = await startServer(connector);
+    const accessToken = await login(base, "desktop-email-device");
+    const pairing = await createPairing(base, accessToken, "create-desktop-email-pairing");
+    const started = await startMobile(base, accessToken, pairing.pairingId, "start-desktop-email-pairing");
+    const destination = new URL(((await started.json()) as { authorizationUrl: string }).authorizationUrl);
+    const callback = new URL(`${base}/v1/brokers/robinhood/mobile-oauth/callback`);
+    callback.searchParams.set("code", "desktop-provider-code");
+    callback.searchParams.set("state", destination.searchParams.get("state")!);
+
+    const completed = await fetch(callback, {
+      redirect: "manual",
+      headers: { "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/605.1.15" },
+    });
+
+    assert.equal(completed.status, 302);
+    assert.equal(completed.headers.get("location"), "http://localhost:5173/pair#desktop-complete");
+  });
+
   it("restores pending state after app cancellation so the same pairing can use desktop fallback", async () => {
     const connector = new TestMobileConnector();
     const base = await startServer(connector);

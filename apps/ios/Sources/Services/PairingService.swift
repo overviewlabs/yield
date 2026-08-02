@@ -146,6 +146,34 @@ enum MobileAuthorizationURLPolicy {
   }
 }
 
+enum DesktopPairingEmailURL {
+  static func make(
+    recipient: String, authorizationURL: URL, expiresAt: Date
+  ) -> URL? {
+    let address = recipient.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !address.isEmpty, address.count <= 254, !address.contains("\n"),
+      !address.contains("\r")
+    else {
+      return nil
+    }
+    let formatter = DateFormatter()
+    formatter.dateStyle = .medium
+    formatter.timeStyle = .short
+    var components = URLComponents()
+    components.scheme = "mailto"
+    components.path = address
+    components.queryItems = [
+      URLQueryItem(name: "subject", value: "Your Yield Robinhood connection link"),
+      URLQueryItem(
+        name: "body",
+        value:
+          "Open this single-use link on your desktop computer to connect Robinhood to Yield:\n\n\(authorizationURL.absoluteString)\n\nThis link expires \(formatter.string(from: expiresAt)). If you did not request it, do not open it. Yield never asks for your Robinhood password by email."
+      ),
+    ]
+    return components.url
+  }
+}
+
 @MainActor
 protocol BrokerAuthorizationPresenting: AnyObject {
   func authorize(
@@ -608,7 +636,7 @@ final class PairingService {
   private(set) var isPolling = false
   private(set) var isAuthorizingInApp = false
   private(set) var statusMessage =
-    "Tap Connect Robinhood to open secure sign-in in Safari."
+    "Email a single-use link to yourself and open it on a desktop computer."
   private(set) var lastScheduledDelay: Double?
   private(set) var pollAttempt = 0
   @ObservationIgnored private let client: any BrokerPairingClient
@@ -716,6 +744,59 @@ final class PairingService {
         _ = await restorePendingPairing(
           pairing, message: message + " This pairing remains available for browser retry.")
       }
+    }
+  }
+
+  func prepareDesktopHandoff() async -> URL? {
+    guard !isAuthorizingInApp else { return nil }
+    if lifecycleStatus == .connected {
+      statusMessage =
+        "Disconnect the current Robinhood authorization before starting a replacement connection."
+      return nil
+    }
+    if let browserAuthorizationURL, let browserAuthorizationExpiresAt,
+      browserAuthorizationExpiresAt > .now
+    {
+      lifecycleStatus = .authorizing
+      statusMessage =
+        "Your desktop link is ready. Send the email, open it on your computer, and complete Robinhood sign-in while Yield waits for confirmation."
+      return browserAuthorizationURL
+    }
+    if session == nil || lifecycleStatus?.isTerminal == true {
+      await generate()
+      guard lifecycleStatus == .pending else { return nil }
+    }
+    guard let pairing = session, pairing.expiresAt > .now else {
+      finish(status: .expired, message: "The pairing expired. Generate a new desktop link.")
+      return nil
+    }
+
+    let attemptID = UUID()
+    authorizationAttemptID = attemptID
+    isAuthorizingInApp = true
+    lifecycleStatus = .authorizing
+    statusMessage = "Preparing a single-use Robinhood link for your desktop computer."
+    do {
+      let handoff = try await client.startInAppAuthorization(pairingID: pairing.id)
+      guard authorizationAttemptID == attemptID else { return nil }
+      try MobileAuthorizationURLPolicy.validate(handoff, pairing: pairing)
+      browserAuthorizationURL = handoff.authorizationURL
+      browserAuthorizationExpiresAt = handoff.expiresAt
+      authorizationAttemptID = nil
+      isAuthorizingInApp = false
+      lifecycleStatus = .authorizing
+      statusMessage =
+        "Your desktop link is ready. Send the email, open it on your computer, and complete Robinhood sign-in while Yield waits for confirmation."
+      return handoff.authorizationURL
+    } catch {
+      guard authorizationAttemptID == attemptID else { return nil }
+      authorizationAttemptID = nil
+      isAuthorizingInApp = false
+      lifecycleStatus = .pending
+      statusMessage =
+        (error as? LocalizedError)?.errorDescription
+        ?? "The desktop connection link could not be prepared. Try again."
+      return nil
     }
   }
 

@@ -176,6 +176,28 @@ export default function App() {
     );
   }
 
+  if (route.desktopCompletion !== null) {
+    const completed = route.desktopCompletion === "complete";
+    return (
+      <main className="center-shell">
+        <section className="panel narrow" aria-labelledby="desktop-result-title">
+          <TreasuryMark />
+          <p className={`eyebrow ${completed ? "success-text" : ""}`}>
+            {completed ? "Authorization received" : "Authorization not completed"}
+          </p>
+          <h1 id="desktop-result-title">
+            {completed ? "Return to Yield on your iPhone" : "Create a new link in Yield"}
+          </h1>
+          <p>
+            {completed
+              ? "Yield is verifying the connection through its secure status channel. You may close this tab and return to the app."
+              : "Robinhood did not complete this connection. Return to Yield and request another short-lived desktop link."}
+          </p>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#connection-content">Skip to connection</a>

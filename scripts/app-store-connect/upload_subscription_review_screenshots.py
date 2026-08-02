@@ -25,7 +25,7 @@ SUBSCRIPTIONS = {
 }
 BUNDLE_ID = "ai.whox.yield"
 BETA_GROUP_ID = "18c04eab-014a-43a2-ad12-7b8aaa07a5f5"
-BUILD_NUMBER = "9"
+BUILD_NUMBER = "10"
 OPTIONS_PRO_SUBSCRIPTION_ID = "6797231900"
 PROMO_OFFER_NAME = "WHOX Options Pro 30 Day"
 # Apple custom offer codes are alphanumeric; punctuation such as a hyphen is rejected.

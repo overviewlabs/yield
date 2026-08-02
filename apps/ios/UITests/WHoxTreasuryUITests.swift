@@ -226,9 +226,9 @@ final class WHoxTreasuryUITests: XCTestCase {
     advanceStandardStep(title: "Choose an approval mode", screenshot: "09-automation")
 
     assertText("Connect Robinhood")
-    XCTAssertTrue(app.staticTexts["Robinhood-controlled setup"].exists)
+    XCTAssertTrue(app.staticTexts["Secure desktop handoff"].exists)
     attachScreenshot("10-connection-empty")
-    let connect = app.buttons["Connect Robinhood"]
+    let connect = app.buttons["Email Desktop Link"]
     scrollUntilHittable(connect)
     connect.tap()
     let completeDemo = app.buttons["Complete Demo Pairing"]
@@ -319,7 +319,7 @@ final class WHoxTreasuryUITests: XCTestCase {
     connection.tap()
     XCTAssertTrue(app.navigationBars["Robinhood Connection"].waitForExistence(timeout: 5))
     let browserDisclosure = app.staticTexts.matching(
-      NSPredicate(format: "label CONTAINS[c] 'open the server-provided Robinhood setup in Safari'")
+      NSPredicate(format: "label CONTAINS[c] 'Email a single-use connection link'")
     ).firstMatch
     scrollUntilExists(browserDisclosure)
     XCTAssertTrue(browserDisclosure.exists)

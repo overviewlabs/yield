@@ -544,7 +544,7 @@ private struct ConnectionSettingsView: View {
       }
       Section("Disclosure") {
         Text(
-          "Yield opens the server-provided Robinhood setup in Safari. After approval, the secure callback returns to Yield. No password, OAuth code, broker token, or MCP credential is returned to or stored by this app."
+          "Yield prepares a short-lived connection link for your verified email address. Open it on a desktop computer and approve within Robinhood while this app waits for server confirmation. No password, OAuth code, broker token, or MCP credential is returned to or stored by this app."
         )
       }
     }
@@ -595,7 +595,6 @@ private struct ConnectionValueRow: View {
 private struct BrokerPairingSheet: View {
   @Environment(AppSession.self) private var session
   @Environment(\.dismiss) private var dismiss
-  @State private var attemptedAutomaticAuthorization = false
 
   var body: some View {
     NavigationStack {
@@ -605,8 +604,8 @@ private struct BrokerPairingSheet: View {
             DisclosureNotice(
               title: "Secure Robinhood handoff",
               message:
-                "Treasury opens Apple’s system authentication browser using a short-lived URL supplied by WHOX. The app accepts only a token-free return and verifies connection status with the server.",
-              symbol: "safari", color: .blue)
+                "Yield creates a short-lived desktop connection link in a pre-addressed email draft. Send it to yourself, open it on your computer, and complete Robinhood sign-in while the app waits for server confirmation.",
+              symbol: "envelope", color: .blue)
             Text(session.pairingService.statusMessage).multilineTextAlignment(.center)
               .foregroundStyle(.secondary)
             if session.pairingService.lifecycleStatus == .connected {
@@ -616,9 +615,9 @@ private struct BrokerPairingSheet: View {
               }
               .buttonStyle(.borderedProminent).controlSize(.large)
             } else {
-              Button("Connect Robinhood", systemImage: "safari") {
+              Button("Email Desktop Link", systemImage: "envelope") {
                 Task {
-                  await session.pairingService.connectInApp()
+                  await session.emailRobinhoodDesktopLink()
                   session.adoptCompletedPairing()
                 }
               }
@@ -646,21 +645,17 @@ private struct BrokerPairingSheet: View {
             }
           } else {
             BrandArtworkView(size: 76)
-            Text("Preparing Robinhood setup").font(.title2.bold())
+            Text("Connect Robinhood on your computer").font(.title2.bold())
             Text(
-              "Treasury is requesting a short-lived setup session for Robinhood’s secure sign-in browser."
+              "Yield will create a single-use connection link and address an email draft to your verified account email."
             ).multilineTextAlignment(.center).foregroundStyle(.secondary)
-            if session.pairingService.lifecycleStatus == .failed {
-              Button("Try Again") {
-                Task {
-                  await session.pairingService.connectInApp()
-                  session.adoptCompletedPairing()
-                }
+            Button("Email Desktop Link", systemImage: "envelope") {
+              Task {
+                await session.emailRobinhoodDesktopLink()
+                session.adoptCompletedPairing()
               }
-              .buttonStyle(.borderedProminent).controlSize(.large)
-            } else {
-              ProgressView().controlSize(.large)
             }
+            .buttonStyle(.borderedProminent).controlSize(.large)
           }
         }
         .padding(24)
@@ -671,13 +666,6 @@ private struct BrokerPairingSheet: View {
     }
     .presentationDetents([.large])
     .interactiveDismissDisabled(session.pairingService.isAuthorizingInApp)
-    .task {
-      guard !attemptedAutomaticAuthorization else { return }
-      attemptedAutomaticAuthorization = true
-      await Task.yield()
-      await session.pairingService.connectInApp()
-      session.adoptCompletedPairing()
-    }
   }
 
 }

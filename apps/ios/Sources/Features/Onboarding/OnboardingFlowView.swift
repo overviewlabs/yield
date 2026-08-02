@@ -535,14 +535,14 @@ struct OnboardingFlowView: View {
       onboardingTitle(
         "Connect Robinhood",
         subtitle:
-          "Tap once to open the server-provided Robinhood setup in Safari. After sign-in, Robinhood returns you to Yield through a secure pairing callback. Yield receives only masked connection status—never your Robinhood password, OAuth code, broker token, or MCP credential."
+          "Email a single-use connection link to your verified account address, then open it on a desktop computer. Yield waits for server confirmation and receives only masked connection status—never your Robinhood password, OAuth code, broker token, or MCP credential."
       )
 
       DisclosureNotice(
-        title: "Robinhood-controlled setup",
+        title: "Secure desktop handoff",
         message:
-          "Yield opens the Safari app. Sign in and approve within Robinhood; the successful callback reopens Yield while the server verifies the connection.",
-        symbol: "safari", color: .blue
+          "Yield creates a short-lived link and opens a pre-addressed email draft. Tap Send, open the link on your computer, and complete Robinhood sign-in there while this app waits.",
+        symbol: "envelope", color: .blue
       )
 
       if session.pairingService.session != nil {
@@ -555,9 +555,9 @@ struct OnboardingFlowView: View {
           .font(.subheadline).foregroundStyle(
             session.pairingService.lifecycleStatus == .connected ? .green : .secondary)
           if session.pairingService.lifecycleStatus != .connected {
-            Button("Connect Robinhood", systemImage: "safari") {
+            Button("Email Desktop Link", systemImage: "envelope") {
               Task {
-                await session.pairingService.connectInApp()
+                await session.emailRobinhoodDesktopLink()
                 session.adoptCompletedPairing()
               }
             }
@@ -603,9 +603,9 @@ struct OnboardingFlowView: View {
           symbol: "timer"
         )
         .treasuryCard()
-        Button("Connect Robinhood", systemImage: "safari") {
+        Button("Email Desktop Link", systemImage: "envelope") {
           Task {
-            await session.pairingService.connectInApp()
+            await session.emailRobinhoodDesktopLink()
             session.adoptCompletedPairing()
           }
         }

@@ -1,6 +1,7 @@
 import AuthenticationServices
 import Foundation
 import Observation
+import UIKit
 
 enum ContentLoadPhase: Equatable {
   case idle
@@ -550,6 +551,31 @@ final class AppSession {
     guard let connected = pairingService.connectedConnection else { return }
     connection = connected
     Haptics.success(enabled: preferences.hapticsEnabled)
+  }
+
+  @discardableResult
+  func emailRobinhoodDesktopLink() async -> Bool {
+    guard !profile.email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+      alertMessage =
+        "Yield does not have a verified account email. Sign in again before requesting a desktop link."
+      return false
+    }
+    guard let authorizationURL = await pairingService.prepareDesktopHandoff(),
+      let expiresAt = pairingService.browserAuthorizationExpiresAt,
+      let emailURL = DesktopPairingEmailURL.make(
+        recipient: profile.email, authorizationURL: authorizationURL, expiresAt: expiresAt)
+    else {
+      if pairingService.lifecycleStatus != .connected {
+        alertMessage = pairingService.statusMessage
+      }
+      return false
+    }
+    guard await UIApplication.shared.open(emailURL, options: [:]) else {
+      alertMessage =
+        "No email app could open the desktop-link draft. Configure a default email app and try again."
+      return false
+    }
+    return true
   }
 
   func openAppReviewDemo() {
@@ -1281,6 +1307,10 @@ final class AppSession {
       return
     }
     isPrivacyShieldVisible = false
+    if pairingService.session != nil, pairingService.lifecycleStatus != .connected {
+      await pairingService.pollNow()
+      adoptCompletedPairing()
+    }
     await synchronizeRemoteNotifications()
     guard isAppLocked else {
       consumePendingIntentRoute()

@@ -409,7 +409,17 @@ export function createApiServer(options: ApiServerOptions = {}): Server {
       await pairings.concludeMobileWithoutConnection(secrets.ownerUserId, secrets.creatorSessionId, secrets.pairingId, state, "error", now().toISOString());
       throw new DomainError("MOBILE_OAUTH_CALLBACK_INVALID", "Mobile authorization callback binding is invalid", 400);
     }
-    const redirect = (result: "verification_pending" | "canceled" | "failed"): HttpResult => ({ status: 302, headers: { location: sanitizedMobileReturn(result, secrets.pairingId), "cache-control": "no-store", "referrer-policy": "no-referrer" } });
+    const redirect = (result: "verification_pending" | "canceled" | "failed"): HttpResult => {
+      const userAgent = context.request.headers["user-agent"] ?? "";
+      const isDesktopBrowser = /(?:Macintosh|Windows NT|CrOS|X11)/i.test(userAgent)
+        && !/(?:iPhone|iPad|Android|Mobile)/i.test(userAgent);
+      if (isDesktopBrowser) {
+        const desktopReturn = new URL("/pair", connectionWebUrl);
+        desktopReturn.hash = result === "verification_pending" ? "desktop-complete" : "desktop-failed";
+        return { status: 302, headers: { location: desktopReturn.href, "cache-control": "no-store", "referrer-policy": "no-referrer" } };
+      }
+      return { status: 302, headers: { location: sanitizedMobileReturn(result, secrets.pairingId), "cache-control": "no-store", "referrer-policy": "no-referrer" } };
+    };
     if (providerErrors.length === 1) {
       const providerError = providerErrors[0]!;
       if (providerError === "" || providerError.length > 200 || /[\u0000-\u001f\u007f]/.test(providerError)) {
