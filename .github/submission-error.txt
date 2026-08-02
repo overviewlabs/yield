@@ -1,0 +1,50 @@
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 493, in open
+    response = meth(req, response)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 602, in http_response
+    response = self.parent.error(
+        'http', request, response, code, msg, hdrs)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 531, in error
+    return self._call_chain(*args)
+           ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 611, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 406: Not Acceptable
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/runner/work/yield/yield/scripts/app-store-connect/upload_subscription_review_screenshots.py", line 1281, in <module>
+    main()
+    ~~~~^^
+  File "/Users/runner/work/yield/yield/scripts/app-store-connect/upload_subscription_review_screenshots.py", line 1201, in main
+    promo_offer = ensure_options_pro_offer([REDACTED]
+  File "/Users/runner/work/yield/yield/scripts/app-store-connect/upload_subscription_review_screenshots.py", line 221, in ensure_options_pro_offer
+    api_request_bytes(
+    ~~~~~~~~~~~~~~~~~^
+        [REDACTED],
+        ^^^^^^
+        f"/v1/subscriptionOfferCodeOneTimeUseCodes/{sandbox_batch['id']}/values",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/runner/work/yield/yield/scripts/app-store-connect/upload_subscription_review_screenshots.py", line 108, in api_request_bytes
+    raise RuntimeError(f"App Store Connect returned HTTP {error.code}: {detail}") from error
+RuntimeError: App Store Connect returned HTTP 406: {
+  "errors" : [ {
+    "id" : "b4f74250-a690-4f18-827b-39cb9b1b1c84",
+    "status" : "406",
+    "code" : "NOT_ACCEPTABLE",
+    "title" : "Not Acceptable",
+    "detail" : "The provided Accept header is not supported for this request",
+    "meta" : {
+      "requested" : [ "application/json" ],
+      "allowed" : [ "text/csv" ]
+    }
+  } ]
+}
