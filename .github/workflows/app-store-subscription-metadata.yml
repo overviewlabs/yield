@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - .github/build-now
+      - .github/subscriptions-now
 
 permissions:
   contents: read

@@ -76,10 +76,16 @@ def ensure_subscription_availability(token: str, subscription_id: str) -> None:
     response = api_request(
         token,
         "GET",
-        f"/v1/subscriptions/{subscription_id}/subscriptionAvailability",
-        allowed_errors={404},
+        f"/v1/subscriptions/{subscription_id}/planAvailabilities?limit=10",
     )
-    availability = response.get("data")
+    availability = next(
+        (
+            item
+            for item in response.get("data", [])
+            if item.get("attributes", {}).get("planType") == "MONTHLY"
+        ),
+        None,
+    )
     relationships = {
         "subscription": {"data": {"type": "subscriptions", "id": subscription_id}},
         "availableTerritories": {"data": territory_links},
@@ -88,11 +94,14 @@ def ensure_subscription_availability(token: str, subscription_id: str) -> None:
         api_request(
             token,
             "POST",
-            "/v1/subscriptionAvailabilities",
+            "/v1/subscriptionPlanAvailabilities",
             {
                 "data": {
-                    "type": "subscriptionAvailabilities",
-                    "attributes": {"availableInNewTerritories": True},
+                    "type": "subscriptionPlanAvailabilities",
+                    "attributes": {
+                        "availableInNewTerritories": True,
+                        "planType": "MONTHLY",
+                    },
                     "relationships": relationships,
                 }
             },
@@ -101,17 +110,21 @@ def ensure_subscription_availability(token: str, subscription_id: str) -> None:
         api_request(
             token,
             "PATCH",
-            f"/v1/subscriptionAvailabilities/{availability['id']}",
+            f"/v1/subscriptionPlanAvailabilities/{availability['id']}",
             {
                 "data": {
-                    "type": "subscriptionAvailabilities",
+                    "type": "subscriptionPlanAvailabilities",
                     "id": availability["id"],
                     "attributes": {"availableInNewTerritories": True},
-                    "relationships": {
-                        "availableTerritories": {"data": territory_links}
-                    },
                 }
             },
+        )
+        api_request(
+            token,
+            "PATCH",
+            f"/v1/subscriptionPlanAvailabilities/{availability['id']}"
+            "/relationships/availableTerritories",
+            {"data": territory_links},
         )
     print(f"{subscription_id}: enabled in {len(territory_links)} storefronts")
 
