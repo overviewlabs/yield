@@ -60,6 +60,7 @@ targets:
           WHOX_APP_ATTEST_ENVIRONMENT: production
           WHOX_RUNTIME_MODE: paper
           WHOX_API_BASE_URL: "https://api.whox.ai"
+          CODE_SIGN_IDENTITY: Apple Distribution
           PROVISIONING_PROFILE_SPECIFIER: WHOX Treasury App Store
     dependencies:
       - target: WHOXTreasuryWidget
@@ -80,6 +81,7 @@ targets:
         APPLICATION_EXTENSION_API_ONLY: true
       configs:
         Release:
+          CODE_SIGN_IDENTITY: Apple Distribution
           PROVISIONING_PROFILE_SPECIFIER: WHOX Treasury Widget App Store
 
   WHOXTreasuryTests:

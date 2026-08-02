@@ -7,11 +7,18 @@
     <key>method</key>
     <string>app-store-connect</string>
     <key>signingStyle</key>
-    <string>automatic</string>
+    <string>manual</string>
     <key>teamID</key>
     <string>8PN4T7SR2G</string>
     <key>manageAppVersionAndBuildNumber</key>
     <false/>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>ai.whox.treasury</key>
+        <string>WHOX Treasury App Store</string>
+        <key>ai.whox.treasury.widget</key>
+        <string>WHOX Treasury Widget App Store</string>
+    </dict>
     <key>stripSwiftSymbols</key>
     <true/>
     <key>uploadSymbols</key>
