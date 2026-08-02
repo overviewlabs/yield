@@ -5,33 +5,42 @@
       "attributes": {
         "appStoreState": "PREPARE_FOR_SUBMISSION",
         "appVersionState": "PREPARE_FOR_SUBMISSION",
-        "copyright": null,
+        "copyright": "2026 Evans Obeng",
         "createdDate": "2026-08-02T03:47:49-07:00",
         "downloadable": true,
         "earliestReleaseDate": null,
         "platform": "IOS",
         "releaseType": "AFTER_APPROVAL",
         "reviewType": "APP_STORE",
-        "usesIdfa": null,
+        "usesIdfa": false,
         "versionString": "1.0"
       },
       "id": "ab09b751-8852-4775-9654-62bc8747ea99",
       "localizations": [
         {
           "attributes": {
-            "description": null,
-            "keywords": null,
+            "description": "Yield helps users monitor portfolios, select versioned investment strategies, set explicit risk limits, review proposed activity, and control future automation. Brokerage authorization and permissions remain separate. Investing and options involve risk, including possible loss of principal, and automated analysis can be wrong.",
+            "keywords": "portfolio,investing,stocks,options,automation,risk,analysis",
             "locale": "en-US",
-            "marketingUrl": null,
-            "promotionalText": null,
-            "supportUrl": null,
+            "marketingUrl": "https://github.com/overviewlabs/yield",
+            "promotionalText": "Portfolio monitoring and automated strategy controls with explicit risk limits.",
+            "supportUrl": "https://github.com/overviewlabs/yield/blob/main/SUPPORT.md",
             "whatsNew": null
           },
           "id": "fa881a76-aeb6-4be5-b447-6be66a13fc13",
-          "screenshotSetCount": 0
+          "screenshotSetCount": 1
         }
       ],
-      "reviewDetail": null
+      "reviewDetail": {
+        "contactEmail": "admin@overviewlabs.ai",
+        "contactFirstName": "Evans",
+        "contactLastName": "Obeng",
+        "contactPhone": "+15707658048",
+        "demoAccountName": null,
+        "demoAccountPassword": null,
+        "demoAccountRequired": false,
+        "notes": "Sign in with Apple is supported. Investment and subscription access do not override risk restrictions or brokerage permissions. Yield is not Robinhood."
+      }
     },
     "items": [
       {
@@ -44,28 +53,28 @@
         "added": false,
         "id": "3676f212-a18c-463a-879b-01cfa482cac8",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"4956363b-f6ce-4344-9555-987f262a3ee0\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"a1ff1ce2-b07a-4794-b2ce-1b76d6040c65\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 3676f212-a18c-463a-879b-01cfa482cac8 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "0f62bb6e-4e91-451b-a718-152fc9a38118",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"ea80bd33-1064-478b-a387-87919b518e9b\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"7837cce8-4b5d-4f22-94e6-123fe90163cb\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id 0f62bb6e-4e91-451b-a718-152fc9a38118 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "f9b2021a-b0fd-4adb-b620-17a295c18f2b",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"f3dff417-9028-4126-bd3f-47dc3a963a9f\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"9c409c97-bc3d-49ac-9e1f-cea4eceb19d4\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id f9b2021a-b0fd-4adb-b620-17a295c18f2b was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       },
       {
         "added": false,
         "id": "d704945d-c643-4680-ac00-1bd4abfdd827",
         "kind": "subscriptionVersion",
-        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"afe095cc-bf05-4c8b-b8d9-a2af32fe011a\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
+        "message": "{\n  \"errors\" : [ {\n    \"id\" : \"5f94fc85-b41c-42fb-8d4b-054f786b61ec\",\n    \"status\" : \"409\",\n    \"code\" : \"ENTITY_ERROR.RELATIONSHIP.INVALID.NOT_ALLOWED\",\n    \"title\" : \"subscriptionVersion with id d704945d-c643-4680-ac00-1bd4abfdd827 was already added to this reviewSubmission.\",\n    \"source\" : {\n      \"pointer\" : \"/data/relationships/subscriptionVersion\"\n    }\n  } ]\n}",
         "status": 409
       }
     ],
