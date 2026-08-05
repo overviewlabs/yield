@@ -104,7 +104,7 @@ export function loadApiRuntimeConfiguration(): ApiRuntimeConfiguration {
   const smtpPort=Number(process.env.SMTP_PORT??"465");
   const smtpValues=[smtpHost,smtpUsername,smtpPassword,smtpFrom];
   if(smtpValues.some((value)=>value!==undefined)&&smtpValues.some((value)=>value===undefined))throw new DomainError("SMTP_CONFIGURATION_INCOMPLETE","SMTP configuration must be supplied as a complete set",500);
-  const desktopLinkEmailSender=smtpHost===undefined?undefined:new SmtpDesktopLinkEmailSender({host:smtpHost,port:smtpPort,username:smtpUsername!,password:smtpPassword!,from:smtpFrom!});
+  const desktopLinkEmailSender=smtpHost===undefined?undefined:new SmtpDesktopLinkEmailSender({host:smtpHost,port:smtpPort,username:smtpUsername!,password:smtpPassword!,from:smtpFrom!,desktopHandoffUrl:new URL("/desktop",connectionWebUrl).href});
   return Object.freeze({
     host: process.env.HOST?.trim() || "127.0.0.1",
     port,

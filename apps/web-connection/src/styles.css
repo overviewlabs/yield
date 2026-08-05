@@ -113,6 +113,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid #d89c36; outline-offs
 .mobile-handoff .secondary-button { margin-top: 5px; }
 .mobile-handoff .text-button { margin-top: 0; }
 .text-link { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; color: var(--accent-strong); font-weight: 750; }
+.desktop-link { display: flex; align-items: center; justify-content: center; text-decoration: none; box-sizing: border-box; }
 
 .progress-ring { display: block; width: 52px; height: 52px; margin: 0 auto 28px; border: 4px solid rgba(67,85,216,.14); border-top-color: var(--accent); border-radius: 50%; animation: spin .75s linear infinite; }
 .success-mark { display: grid; place-items: center; width: 54px; height: 54px; margin: 0 0 20px; border-radius: 50%; color: white; background: var(--accent); font-size: 1.5rem; }

@@ -7,7 +7,7 @@ import {
   secondsUntil,
 } from "./pairingMachine";
 import { createApiPairingClient, createMockPairingClient } from "./pairingClient";
-import { parsePairingRoute } from "./pairingRoute";
+import { isMobileBrowser, parsePairingRoute, validatedDesktopAuthorizationUrl } from "./pairingRoute";
 
 const deployment = import.meta.env.VITE_DEPLOYMENT_ENV ?? "demo";
 const provider = import.meta.env.VITE_PAIRING_PROVIDER ?? "mock";
@@ -70,6 +70,20 @@ export default function App() {
     }
     return createMockPairingClient();
   }, []);
+  const desktopAuthorizationUrl = route.desktopAuthorizationUrl === null
+    ? null
+    : validatedDesktopAuthorizationUrl(route.desktopAuthorizationUrl);
+  const mobileBrowser = isMobileBrowser(
+    window.navigator.userAgent,
+    window.navigator.platform,
+    window.navigator.maxTouchPoints,
+  );
+
+  useEffect(() => {
+    if (desktopAuthorizationUrl !== null && !mobileBrowser) {
+      window.location.replace(desktopAuthorizationUrl);
+    }
+  }, [desktopAuthorizationUrl, mobileBrowser]);
 
   useEffect(() => {
     if (route.callbackPairingId === null) return;
@@ -171,6 +185,33 @@ export default function App() {
           <p className="eyebrow">Configuration stopped</p>
           <h1 id="configuration-title">Mock pairing is disabled outside Demo.</h1>
           <p>Set the pairing provider to <code>api</code> before deploying Paper or Live.</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (route.desktopAuthorizationUrl !== null) {
+    const invalid = desktopAuthorizationUrl === null;
+    return (
+      <main className="center-shell">
+        <section className="panel narrow" aria-labelledby="desktop-handoff-title">
+          <TreasuryMark />
+          <p className={`eyebrow ${invalid ? "" : "success-text"}`}>Secure desktop handoff</p>
+          <h1 id="desktop-handoff-title">
+            {invalid
+              ? "Request a new link in Yield"
+              : mobileBrowser ? "Open this email on a computer" : "Opening Robinhood…"}
+          </h1>
+          <p>
+            {invalid
+              ? "This desktop link is invalid or expired. Return to Yield and request another email."
+              : mobileBrowser
+                ? "Robinhood only completes Agentic Trading connections in a desktop browser. Open this same Yield email on a Mac or PC while the Yield app waits for confirmation."
+                : "You are being securely redirected to Robinhood to approve the connection."}
+          </p>
+          {!invalid && !mobileBrowser && (
+            <a className="primary-button desktop-link" href={desktopAuthorizationUrl}>Continue to Robinhood</a>
+          )}
         </section>
       </main>
     );
