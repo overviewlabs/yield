@@ -14,7 +14,7 @@ RUN VITE_DEPLOYMENT_ENV="$BUILD_DEPLOYMENT_ENV" \
     VITE_ALLOWED_AUTH_ORIGINS="$BUILD_ALLOWED_ORIGINS" \
     npm run build --workspace @whox/web-connection
 
-FROM nginxinc/nginx-unprivileged:1.30.4-alpine@sha256:44e36330f74d4f3a1d4e222acca9e23b401fb87811a7597024502bb759c4dd49 AS runtime
+FROM nginxinc/nginx-unprivileged:1.31.6-alpine@sha256:b54ac358b83fc6c965793fd271839b4ea4cdb6e99895bb19618cbc2ca152d972 AS runtime
 ENV API_CONNECT_SRC=http://localhost:8080 NGINX_ENVSUBST_FILTER=API_CONNECT_SRC
 COPY infrastructure/docker/nginx.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /workspace/apps/web-connection/dist /usr/share/nginx/html
